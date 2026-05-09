@@ -1,0 +1,31 @@
+# deps
+node_modules/
+
+# build / cache
+dist/
+build/
+.cache/
+coverage/
+*.tsbuildinfo
+
+# env / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# private notes / scratch
+.private/
+scratch/
+*.scratch.*
+
+# logs
+*.log
+logs/
