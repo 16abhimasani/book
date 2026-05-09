@@ -1,10 +1,18 @@
 # book
 
 On-chain experiments on **Sui**. Primary focus: **DeepBook Predict** —
-oracle-driven prediction markets, currently testnet-only. Secondary: a
-sandbox for general auto-trading work that doesn't fit anywhere else.
+oracle-driven prediction markets, currently testnet-only. Two surfaces
+in one repo:
 
-**Status:** scaffolding. No live trading. Sui testnet only.
+- **`ios/`** — native iOS / Swift app (in progress). The product
+  surface. Mobile-first prediction-market UX as the wedge against the
+  DeepBook team's likely web-first official app.
+- **`src/`** — TypeScript sandbox. Research scripts, indexer prototypes,
+  programmatic strategy experiments. The "what does this protocol
+  actually do" workbench.
+
+**Status:** scaffolding both surfaces. Sui testnet only. No live trading,
+no public release.
 
 ## Why "book"
 
@@ -15,31 +23,50 @@ Two readings, both intended:
 
 ## Quick orient (read in this order)
 
-1. [`docs/DEEPBOOK_PREDICT.md`](docs/DEEPBOOK_PREDICT.md) — what the
-   protocol is, primitives, open questions, build ideas.
-2. [`AGENTS.md`](AGENTS.md) — cross-agent guidance + memory protocol.
-3. [`docs/STACK.md`](docs/STACK.md) — local AI + dev tooling (Ollama,
-   Cursor, opencode, Goose, etc). Carried over from the V1 plan.
-4. [`docs/v1-base-bot/`](docs/v1-base-bot/) — archived V1 plan
+1. [`docs/STRATEGY.md`](docs/STRATEGY.md) — current thesis, the t2000 /
+   Audric finding, the iOS-first pivot, what's deliberately out of scope.
+2. [`docs/DEEPBOOK_PREDICT.md`](docs/DEEPBOOK_PREDICT.md) — protocol
+   primitives, open questions, build ideas (LP-side and taker-side).
+3. [`docs/IOS.md`](docs/IOS.md) — Swift / iOS choices: SuiKit (community
+   SDK), zkLogin path, Xcode prereq, App Store gauntlet.
+4. [`AGENTS.md`](AGENTS.md) — cross-agent guidance + memory protocol.
+5. [`docs/STACK.md`](docs/STACK.md) — local AI / dev tooling reference
+   (Ollama, Cursor, opencode, Goose, etc).
+6. [`docs/v1-base-bot/`](docs/v1-base-bot/) — archived V1 plan
    (Base + Coinbase CDP + Uniswap V3 rebalancer). Parked, not deleted —
-   the chain/protocol research in `CHAINS_AND_PROTOCOLS.md` is still
-   useful when picking hedging venues.
+   chain/protocol research is still useful.
 
 ## Stack
 
-- **Runtime:** Bun + TypeScript (`tsconfig.json`, `src/`).
-- **Sui SDK:** [`@mysten/sui`](https://www.npmjs.com/package/@mysten/sui)
-  `^2.16.0` (matches `~/dev/money-movement` for cross-project consistency).
-- **DeepBook Predict SDK:** TBD — not located yet, see open questions in
-  `docs/DEEPBOOK_PREDICT.md`.
+**TypeScript sandbox** (`src/`):
+- Bun + TypeScript
+- [`@mysten/sui`](https://www.npmjs.com/package/@mysten/sui) `^2.16.0`
+  (matches `~/dev/money-movement` for cross-project consistency)
+
+**iOS app** (`ios/`):
+- Swift 6.3 / SwiftPM
+- [SuiKit](https://github.com/opendive/SuiKit) `^1.4.0` — community
+  Swift SDK; native BCS, zkLogin, GraphQL via apollo-ios. Mysten doesn't
+  ship a first-party Swift SDK.
+- iOS 17+ / macOS 14+ targets
+- iOS App target lives in Xcode (added Phase 2 — see `docs/STRATEGY.md`)
 
 ## Run
 
+**TypeScript sandbox:**
 ```sh
 bun install
-bun run start            # connects to Sui testnet, prints chain info
-SUI_NETWORK=devnet bun run start   # override network
+bun run start                       # connects to Sui testnet, prints chain info
+SUI_NETWORK=devnet bun run start    # override network
 bun run typecheck
+```
+
+**iOS / Swift package** (compiles for macOS today; iOS requires Xcode):
+```sh
+cd ios
+swift build
+swift run book-cli                  # same Sui testnet smoke test as TS
+SUI_NETWORK=devnet swift run book-cli
 ```
 
 ## Adjacent / inspiration
@@ -47,24 +74,27 @@ bun run typecheck
 - **DeepBook App (official, in development).** Waitlist:
   https://waitlist.deepbook.tech (announced
   [@aslan_web3](https://x.com/aslan_web3/status/2052751520072892624)).
-  This repo deliberately avoids competing on consumer UX — focus is on
-  the **agentic / programmatic** layer (LP strategies, scanners,
-  backtesting, multi-leg builders).
-- **money-movement** (`~/dev/money-movement`) — has working Sui client
-  setup (`packages/web-demo/src/sui-dapp-kit.ts`) and broader payments
-  SDK that this repo can borrow from when we need wallet flows.
+  Likely web-first. Our wedge is **native mobile + onramp**.
+- **t2000 / Audric** ([t2000.ai](https://t2000.ai),
+  [audric.ai](https://audric.ai)) — `@audricai`'s open-source agentic
+  finance infra on Sui (wallet / send / save / borrow / swap / MCP +
+  LLM agent harness). Doesn't cover prediction markets or native mobile.
+  We're cherry-picking patterns, not depending on the SDK.
+- **money-movement** (`~/dev/money-movement`) — Stripe / Plaid / Bridge
+  onramp integration docs that fold into this app's onboarding (Phase 6
+  per `docs/STRATEGY.md`).
 - **DeepBook Predict docs** — https://docs.sui.io/onchain-finance/deepbook-predict/
 
 ## What's NOT in scope (yet)
 
-- Mainnet anything. Testnet only until DeepBook Predict ships to mainnet.
-- LLM in the live trade loop. Claude/local models iterate strategy code
-  and parse signals offline; execution is deterministic.
-- Multi-chain. Sui-first. Hedging on Hyperliquid is on the table once
-  there's an LP strategy worth hedging.
-- A consumer UI. The DeepBook App will likely cover that surface.
+- **Mainnet anything** until DeepBook Predict ships there.
+- **LLM in the live trade loop.** Models iterate strategy code and
+  parse signals offline; execution is deterministic.
+- **Cross-chain.** Sui-only. Hyperliquid hedging is research-only.
+- **Public release / TestFlight.** Local builds only — see
+  `docs/IOS.md` §App Store reality check for the regulatory gauntlet.
 
 ## Owner
 
-Ash Bhimasani — ex-Phantom Cash team. This is a personal sandbox; the
-Tempo / Paradigm Fellowship anchor lives in `~/dev/money-movement/`.
+Ash Bhimasani — ex-Phantom Cash team. Personal sandbox. The Tempo /
+Paradigm Fellowship anchor lives in `~/dev/money-movement/`.
