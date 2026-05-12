@@ -11,6 +11,16 @@ got here.
 markets) — primarily as a way to learn what building on Sui feels like
 from native mobile, secondarily as a candidate consumer-facing product.**
 
+**Note (2026-05-12):** Post-research, DeepBook Predict turns out to be
+positioned as a *crypto-price hedging primitive* (2,159 hourly BTC
+oracles, $1M LP vault, 0.027% utilization), and its
+`create<Quote>` / `add_oracle_grid` entry points are `public(package)` —
+admin-gated. That means DBP structurally **cannot** host
+user-generated event markets ("will OpenAI ship GPT-5 by July?"). A
+separate Move package + LLM-oracle service for the user-generated tier
+is captured in `STRATEGY-V2.md`. V1 (this doc) and V2 share the iOS
+app surface and wallet, not the Move packages.
+
 ## Map of the territory (May 2026)
 
 - **DeepBook Predict** (`docs.sui.io/onchain-finance/deepbook-predict/`)
@@ -81,6 +91,12 @@ Face ID. Pay gas user-funded for now.
 
 **Phase 7:** Sponsored gas. Tiny TS backend wrapping Enoki, or direct
 Mysten gas station calls. Removes the "fund your own gas" friction.
+
+## Linked strategy docs
+
+- **`STRATEGY-V2.md`** — the user-generated / LLM-oracle / X-distribution
+  vision. Composes with this doc; doesn't replace it. Contains 4 design
+  decisions marked TODO for the user to fill in.
 
 ## What's deliberately out of scope
 

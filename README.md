@@ -23,16 +23,20 @@ Two readings, both intended:
 
 ## Quick orient (read in this order)
 
-1. [`docs/STRATEGY.md`](docs/STRATEGY.md) — current thesis, the t2000 /
-   Audric finding, the iOS-first pivot, what's deliberately out of scope.
-2. [`docs/DEEPBOOK_PREDICT.md`](docs/DEEPBOOK_PREDICT.md) — protocol
-   primitives, open questions, build ideas (LP-side and taker-side).
-3. [`docs/IOS.md`](docs/IOS.md) — Swift / iOS choices: SuiKit (community
+1. [`docs/STRATEGY.md`](docs/STRATEGY.md) — current thesis (V1: iOS app
+   on top of DeepBook Predict), t2000 / Audric finding, iOS pivot.
+2. [`docs/STRATEGY-V2.md`](docs/STRATEGY-V2.md) — expanded vision:
+   user-generated markets + LLM oracle as a separate protocol layer
+   beside DBP. Contains 4 design decisions marked TODO.
+3. [`docs/DEEPBOOK_PREDICT.md`](docs/DEEPBOOK_PREDICT.md) — protocol
+   research notes with **concrete testnet integration targets** (package
+   IDs, server endpoints, Move public API, live state snapshot).
+4. [`docs/IOS.md`](docs/IOS.md) — Swift / iOS choices: SuiKit (community
    SDK), zkLogin path, Xcode prereq, App Store gauntlet.
-4. [`AGENTS.md`](AGENTS.md) — cross-agent guidance + memory protocol.
-5. [`docs/STACK.md`](docs/STACK.md) — local AI / dev tooling reference
+5. [`AGENTS.md`](AGENTS.md) — cross-agent guidance + memory protocol.
+6. [`docs/STACK.md`](docs/STACK.md) — local AI / dev tooling reference
    (Ollama, Cursor, opencode, Goose, etc).
-6. [`docs/v1-base-bot/`](docs/v1-base-bot/) — archived V1 plan
+7. [`docs/v1-base-bot/`](docs/v1-base-bot/) — archived original V1 plan
    (Base + Coinbase CDP + Uniswap V3 rebalancer). Parked, not deleted —
    chain/protocol research is still useful.
 

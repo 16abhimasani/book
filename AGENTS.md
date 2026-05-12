@@ -15,13 +15,18 @@ Cross-agent guidance for this repo. Read alongside `~/.agents/AGENTS.md`
 ## Read order on cold start
 
 1. `README.md` — what this repo is.
-2. `docs/STRATEGY.md` — current thesis + the strategic pivots (t2000 /
-   Audric finding, iOS-first decision, compose-vs-cherry-pick choice).
-3. `docs/DEEPBOOK_PREDICT.md` — protocol primitives + open questions.
-4. `docs/IOS.md` — Swift / iOS specifics, SDK choice (SuiKit), zkLogin
+2. `docs/STRATEGY.md` — V1 thesis (iOS app on DBP) + the strategic
+   pivots (t2000 / Audric finding, iOS-first decision, cherry-pick).
+3. `docs/STRATEGY-V2.md` — V2 expansion: user-generated markets +
+   LLM-oracle stack as a separate protocol beside DBP. **4 design
+   decisions are marked TODO for the user; don't pick them on their
+   behalf.**
+4. `docs/DEEPBOOK_PREDICT.md` — protocol research with concrete testnet
+   integration targets (package IDs, endpoints, Move public API).
+5. `docs/IOS.md` — Swift / iOS specifics, SDK choice (SuiKit), zkLogin
    path, Xcode prereq, App Store risks.
-5. `docs/STACK.md` — local AI / dev tooling reference.
-6. `docs/v1-base-bot/` — archived V1 plan (Base + CDP + Uniswap).
+6. `docs/STACK.md` — local AI / dev tooling reference.
+7. `docs/v1-base-bot/` — archived original V1 plan (Base + CDP + Uniswap).
 
 ## Reality checks before doing work
 
