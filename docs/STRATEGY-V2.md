@@ -25,6 +25,57 @@ list that market in DBP. The market needs a different protocol that:
 That's the V2 tier. Working name: **`book-protocol`** (the on-chain
 Move package) + **`book-oracle`** (the off-chain LLM resolver service).
 
+## Adopted architectural patterns (from sdk.markets)
+
+[sdk.markets](https://sdk.markets) is doing this exact thesis on Base.
+Their [agents docs](https://sdk.markets/docs/advanced/agents) are
+patterns-focused and document several principles we should adopt
+verbatim — they're chain-agnostic and well-reasoned.
+
+1. **Agent-as-EOA (or Sui-address) — no on-chain agent abstraction.**
+   The "agent" is purely off-chain (LLM loop + key custody). The chain
+   sees a regular Sui address. The Move package only needs a `resolver:
+   address` field per market. Keeps the protocol surface small and
+   auditable; lets us swap LLMs / providers / vendors without redeploying
+   anything on-chain.
+
+2. **Three lifecycle entry points only.** Mirror sdk.markets' shape:
+   - `propose_market(...)` — user (or agent on behalf of user)
+   - `resolve_market(market_id, outcome, evidence_uri)` — resolver address
+     only (gated)
+   - `finalize_market(market_id)` — **permissionless** (anyone cranks
+     after dispute window closes; same pattern as DBP's
+     `redeem_permissionless` — confirmed cross-protocol convention now)
+
+3. **Per-market resolver scoping; resolver address is permanent.**
+   Resolver is set at market creation, scoped to that one market.
+   Blast radius is bounded. **Footgun (sdk.markets explicit warning):**
+   rotating resolver keys requires deploying new markets — design
+   accordingly (use account-abstraction wrapper or accept it as cost).
+
+4. **Resolver MUST NOT be a market participant.** sdk.markets calls
+   "agents both buying in and resolving" *textbook market manipulation*.
+   Enforce as Move invariant: at `resolve_market`, assert resolver
+   address holds zero shares in this market. Non-negotiable.
+
+5. **Liveness via two independent resolver processes with shared
+   idempotency.** The on-chain `resolve_market` is naturally idempotent
+   (second call is a no-op once outcome is set), so two off-chain
+   `book-oracle` instances can race each other safely.
+
+6. **Three custody options for the resolver key:**
+   - Local HSM/KMS (V0 acceptable, e.g. AWS KMS + a small TS daemon)
+   - TEE / confidential VM (production target — proves the LLM ran in
+     a tamper-evident environment)
+   - Multi-sig / account abstraction (resolver is a Safe-style account
+     with co-signers — humans can override the agent if needed)
+
+7. **What sdk.markets explicitly does NOT specify** (left to integrator
+   = our V2 design space): which LLM(s), prompt structure, evidence
+   source allowlist, rate limits, override mechanics. Those are our
+   product opinions and they're captured in the four / five design
+   decisions below.
+
 ## Architecture sketch
 
 ```
@@ -181,6 +232,10 @@ the testnet sandbox.
   pattern) — more capital efficient, harder to implement
 - (c) Bootstrap-only — protocol seeds first $X per market, then organic
   LP arrives
+- (d) **Parimutuel (sdk.markets-style)** — no LP at all. Everyone bets,
+  winners split the losing pool pro-rata. Trade-off: no continuous
+  price discovery, no live "current odds." Per-market pools are
+  isolated; no liquidity bootstrap problem.
 
 **Your call:**
 ```
@@ -188,10 +243,16 @@ TODO — your answer here
 Reasoning: ...
 ```
 
-**My argued default:** **(a) for V0.** Simplest Move code, fastest to
-ship, well-understood economics. We can migrate to (b) later if capital
-efficiency becomes a constraint. (c) is half a solution that ends up
-needing one of the others anyway.
+**My (revised) argued default:** **(d) parimutuel for V0.** Switched
+from (a) after reading sdk.markets' docs. Reasoning: parimutuel is
+*dramatically* simpler Move code (~couple hundred lines), no LP
+profitability question, no liquidity bootstrap problem, no AMM
+invariant proofs to write. The trade-off is no live odds during the
+betting window, but for permissionless user-generated markets where
+volume is uncertain and most markets will be small, that's actually
+*correct* — you don't want LPs eating tail-risk on someone's "will my
+landlord call me back" market. We can add (a) or (b) later for
+high-volume markets if there's demand.
 
 ---
 
@@ -212,6 +273,36 @@ Reasoning: ...
 denominated payoffs are how prediction markets are mentally modeled, and
 SUI volatility introduces a second source of variance into the user's
 PnL on top of the market itself.
+
+---
+
+### 5. Dispute-failure mode (NEW — added after sdk.markets research)
+
+**Spectrum:**
+- (a) **Slash-bond (UMA-style)** — proposer of bad outcome forfeits
+  bond to disputer. Strong incentive for accuracy; high stakes for
+  proposers and challengers.
+- (b) **Void-and-refund (sdk.markets-style)** — if majority disputes,
+  market voids, all bettors get their stake back; resolver bond may or
+  may not be slashed but no one "wins" the dispute. Lower stakes;
+  fewer adversarial dynamics; works better for small / casual markets.
+- (c) **Hybrid** — void-refund as default, slash-bond if disputer also
+  posts an explicit "claim correct outcome" with their own bond.
+
+**Your call:**
+```
+TODO — your answer here
+Reasoning: ...
+```
+
+**My argued default:** **(b) void-and-refund for V0.** Matches the
+"casual / friends / long-tail" character of permissionless user-gen
+markets. Slash-bond economics are designed for high-value adversarial
+markets (Polymarket-on-Augur scale); they're overkill (and toxic) for
+"will my coworker quit by Friday." Void-refund means the worst case
+for a bad market is "everyone gets their money back" — that's a
+recoverable failure mode, not a catastrophic one. Migrate to (a) or
+(c) later for high-value markets if the appetite emerges.
 
 ---
 
@@ -247,6 +338,18 @@ PnL on top of the market itself.
   https://docs.polymarket.com/
 - **Manifold Markets** — closest cultural fit (user-generated, social
   feed, play money). https://manifold.markets/
+- **sdk.markets** ([@shivkanthb](https://x.com/shivkanthb)) — closest
+  *technical* fit; doing this exact thesis on Base with parimutuel +
+  AI Oracle + embedded Privy wallets. **Their
+  [agents docs](https://sdk.markets/docs/advanced/agents) are the
+  source for several adopted patterns above (agent-as-EOA, 3-lifecycle,
+  permissionless finalize, per-market scoping, no-resolver-as-bettor,
+  redundant resolver processes, custody tiers).** We differentiate on
+  chain (Sui not Base) + UX (native iOS not embedded TS SDK) + market
+  tiering (DBP-curated price markets + parimutuel user-gen, not
+  parimutuel-only). Open question: reach out to shivkanthb? Same
+  flavor as the audricai DM question — wait until we've shipped
+  something.
 - **Reality.eth** — generic event oracle with escalation.
 - **Augur (deprecated)** — lessons in what fully permissionless gets you
   (mostly: a graveyard of unresolvable markets).
