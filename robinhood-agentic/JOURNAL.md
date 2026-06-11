@@ -155,3 +155,34 @@ Append-only. Newest at the bottom. Format: POLICY.md §6.
   MU ~1,035.65, INTC ~125.57 (+10% → trail breakeven/−10% from peak).
   TQQQ exits: VIX ≥ 25, QQQ < 20d MA, or −20% intraday. Time stops
   2026-06-18.
+
+## 2026-06-11 20:20 UTC · run: EOD (scheduled, local)
+
+- Account: $3,087.27 (+2.91% day, +2.91% total) · cash $481.40 (15.6%)
+- Positions (at 16:00 ET close):
+  - MU 1 @ 941.50 (close 995.65, +5.75%, +$54.15) [L1, stop 866.00 GTC 6a2af328]
+  - INTC 6 @ 114.15 (close 116.99, +2.49%, +$17.04) [L1, stop 105.00 GTC 6a2af32a]
+  - TQQQ 12 @ 74.35 (close 76.00, +2.22%, +$19.80) [L2, stop 63.20 GTC 6a2af57f]
+- Actions: NO-TRADE (EOD reconcile only). Fills reconciled vs broker:
+  3 buys today (MU 1 @ 941.50 17:35Z; INTC 6 @ 114.15 17:39Z; TQQQ 12
+  @ 74.35 17:46Z), 1 cancel (TQQQ 74.00 chase-replace), 0 sells. All 3
+  GTC stops verified state=confirmed via get_equity_orders. Realized
+  P&L $0.00; unrealized +$90.99. Journal matches broker exactly.
+- Catalysts considered: n/a (EOD — no new entries per cadence).
+- Regime gate: ON at close — QQQ 716.44 (+3.28%) > est. 20d MA
+  (mid-690s); VIX ~22 (prior close 22.22, intraday ~20–22.7) < 25.
+  Divergence (vol bid on +3% tape) never resolved — carry the caution
+  into tomorrow's pre-market.
+- Limits check: OK (3 pos ≤4; entries 31/23/30% ≤40%; lev 29.5% ≤50%;
+  cash 15.6% ≥5%; day +2.91% > −15%; acct $3,087 > $2k).
+- Lessons:
+  1. Day 1 complete: thesis (ORCL-capex → silicon rotation) worked
+     same-day; all 3 positions green. The +2.1% TQQQ chase cost still
+     ended +2.2% — discipline, not luck, is the repeatable part.
+  2. MU after-hours drifting (986.60 vs 995.65 close) — ignore AH
+     noise; stops are regular-hours anyway.
+- Next watch: MU trail trigger ~1,035.65 (+10% → trail breakeven/−10%
+  from peak), INTC ~125.57. TQQQ exits: VIX ≥ 25, QQQ < 20d MA, or
+  −20% intraday. Time stops 2026-06-18. Next run: pre-market ~8:30 ET
+  2026-06-12 (or 10:15 ET scheduled) — fresh gate check, MU stop
+  review as it nears +10%.
