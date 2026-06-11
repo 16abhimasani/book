@@ -67,6 +67,18 @@
 - Blocked until options tools appear on the MCP connection. When they do:
   journal the discovery, do NOT trade; owner will spec the lane first.
 
+### Lane 5 — Crypto (PARKED, pre-spec'd for instant enable)
+- Blocked until crypto order tools appear on the Agentic MCP (read/
+  watchlist support already present; heartbeat checks every run and
+  journals the moment order tools land).
+- Pre-agreed terms, owner ratifies before first trade: majors only to
+  start (BTC, ETH, SOL); combined crypto ≤ 35% of account; hard stop
+  −10% per position; cadence extends to 24/7 (routine schedule change);
+  no leverage. Aggressive sizing inside those rails is at agent
+  discretion per §2.
+- Parallel RH Crypto *API* path (separate account/pot) documented in
+  docs/VENUES.md §Tier 1.5 — parked by owner decision 2026-06-11.
+
 ## 4. Cadence
 
 - Pre-market run (~8:30 ET): scan catalysts, plan the day, queue entries.

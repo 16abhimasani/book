@@ -113,3 +113,23 @@ Append-only. Newest at the bottom. Format: POLICY.md §6.
 - Next watch: VIX > 25 or QQQ < 20d MA → exit TQQQ. MU +10% trail
   trigger at ~1,035.65; INTC at ~125.57. Time stops: 5 sessions
   (2026-06-18). EOD run 16:15 ET reconciles.
+
+## 2026-06-11 18:20 UTC · run: market-hourly #3 (scheduled, local)
+
+- Account: $3,009.24 (+0.31% day, +0.31% total) · cash $481.40
+- Positions:
+  - MU 1 @ 941.50 (+0.94%, last 950.39) [L1, stop 866.00 GTC 6a2af328]
+  - INTC 6 @ 114.15 (−0.28%, last 113.83) [L1, stop 105.00 GTC 6a2af32a]
+  - TQQQ 12 @ 74.35 (−0.01%, last 74.34) [L2, stop 63.20 GTC 6a2af57f]
+- Actions: NO-TRADE — HOLD ×3. Verified all 3 GTC stops confirmed/working
+  via get_equity_orders. No new entries: free BP $481 = max ~16% position,
+  below Lane-1 25% minimum sizing; 4th slot stays empty until an exit
+  frees capital.
+- Catalysts considered: none new since run #2 (~30 min ago). ORCL-capex
+  rotation thesis intact; MU above entry (+0.94%), INTC/TQQQ ~flat vs entry.
+- Regime gate: ON — QQQ 710.92 (+2.5%) > est. 20d MA (mid-690s); VIX ~22
+  (intraday range ~20–22.7) < 25. TQQQ +7.3% on day — no −20% intraday exit.
+- Limits check: OK (3 pos ≤4; entries 31/23/30% ≤40%; lev 29.6% ≤50%;
+  cash 16.0% ≥5%; day +0.31% > −15%; acct $3,009 > $2k).
+- Next watch: VIX > 25 or QQQ < 20d MA → exit TQQQ. Trail triggers: MU
+  ~1,035.65, INTC ~125.57 (+10%). Time stops 2026-06-18. EOD run 16:15 ET.
