@@ -86,3 +86,30 @@ Append-only. Newest at the bottom. Format: POLICY.md §6.
   (hourly :15, 10:15–16:15 ET weekdays; 16:15 = EOD reconcile). It
   manages TQQQ order/stop, trails winners, journals every run. Cloud
   routine still pending owner setup → will replace local task.
+
+## 2026-06-11 17:52 UTC · run: market-hourly #2 (scheduled, local)
+
+- Account: $3,001.11 (+0.04% day, +0.04% total) · cash $481.40
+- Positions:
+  - MU 1 @ 941.50 (−0.12%, last 940.40) [L1, stop 866.00 GTC 6a2af328]
+  - INTC 6 @ 114.15 (+0.29%, last 114.48) [L1, stop 105.00 GTC 6a2af32a]
+  - TQQQ 12 @ 74.35 (−0.85%, last 73.72) [L2, stop 63.20 GTC 6a2af57f]
+- Actions:
+  - CONFIRMED TQQQ buy 12 @ 74.35 limit FILLED 17:46 UTC (order 6a2af3bc)
+    — filled on pullback ~4 min after run #1 closed, no chase needed.
+  - SELL-STOP placed: TQQQ stop_market 12 @ 63.20 GTC (6a2af57f,
+    confirmed). Reviewed first; no broker alerts. All 3 positions now
+    have GTC stops — stop-less gap closed.
+  - NO new entries: 3/4 position slots used, 84% deployed; ~16% cash
+    buffer intentional vs Iran/oil headline risk. VIX +11.8% intraday
+    (20.1→22.7 range) argues against adding leverage today.
+- Catalysts considered: none new since run #1 (ORCL capex rotation
+  thesis intact; MU/INTC/TQQQ all per plan). No fresh <48h catalyst
+  worth the last position slot at these prices.
+- Regime gate: ON — QQQ 709.18 (+2.2%) > est. 20d MA (mid-690s);
+  VIX ~21.4 < 25. Watch: VIX rising while index rips = fragile tape.
+- Limits check: OK (entries 31/23/30% ≤40%; 3 pos ≤4; lev 29.5% ≤50%;
+  cash 16% ≥5%; day +0.04% > −15%; acct > $2k).
+- Next watch: VIX > 25 or QQQ < 20d MA → exit TQQQ. MU +10% trail
+  trigger at ~1,035.65; INTC at ~125.57. Time stops: 5 sessions
+  (2026-06-18). EOD run 16:15 ET reconciles.
