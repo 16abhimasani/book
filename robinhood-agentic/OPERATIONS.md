@@ -1,0 +1,91 @@
+# OPERATIONS.md — runbooks
+
+## A. Phone-native today (zero build)
+
+The Robinhood Trading MCP is a **custom connector on the Claude account**, so
+it runs from Anthropic's cloud — already usable from the Claude mobile app.
+
+1. Verify: claude.ai → Settings → Connectors → Robinhood Trading is listed
+   (it was added via desktop; account-level connectors appear on mobile).
+2. From the phone, any chat can now do: "Morning scan: portfolio, overnight
+   news on my positions, top 3 catalyst candidates per POLICY" or
+   "Exit everything in the Agentic account now" (manual override surface).
+3. Robinhood app push notifications fire on every agent fill — that's the
+   monitoring layer, no build needed.
+
+## B. The heartbeat — Claude Code Routine (cloud, laptop-off)
+
+Routines = prompt + repo + connectors running on Anthropic-managed cloud
+(claude.ai/code/routines). Research preview since 2026-04-14.
+
+Prereq (one-time, owner):
+1. Create a **private GitHub repo** and push `~/dev/book` to it
+   (`git remote add origin … && git push -u origin main`). Routines clone
+   the repo; the journal commits back to it.
+2. On claude.ai/code/routines → New routine:
+   - Repo: the private `book` repo
+   - Connectors: Robinhood Trading (remove everything else)
+   - Schedule (June/EDT): pre-market `30 12 * * 1-5`, market-hours hourly
+     `30 13-19 * * 1-5`, EOD `15 20 * * 1-5`, weekend research
+     `0 16 * * 6`. (Collapse into fewer routines if cron count is limited;
+     a single hourly `30 12-20 * * 1-5` weekday routine is an acceptable v0
+     — the prompt infers run-type from the clock.)
+   - Prompt: see template below, verbatim.
+
+### Routine prompt template
+
+```
+You are the trading loop for the Robinhood Agentic account.
+1. Read robinhood-agentic/POLICY.md fully and the last 5 entries of
+   robinhood-agentic/JOURNAL.md.
+2. Verify tools: call get_accounts and identify the account with
+   agentic_allowed=true. If Robinhood tools are missing or erroring,
+   append a TOOLS-DOWN entry to JOURNAL.md, commit, and STOP.
+3. Ground truth: get_portfolio, get_equity_positions, open equity orders.
+4. Determine run-type from current UTC time (pre-market / market-hourly /
+   EOD / weekend per POLICY §4). Weekend = research only, never trade.
+5. Enforce POLICY §1 status and §2 limits before any order. Execute lane
+   logic (§3). Always review_equity_order before place_equity_order.
+6. Append a journal entry per POLICY §6 (even NO-TRADE), commit with
+   message: journal: <UTC timestamp> <run-type>.
+Never exceed POLICY limits. Only the owner edits POLICY.md.
+```
+
+### Known issue + mitigation
+
+Cloud scheduled sessions sometimes start without MCP connectors loaded
+(anthropic/claude-code #43397, #35899 — "tools not loaded until a user
+message warms the session"). Mitigations: step 2 above hard-stops with a
+TOOLS-DOWN journal entry (never trade blind); trigger the first run
+manually to warm/verify; if TOOLS-DOWN entries appear repeatedly, re-add
+the connector to the routine and re-test.
+
+## C. Kill switches (fastest first)
+
+1. **Robinhood app → disconnect the MCP** — instant, global, one tap.
+2. Pause/disable the routine at claude.ai/code/routines.
+3. Set `Status: HALT` in POLICY.md §0 and push — next run stands down.
+4. From phone chat: "Cancel all open orders and liquidate the Agentic
+   account" (manual override).
+
+## D. Weekly review ritual (Cowork or phone)
+
+- Read the week's JOURNAL entries; compute hit rate, avg win/loss, max
+  drawdown; compare lanes.
+- Propose POLICY diffs as a PR-style edit; owner approves; bump version.
+- Update `~/.agents/memory/` checkpoint + `~/brain/daily/` if notable.
+
+## E. Roadmap
+
+1. **Options lane** — when option tools appear on the MCP (account is
+   already level 2): spec Lane 4 (likely defined-risk long premium on
+   Lane-1 catalysts), paper-walk a week in journal, then enable.
+2. **24/7** — when RH ships crypto/event-contract tools: add lanes +
+   flip routines to round-the-clock cadence.
+3. **More capital** — owner adds funds only after ≥ 4 weeks of journaled
+   edge (positive expectancy, limits respected on every run).
+4. **Unified terminal** — same pattern per venue: one POLICY + one JOURNAL
+   per venue (Kalshi, Polymarket, DeepBook testnet already in this repo),
+   connectors/SDKs as the execution layer, and a single dashboard
+   (Cowork artifact or web) reading all journals. The repo stays the
+   single source of truth.

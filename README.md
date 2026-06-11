@@ -1,18 +1,20 @@
 # book
 
-On-chain experiments on **Sui**. Primary focus: **DeepBook Predict** —
-oracle-driven prediction markets, currently testnet-only. Two surfaces
-in one repo:
+Canonical repo for all of Ash's **automated trading**. Three surfaces:
 
-- **`ios/`** — native iOS / Swift app (in progress). The product
-  surface. Mobile-first prediction-market UX as the wedge against the
-  DeepBook team's likely web-first official app.
+- **`robinhood-agentic/`** — **live agentic trading** on Robinhood's
+  Agentic platform (real money). Claude trades a dedicated account under
+  a binding `POLICY.md`, journaling every run. Start here.
+- **`ios/`** — native iOS / Swift app (in progress) for **DeepBook
+  Predict** (Sui, testnet). Mobile-first prediction-market UX as the
+  wedge against the DeepBook team's likely web-first official app.
 - **`src/`** — TypeScript sandbox. Research scripts, indexer prototypes,
-  programmatic strategy experiments. The "what does this protocol
-  actually do" workbench.
+  programmatic strategy experiments.
 
-**Status:** scaffolding both surfaces. Sui testnet only. No live trading,
-no public release.
+**Status:** robinhood-agentic live with real capital (POLICY-governed).
+DBP surfaces scaffolding, Sui testnet only, no public release. Venue
+expansion (prediction markets, more crypto) parked but mapped in
+[`docs/VENUES.md`](docs/VENUES.md).
 
 ## Why "book"
 
@@ -23,6 +25,9 @@ Two readings, both intended:
 
 ## Quick orient (read in this order)
 
+0. [`robinhood-agentic/README.md`](robinhood-agentic/README.md) — the
+   live-money surface. Its `POLICY.md` is binding on agents;
+   [`docs/VENUES.md`](docs/VENUES.md) is the venue-expansion roadmap.
 1. [`docs/STRATEGY.md`](docs/STRATEGY.md) — current thesis (V1: iOS app
    on top of DeepBook Predict), t2000 / Audric finding, iOS pivot.
 2. [`docs/STRATEGY-V2.md`](docs/STRATEGY-V2.md) — expanded vision:
@@ -89,11 +94,14 @@ SUI_NETWORK=devnet swift run book-cli
   per `docs/STRATEGY.md`).
 - **DeepBook Predict docs** — https://docs.sui.io/onchain-finance/deepbook-predict/
 
-## What's NOT in scope (yet)
+## What's NOT in scope (yet) — DBP lane
+
+(Scoped to the Sui/DeepBook lane. The robinhood-agentic lane *does* run
+an LLM in the live loop — by design, governed by its POLICY.md.)
 
 - **Mainnet anything** until DeepBook Predict ships there.
-- **LLM in the live trade loop.** Models iterate strategy code and
-  parse signals offline; execution is deterministic.
+- **LLM in the DBP trade loop.** Models iterate strategy code and
+  parse signals offline; on-chain execution stays deterministic.
 - **Cross-chain.** Sui-only. Hyperliquid hedging is research-only.
 - **Public release / TestFlight.** Local builds only — see
   `docs/IOS.md` §App Store reality check for the regulatory gauntlet.

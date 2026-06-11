@@ -7,26 +7,32 @@ Cross-agent guidance for this repo. Read alongside `~/.agents/AGENTS.md`
 
 - **Focus:** Sui DeepBook Predict (oracle-driven prediction markets,
   testnet) wrapped in a **native iOS app**.
-- **Two surfaces, one repo:**
+- **Three surfaces, one repo:**
   - `ios/` — Swift package + (forthcoming) iOS App target. Product surface.
   - `src/` — Bun + TypeScript sandbox for research / strategy experiments.
-- **Status:** scaffolding both surfaces; no live trading; testnet only.
+  - `robinhood-agentic/` — **live agentic trading on Robinhood (real
+    money)**. `POLICY.md` there is binding on agents; only the owner
+    edits limits.
+- **Status:** DBP surfaces scaffolding (testnet only). robinhood-agentic
+  is live with real capital — read its README + POLICY before touching.
 
 ## Read order on cold start
 
 1. `README.md` — what this repo is.
-2. `docs/STRATEGY.md` — V1 thesis (iOS app on DBP) + the strategic
+2. `robinhood-agentic/README.md` — live Robinhood agentic trading.
+   Its `POLICY.md` is binding; `JOURNAL.md` is the run log.
+3. `docs/STRATEGY.md` — V1 thesis (iOS app on DBP) + the strategic
    pivots (t2000 / Audric finding, iOS-first decision, cherry-pick).
-3. `docs/STRATEGY-V2.md` — V2 expansion: user-generated markets +
+4. `docs/STRATEGY-V2.md` — V2 expansion: user-generated markets +
    LLM-oracle stack as a separate protocol beside DBP. **4 design
    decisions are marked TODO for the user; don't pick them on their
    behalf.**
-4. `docs/DEEPBOOK_PREDICT.md` — protocol research with concrete testnet
+5. `docs/DEEPBOOK_PREDICT.md` — protocol research with concrete testnet
    integration targets (package IDs, endpoints, Move public API).
-5. `docs/IOS.md` — Swift / iOS specifics, SDK choice (SuiKit), zkLogin
+6. `docs/IOS.md` — Swift / iOS specifics, SDK choice (SuiKit), zkLogin
    path, Xcode prereq, App Store risks.
-6. `docs/STACK.md` — local AI / dev tooling reference.
-7. `docs/v1-base-bot/` — archived original V1 plan (Base + CDP + Uniswap).
+7. `docs/STACK.md` — local AI / dev tooling reference.
+8. `docs/v1-base-bot/` — archived original V1 plan (Base + CDP + Uniswap).
 
 ## Reality checks before doing work
 
