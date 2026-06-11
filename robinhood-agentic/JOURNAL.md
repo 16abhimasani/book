@@ -29,3 +29,36 @@ Append-only. Newest at the bottom. Format: POLICY.md §6.
 - Next: owner runs `git push` from laptop once (sync this entry; also
   proves local creds for future POLICY edits) → create the cloud
   routine (OPERATIONS §B) → manual warm run #1.
+
+## 2026-06-11 17:40 UTC · run: market-hourly #1 (Cowork, owner-initiated)
+
+- Account: $3,000 · cash $3,000 · 1 working order, 0 positions
+- Market: big risk-on day. ORCL −11% (capex/debt shock from Q4 print)
+  while capex *receivers* rip: MU +6%, ARM +8%, INTC +6% (BofA double
+  upgrade on foundry), MRVL +7%, SOXL +13%, TQQQ +7%. VIX ~18-19.
+  Regime gate ON (QQQ 705 > est. 20d MA ~mid-690s, VIX < 25).
+  Live tail risk: Iran escalation headlines (Tue), Brent > $84.
+- Thesis: rotation out of AI-capex spenders into silicon order books.
+- Plan: MU 1 sh (~31%, L1) + INTC 6 sh (~23%, L1) + TQQQ 12 sh
+  (~29%, L2). ~17% cash buffer vs headline risk. Passed on SOXL
+  (+13% = chase in a 3x wrapper) and ORCL knife-catch.
+- Actions:
+  - BUY 1 MU @ 941.50 limit gfd — placed, `confirmed`, UNFILLED (MU ran
+    to 946.75 before fill). Order 6a2af14f. Left working (cannot
+    replace — see blocker).
+  - BUY 6 INTC @ 114.15 limit — REJECTED by RH: investor-profile
+    questionnaire legally required before account's 2nd trade. Owner
+    link sent (applink .../investment_profile?...&context=second_trade).
+  - TQQQ re-review: EQUITY_SUITABILITY alert surfaced (leveraged ETF,
+    individual acct) — informational; proceed when unblocked.
+- Limits check: OK (plan = 83% deployed, 3 positions, lev 29% < 50%).
+- Lessons:
+  1. RH gates the 2nd-ever trade on an investor questionnaire — bake
+     into OPERATIONS as known first-day friction.
+  2. Marketable limits go stale in minutes on momentum days; quote
+     immediately before placement, not at plan time.
+  3. Stops queue behind the same gate → first position briefly
+     stop-less; acceptable only because session is supervised.
+- Next: owner completes questionnaire → retry INTC (same ref_id),
+  place TQQQ at fresh ask, resolve MU (chase ≤ +1% or stand down),
+  then GTC stops on all fills.

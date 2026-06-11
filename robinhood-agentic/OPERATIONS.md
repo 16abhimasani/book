@@ -60,6 +60,15 @@ TOOLS-DOWN journal entry (never trade blind); trigger the first run
 manually to warm/verify; if TOOLS-DOWN entries appear repeatedly, re-add
 the connector to the routine and re-test.
 
+### Known first-day friction
+
+- **Second-trade gate:** RH legally requires the investor-profile
+  questionnaire (in-app) before the account's 2nd trade ever. Symptom:
+  `place_equity_order` 400 "answer some questions about your investing
+  goals". Fix: owner opens the applink from the error once.
+- **Leveraged ETF orders** (TQQQ/SOXL) trigger an `EQUITY_SUITABILITY`
+  review alert — informational, surface it, proceed per POLICY.
+
 ## C. Kill switches (fastest first)
 
 1. **Robinhood app → disconnect the MCP** — instant, global, one tap.
