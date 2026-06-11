@@ -62,3 +62,27 @@ Append-only. Newest at the bottom. Format: POLICY.md §6.
 - Next: owner completes questionnaire → retry INTC (same ref_id),
   place TQQQ at fresh ask, resolve MU (chase ≤ +1% or stand down),
   then GTC stops on all fills.
+
+## 2026-06-11 17:50 UTC · run: market-hourly #1 — COMPLETE
+
+- Account: $3,010.18 (+0.34% day) · cash $1,373.60 (free BP $481.40
+  after TQQQ reserve)
+- Positions:
+  - MU 1 @ 941.50 (filled 17:35) [L1; stop 866.00 GTC, order 6a2af328]
+  - INTC 6 @ 114.15 (filled 17:39, instant once questionnaire cleared)
+    [L1; stop 105.00 GTC, order 6a2af32a]
+- Working: BUY 12 TQQQ @ 74.35 limit gfd (6a2af3bc). Chased once
+  (74.00 → 74.35) per one-chase rule; TQQQ immediately ran to 74.68.
+  NO further chase — fills on pullback or expires at close. If filled:
+  stop_market 63.20 GTC next run. If expired: fresh gate check next day.
+- Limits check: OK. Filled exposure 54% (MU 31% + INTC 23%), reserved
+  30% lev (≤50% cap), positions 2 (+1 pending) ≤ 4, cash ≥ 5%.
+- Owner actions this run: completed RH investor questionnaire (second-
+  trade gate); standing full-auto authorization for session confirmed.
+- Lesson (4): on momentum days place the marketable limit at decision
+  time or accept the miss — three TQQQ re-quotes cost +2.1% vs the
+  original 72.80 plan. One-chase rule now codified behavior.
+- Next: heartbeat = Cowork scheduled task `rh-trading-loop-local`
+  (hourly :15, 10:15–16:15 ET weekdays; 16:15 = EOD reconcile). It
+  manages TQQQ order/stop, trails winners, journals every run. Cloud
+  routine still pending owner setup → will replace local task.
