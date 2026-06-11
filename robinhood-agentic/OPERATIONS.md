@@ -13,15 +13,31 @@ it runs from Anthropic's cloud — already usable from the Claude mobile app.
 3. Robinhood app push notifications fire on every agent fill — that's the
    monitoring layer, no build needed.
 
+### A2. Phone command center (the full map)
+
+| Surface | Use for |
+|---|---|
+| Claude app → chat (+RH connector) | status, overrides, ad-hoc trades, "liquidate now" |
+| Claude app → Claude Code tab | cloud sessions on `book`: policy edits (commit+push from the VM), analysis, ops |
+| claude.ai/code/routines (phone browser) | create / pause / "run now" the heartbeat |
+| Robinhood app | ground truth: fills, P&L feed, **MCP disconnect = kill switch** |
+| GitHub mobile (optional) | journal commits = audit-trail notifications |
+
+POLICY edits from phone: open a Claude Code cloud session on the repo →
+"change X in robinhood-agentic/POLICY.md, bump version, commit, push."
+No laptop required for anything once the routine exists.
+
 ## B. The heartbeat — Claude Code Routine (cloud, laptop-off)
 
 Routines = prompt + repo + connectors running on Anthropic-managed cloud
 (claude.ai/code/routines). Research preview since 2026-04-14.
 
 Prereq (one-time, owner):
-1. Create a **private GitHub repo** and push `~/dev/book` to it
-   (`git remote add origin … && git push -u origin main`). Routines clone
-   the repo; the journal commits back to it.
+1. ~~Create a private GitHub repo and push~~ ✅ DONE 2026-06-11
+   (`github.com/16abhimasani/book`, private).
+1b. At claude.ai/code, start one session on the repo — this prompts the
+   **Claude GitHub app install** for `16abhimasani/book` (one-time grant
+   routines need to clone/commit).
 2. On claude.ai/code/routines → New routine:
    - Repo: the private `book` repo
    - Connectors: Robinhood Trading (remove everything else)
@@ -50,6 +66,14 @@ You are the trading loop for the Robinhood Agentic account.
    message: journal: <UTC timestamp> <run-type>.
 Never exceed POLICY limits. Only the owner edits POLICY.md.
 ```
+
+### ⚠️ One heartbeat at a time
+
+The local Cowork scheduled task `rh-trading-loop-local` (created
+2026-06-11) and the cloud routine run the SAME loop. Two heartbeats =
+risk of duplicate position-taking. **As soon as the cloud routine's warm
+run journals cleanly, disable the local task** (Cowork sidebar →
+Scheduled). Keep it only as a manually-triggered fallback.
 
 ### Known issue + mitigation
 
