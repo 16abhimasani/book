@@ -87,6 +87,24 @@ risk of duplicate position-taking. **As soon as the cloud routine's warm
 run journals cleanly, disable the local task** (Cowork sidebar →
 Scheduled). Keep it only as a manually-triggered fallback.
 
+### Routine self-service + Dispatch (Claude Code-native ops)
+
+- Any Claude Code session (incl. phone-triggered cloud sessions) can
+  manage routines itself: `/schedule` → `list` / `update` / `run`.
+  The agent maintains its own heartbeat — no dashboard needed.
+- **Branch caveat**: routines/cloud sessions may push to `claude/*`
+  branches instead of main. The loop skill opens a PR immediately when
+  that happens; verify on the warm run and merge promptly so JOURNAL
+  never forks.
+- **Claude Dispatch** = remote trigger bridge: fire a Claude Code task
+  from the phone that executes on the Mac (local runtime, keychain
+  creds). Use when a task needs the Mac specifically (e.g. editing the
+  Cowork scheduled task at ~/Claude/Scheduled/, osascript). Routines =
+  cloud (laptop-off); Dispatch = phone-triggered local.
+- The Cowork scheduled task (`rh-trading-loop-local`) is NOT repo state:
+  cloud sessions can't edit it. Local sessions/Dispatch can (it's a file
+  under ~/Claude/Scheduled/). It dies when the cloud routine is live.
+
 ### Known issue + mitigation
 
 Cloud scheduled sessions sometimes start without MCP connectors loaded

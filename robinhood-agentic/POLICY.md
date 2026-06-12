@@ -1,6 +1,7 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.1 (2026-06-11) · **Owner:** Ash
+- **Version:** 0.2 (2026-06-12) · **Owner:** Ash — all 9 diffs from
+  `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -34,6 +35,14 @@
 | Averaging down | max once per position |
 | Order hygiene | `review_equity_order` before every `place_equity_order`, no exceptions |
 | Order type default | limit orders; market orders only for exits in fast moves |
+| Max risk per position at entry ((entry−stop)×qty) | 2.5% of account |
+| Max total open risk to stops, whole book | 8% of account |
+| Beta-adjusted gross exposure (lev ETFs × multiplier) | ≤ 150% of account |
+| Single theme/catalyst concentration at entry | ≤ 65% of account (lev at notional) |
+| Settled funds (cash account) | buys with settled funds only; NEVER sell a position bought with unsettled proceeds before they settle (GFV); in doubt → skip the entry |
+
+**Size from risk first**: `qty = (account × 2.5%) ÷ (entry − stop)`.
+The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
 
 ## 3. Lanes
 
@@ -44,17 +53,24 @@
   not stale charts.
 - Entry: named catalyst < 48h old + confirming tape (price above prior-day
   high or reclaiming VWAP-equivalent). Position 25–40%.
-- Exit: hard stop −8% from entry (tracked in journal; execute as orders);
-  after +10%, trail at the larger of breakeven or −10% from peak. Time stop:
-  thesis hasn't started working in 5 sessions → exit.
+- Exit ladder: hard stop −8% from entry, placed with the fill. At **+5%**
+  unrealized → raise stop to breakeven. At **+10%** → trail at
+  max(breakeven, −8% from peak). At **+12%** → sell 1/3 to bank ≥ 1R,
+  trail the rest. Stops ratchet up only. Time stop: thesis hasn't started
+  working in 5 sessions → exit.
 
 ### Lane 2 — Leveraged ETF rotation (secondary, regime-gated)
 - Universe: TQQQ / SOXL / SPXL-class long-leverage ETFs.
 - Regime gate ON (allowed): QQQ above its 20-day average AND VIX < 25
   (estimate from quotes/news if no direct feed). Gate OFF → exit lane
   entirely, no new entries.
-- Sizing within the 50% combined cap. Exit any holding on a −20% intraday
-  move; re-enter only on a fresh gate check next run.
+- Sizing within the 50% combined cap AND the §2 risk budget. Hard stop
+  **−12%** from entry, placed with the fill; ratchets up only, re-checked
+  every hourly run. Gate flipping OFF exits the lane regardless of stop.
+  Re-enter only on a fresh gate check next run.
+- Entry hygiene (all lanes): quote immediately before placement; place
+  the marketable limit at decision time. Max ONE chase per order, ≤ +1%
+  from the original limit; otherwise stand down until the next run.
 
 ### Lane 3 — Mean reversion (conditional tactic, not a standing lane)
 - Active ONLY when the Lane-2 regime gate is OFF (chop/fear). Buy quality
@@ -74,8 +90,9 @@
 - Pre-agreed terms, owner ratifies before first trade: majors only to
   start (BTC, ETH, SOL); combined crypto ≤ 35% of account; hard stop
   −10% per position; cadence extends to 24/7 (routine schedule change);
-  no leverage. Aggressive sizing inside those rails is at agent
-  discretion per §2.
+  no leverage. The §2 risk budget GOVERNS: at a −10% stop, 2.5%
+  per-position risk implies ≤ 25% sizing — under the 35% combined cap,
+  not beside it (reconciliation per HANDOFF-2026-06-12).
 - Parallel RH Crypto *API* path (separate account/pot) documented in
   docs/VENUES.md §Tier 1.5 — parked by owner decision 2026-06-11.
 
@@ -83,7 +100,12 @@
 
 - Pre-market run (~8:30 ET): scan catalysts, plan the day, queue entries.
 - Hourly during market hours: manage positions, execute plan, react.
-- EOD run (~16:15 ET): reconcile fills, P&L, journal lessons.
+- EOD run (~16:15 ET): reconcile fills, P&L, journal lessons; append one
+  row to `data/marks.csv` (date, QQQ close, VIXY close, account value).
+  Regime gate inputs come from this file: QQQ > 20-session MA (estimate
+  until 20 rows exist) AND vol leg = VIXY below prior close (or est.
+  VIX < 25 while the series builds). Never use VIXY's absolute level as
+  the VIX<25 leg — decaying ETP, direction only.
 - Weekend run: research + propose policy diffs (NO trades, ever).
 - 24/7 cadence activates only when 24/7 instruments (crypto/event
   contracts) ship on the MCP and the owner adds lanes for them.
@@ -98,6 +120,14 @@
 5. Append a journal entry (format §6) **even for NO-TRADE runs**, commit.
 6. If Robinhood tools are unavailable or erroring: append a `TOOLS-DOWN`
    entry and stop. No retries, no workarounds, no trading from cache.
+
+## 6a. Measurement gate
+
+Log every round-trip in `data/trades.csv` with its R-multiple
+(P&L ÷ initial $ risk). Weekly review computes hit rate, avg win R,
+avg loss R, expectancy/trade = `win% × avgWinR − loss% × avgLossR`.
+**Adding capital requires: ≥ 10 closed trades, expectancy > +0.25R,
+zero limit breaches, ≥ 4 weeks elapsed.**
 
 ## 6. Journal entry format
 

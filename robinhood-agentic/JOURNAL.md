@@ -295,3 +295,29 @@ session and the heartbeat interleave — timestamps are authoritative.)
   queued→confirmed at open; fresh gate check. Trail triggers: MU
   ~1,035.65 (+10%), INTC ~125.57. TQQQ exits: gate OFF or −20% intraday.
   Time stops 2026-06-18.
+
+## 2026-06-12 02:10 UTC · run: infra — POLICY v0.2 RATIFIED + Claude Code-native (Cowork)
+
+- OWNER RATIFIED all 9 v0.2 diffs ("okay lets do it"). POLICY.md now
+  v0.2: risk budget (2.5%/position, 8% book), beta-adjusted ≤150%,
+  theme ≤65%, settled-funds/GFV rule, L1 exit ladder (+5% breakeven /
+  +10% trail / +12% bank 1/3), L2 hard stop −12% ratchet-up, entry
+  hygiene codified, marks.csv-driven gate, §6a measurement gate
+  (≥10 trades, >+0.25R, 0 breaches, ≥4wks before capital adds).
+  Lane 5 crypto reconciled under the risk budget (≤25% effective).
+- RISK ACTION (v0.2 retrofit): TQQQ stop 63.20 → 65.43 (−12% rule).
+  Old 6a2af57f cancelled; new GTC 6a2b6887 queued. TQQQ 76.96 AH.
+- STOP REGISTRY (authoritative): MU 1 @ stop 941.50 (6a2b62e1) ·
+  INTC 6 @ stop 105.00 (6a2af32a) · TQQQ 12 @ stop 65.43 (6a2b6887).
+  Book open risk to stops: ~$192 ≈ 5.6% of $3,097 (within 8% cap).
+- CLAUDE CODE-NATIVE shipped: CLAUDE.md entrypoint;
+  .claude/skills/trading-loop/SKILL.md (committed skill = the loop,
+  identical on cloud/local/Cowork); OPERATIONS §B routine self-service
+  (/schedule), claude/* branch caveat, Dispatch-vs-Routines map.
+  Cowork task slimmed to a shim invoking the repo skill (owner wants
+  ~/Claude clean; file location is app-managed — shim until cloud
+  routine verified, then DELETE).
+- Brainstorm capture: docs/BRAINSTORM-2026-06-12-claude-code-native.md.
+- Next: owner (phone): claude.ai/code session on book → /schedule
+  routine running /trading-loop per §B cadence → run once → verify
+  journal lands on main (or PR) → delete rh-trading-loop-local.
