@@ -416,3 +416,38 @@ session and the heartbeat interleave — timestamps are authoritative.)
   EOD run ~16:15 ET must append marks.csv row (NO heartbeat is scheduled
   — local Cowork task retired, cloud routine not yet created); MU time
   stop 06-18, MU earnings 06-24 AMC; DAL invalidation = oil reversal >+3%.
+
+## 2026-06-12 15:22 UTC · run: market-hourly (scheduled Cowork shim — DUPLICATE HEARTBEAT → journal-only)
+
+- One-heartbeat rule (trading-loop hard rules / OPERATIONS §B): an
+  owner-initiated session journaled this same hourly window (15:25 UTC
+  entry, commit 33e7c07 pushed 15:19 UTC; this shim fired 15:20 UTC) →
+  JOURNAL-ONLY. NO orders placed, cancelled, or modified this run.
+- Account: $4,735.57 · cash $1,591.46 ($658.12 settled buying power;
+  TQQQ proceeds settle Mon 06-15)
+- Positions (read-only verify, quotes 15:21 UTC):
+  - MU 1 @ 941.50 (1000.79, +6.30%) [L1, stop 941.50 BE GTC 6a2b62e1 confirmed]
+  - INTC 6 @ 114.15 (122.80, +7.57%) [L1, stop 114.15 BE GTC 6a2c22bd confirmed]
+  - DAL 17 @ 82.67 (82.63, −0.05%) [L1, stop 76.05 GTC 6a2c230c confirmed]
+- Stop registry reconciled at broker: all three stops confirmed, exactly
+  matching the 15:25 entry. No missing stops, nothing to replace. MCP
+  toolset unchanged (equity-only) — lanes 4/5 stay parked, no NEW-TOOLS.
+- Actions: NO-TRADE — duplicate heartbeat; this window's management
+  (TQQQ gate exit, INTC BE ratchet, DAL entry) was already executed by
+  the prior writer.
+- Catalysts considered: none — deferred to the prior run this window.
+- Limits check: not exercised (no orders). Read-only note: QQQ 723.26
+  intraday, above the 721.51 MA20 re-arm level — Lane-2 re-entry watch
+  for Monday is live IF today's official close > 721.51 (close decides,
+  not intraday).
+- OPS FLAG for owner: rh-trading-loop-local is STILL SCHEDULED — it
+  fired this run at 15:20 UTC, so the 15:25 entry's "local Cowork task
+  retired" was premature. Reconcile one of two ways: (a) delete the
+  Cowork task now and stand up the cloud /trading-loop routine before
+  EOD ~16:15 ET (marks.csv row is due), or (b) keep the shim for
+  today's EOD and delete it after the cloud routine is verified. Do not
+  run both. This run held to journal-only because git ordering made the
+  duplicate visible — two writers further apart in time could race.
+- Next watch: EOD ~16:15 ET marks.csv row + QQQ close vs 721.51; MU
+  time stop 06-18, MU earnings 06-24 AMC; DAL invalidation = oil
+  reversal >+3%.
