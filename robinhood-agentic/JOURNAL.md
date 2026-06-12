@@ -526,3 +526,39 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Next watch: owner sitting per OWNER-CHECKLIST-2026-06-13 (governance patch
   + B2); EOD ~16:15 ET Cowork run (marks.csv + close vs 721.51); MU time
   stop 06-18.
+
+## 2026-06-12 16:25 UTC · run: market-hourly (scheduled Cowork shim — sole heartbeat per 16:08 ratification)
+
+- Account: $4,729.84 (≈flat vs 15:25 reading $4,736.53; day % distorted
+  by today's owner deposit) · cash $1,591.46 ($658.12 settled BP; TQQQ
+  proceeds settle Mon 06-15)
+- Positions (quotes 16:21 UTC):
+  - MU 1 @ 941.50 (988.68, +5.01%) [L1, stop 941.50 BE GTC 6a2b62e1 confirmed]
+  - INTC 6 @ 114.15 (124.06, +8.68%) [L1, stop 114.15 BE GTC 6a2c22bd confirmed]
+  - DAL 17 @ 82.67 (82.59, −0.10%) [L1, stop 76.05 GTC 6a2c230c confirmed]
+- Stop registry reconciled at broker — all three confirmed, matching the
+  15:25/15:22 registry (the 16:05 entry's orders-API 502s were transient;
+  skill step-3 reconcile done). Toolset unchanged (equity-only order
+  tools) — no NEW-TOOLS, lanes 4/5 stay parked.
+- Actions: NO-TRADE / HOLD ×3.
+  1. No ladder triggers: MU +5.0% (BE stop already set), INTC +8.7%
+     (+10% trail arms ~125.57; trail max(BE, peak−8%) only exceeds BE
+     once peak > ~124.08 — not yet), DAL −0.1% (stop 76.05 stands).
+  2. Lane 2 gate OFF (bun run gate: QQQ 717.12 ≤ MA20 721.42 at 06-11
+     close). QQQ 718.97 intraday < 721.51 re-arm level — official close
+     decides at EOD, not intraday.
+  3. DAL invalidation check: USO −2.1% on the day — oil still falling,
+     thesis intact (invalidation = oil reversal >+3%).
+  4. No new entries: no fresh vetted catalyst this window (PREMARKET
+     candidates resolved — DAL taken, RH/MMM invalidated); Lane 3 has no
+     staged candidate. Settled BP $658.12 held.
+- Catalysts considered: none new this window; carry-through from
+  docs/PREMARKET-2026-06-12.md.
+- Limits check: ALL PASS (bun run risk, book.json refreshed from ground
+  truth 16:21Z): 3/4 slots; book risk to stops $112.54 = 2.4% ≤ 8%
+  (MU+INTC at BE = $0); lev ETF 0%; beta-gross 66.3% ≤ 150%; themes
+  ai-capex 36.6% / oil-benef 29.7% ≤ 65%; cash 13.9% ≥ 5%.
+- Next watch: EOD ~16:15 ET run — marks.csv row + official QQQ close vs
+  721.51 (L2 re-entry eligibility Monday) + INTC trail check (125.57);
+  MU time stop 06-18; MU earnings 06-24 AMC; DAL invalidation = USO
+  reversal >+3%.
