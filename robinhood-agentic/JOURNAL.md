@@ -496,3 +496,33 @@ session and the heartbeat interleave — timestamps are authoritative.)
   the sole scheduled heartbeat for now. Cloud-routine cutover deferred to
   owner's choosing per the 16:05 entry's plan. Future runs: stop flagging
   this as an open owner action; the standing OPS FLAG is resolved.
+
+## 2026-06-12 16:35 UTC · run: research+build (autoplan next-move review — NO-TRADE)
+
+- /autoplan dual-voice review (Claude subagent + Codex gpt-5.5) on "highest-
+  leverage next move". Both voices independently REJECTED the framing:
+  owner-minutes and agent-hours don't compete, and the system's real product
+  is an uncontaminated verdict on edge. Owner accepted reframe + approved the
+  two-track plan (gate D1/D2).
+- GOVERNANCE CATCH (both voices, independently): the 06-12 owner deposit vs
+  POLICY §6a as-written. Owner checklist with copy-paste amendment text:
+  docs/OWNER-CHECKLIST-2026-06-13.md (governance patch + B2 ratification).
+- Shipped (agent track, all read-only/pure; 37 tests, typecheck clean):
+  1. Asymmetric gate variant (confirm entries / exit immediately) TESTED AND
+     REJECTED — 26.7% CAGR / 24.3% time-in-market vs symmetric's 38.2% /
+     43.8%. B2 open question closed: symmetric 2-day confirm is final rec.
+  2. Per-lane §6a stats (stats.ts): L1 (LLM-edge hypothesis) now measured
+     separately from L2 (mechanical gate) — pooled expectancy would have
+     validated/damned the wrong thing. No trades.csv schema change.
+  3. bun run book — invariant/audit panel (positions/stops, §2 limits, gate,
+     §6a per-lane, staleness + missing-stop flags). First live run: clean,
+     0 flags.
+  4. MU 06-18 time-stop / 06-24 earnings playbook → EARNINGS-WATCH.md.
+- Decisions (audit trail in ~/.gstack plan file): D install REJECTED
+  (injection surface; in-house fetchers when needed); C deferred (no
+  missed-event evidence); E upgraded to explicit measurement freeze; F
+  reframed as safety artifact (done, above).
+- Limits check: OK — no orders (bun run book: ALL PASS, 0 flags).
+- Next watch: owner sitting per OWNER-CHECKLIST-2026-06-13 (governance patch
+  + B2); EOD ~16:15 ET Cowork run (marks.csv + close vs 721.51); MU time
+  stop 06-18.

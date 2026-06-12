@@ -4,6 +4,7 @@ import { computeStats, loadTrades, type TradeRow } from "./stats";
 const t = (over: Partial<TradeRow>): TradeRow => ({
   trade_id: "id",
   symbol: "SYM",
+  lane: "L1",
   entry_date: "2026-06-11",
   risk_usd: 100,
   exit_date: "",

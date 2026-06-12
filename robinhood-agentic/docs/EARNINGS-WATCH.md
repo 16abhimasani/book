@@ -17,6 +17,19 @@ the report day should pull the live straddle.
 | ~06-24/26 | CCL | Carnival | TBD | ✗ (pattern est.) | Oil-sensitive consumer; only with date confirmed + oil calm. |
 | Tue 06-30 | NKE | Nike | AMC | ✔ | Outside window — noted for the following week's watch. |
 
+## MU playbook (HELD position — the window's one forced decision)
+
+1. **Time stop Thu 06-18 close** (5 sessions from 06-11 entry, POLICY §3 L1):
+   if MU hasn't resumed the trend (stalling ~996 vs 995.87 entry-day close
+   as of 06-12), exit at/near Thursday's close. Stop is breakeven — worst
+   case ex-gap is ~$0 either way; the time stop exists to recycle the slot.
+2. **Never hold into the 06-24 AMC print.** If somehow still held on 06-24
+   (trail trigger 1,035.65 fired and trend resumed), exit before the close
+   that day regardless.
+3. **Post-print reaction trade is allowed** (Lane-1, after the print, on
+   confirming tape) and may be the best setup of the window — theme room
+   will exist once MU exits.
+
 Notes:
 - **Fri 06-12 (today) is sparse** — no semis/tech-material prints.
 - The window's center of gravity is **06-23/24/25 (FDX → MU → DRI)** —

@@ -1,5 +1,6 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time; stops from the journal stop registry. Snapshot basis: 2026-06-12 ~15:17 UTC post-trades (prices = fill-time quotes). Cash note: $933.34 TQQQ proceeds settle Monday 06-15 — until then settled cash for NEW buys is ~$658.",
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. Cash note: $933.34 TQQQ proceeds settle Monday 06-15 — until then settled cash for NEW buys is ~$658.",
+  "asOf": "2026-06-12T15:17:00Z",
   "accountValue": 4724.73,
   "cash": 658.12,
   "positions": [

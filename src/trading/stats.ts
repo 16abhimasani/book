@@ -14,6 +14,7 @@ import { parseCsvObjects } from "./csv";
 export interface TradeRow {
   trade_id: string;
   symbol: string;
+  lane: string; // L1 (catalyst singles — the LLM-edge hypothesis) / L2 (mechanical gate) / ...
   entry_date: string;
   risk_usd: number;
   exit_date: string; // "" while open
@@ -28,6 +29,7 @@ export function loadTrades(path: string): TradeRow[] {
     .map((r) => ({
       trade_id: r.trade_id!,
       symbol: r.symbol ?? "",
+      lane: r.lane ?? "",
       entry_date: r.entry_date ?? "",
       risk_usd: Number(r.risk_usd || 0),
       exit_date: r.exit_date ?? "",
@@ -105,6 +107,27 @@ export function computeStats(trades: TradeRow[], opts: { breaches?: number; asOf
   };
 }
 
+/**
+ * Per-lane breakdown. Lane 1 (catalyst singles) is the actual "LLM has edge"
+ * hypothesis; Lane 2 (regime gate) is mechanical and backtestable. Pooling
+ * them in one expectancy number would validate or damn the wrong thing —
+ * the §6a verdict must be readable per lane.
+ */
+export function computeLaneStats(
+  trades: TradeRow[],
+  opts: { breaches?: number; asOf?: string } = {},
+): Map<string, Stats> {
+  const lanes = new Map<string, TradeRow[]>();
+  for (const t of trades) {
+    const lane = t.lane || "unknown";
+    if (!lanes.has(lane)) lanes.set(lane, []);
+    lanes.get(lane)!.push(t);
+  }
+  return new Map(
+    [...lanes.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([lane, ts]) => [lane, computeStats(ts, opts)]),
+  );
+}
+
 export function formatStats(s: Stats): string {
   const f = (n: number | null, d = 2) => (n == null ? "n/a" : n.toFixed(d));
   const mark = (ok: boolean) => (ok ? "✓" : "✗");
@@ -128,9 +151,14 @@ if (import.meta.main) {
     const i = args.indexOf(name);
     return i >= 0 ? args[i + 1] : undefined;
   };
-  const stats = computeStats(loadTrades(TRADES_PATH), {
-    breaches: Number(flag("--breaches") ?? 0),
-    asOf: flag("--as-of"),
-  });
-  console.log(formatStats(stats));
+  const trades = loadTrades(TRADES_PATH);
+  const opts = { breaches: Number(flag("--breaches") ?? 0), asOf: flag("--as-of") };
+  console.log(formatStats(computeStats(trades, opts)));
+  for (const [lane, s] of computeLaneStats(trades, opts)) {
+    const f = (n: number | null) => (n == null ? "n/a" : n.toFixed(2));
+    console.log(
+      `  ${lane}: ${s.closedCount} closed / ${s.openCount} open · expectancy ${f(s.expectancyR)}R · ` +
+        `hit ${s.hitRate == null ? "n/a" : `${(s.hitRate * 100).toFixed(0)}%`}`,
+    );
+  }
 }

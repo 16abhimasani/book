@@ -141,6 +141,11 @@ if (import.meta.main) {
     runGateStrategy(qqq, vixy, tqqq, { maLen: 20, volLeg: "vixy-direction", confirmDays: 2 }, "B2: MA20 + VIXY dir + 2d confirm"),
     runGateStrategy(qqq, vixy, tqqq, { maLen: 20, volLeg: "vixy-5d-avg" }, "B2: MA20 + VIXY<5d avg"),
     runGateStrategy(qqq, vixy, tqqq, { maLen: 20, volLeg: "vixy-5d-avg", confirmDays: 2 }, "B2: MA20 + VIXY<5d avg + 2d confirm"),
+    runGateStrategy(
+      qqq, vixy, tqqq,
+      { maLen: 20, volLeg: "vixy-direction", confirmDays: 2, confirmDirection: "entries-only" },
+      "B2: MA20 + VIXY dir + 2d confirm (entries only)",
+    ),
   );
   console.log(formatTable(results));
   console.log(

@@ -127,6 +127,17 @@ closes**; keep VIXY-direction as the vol leg. Note the asymmetry trade-off:
 confirmation also delays *exits* by a day (max DD says this cost ~nothing
 in sample, but a gap-down day one is the risk you're accepting).
 
+**Asymmetric variant tested and REJECTED (2026-06-12, second pass):** the
+obvious "confirm entries, act exits immediately" idea — which would have
+removed the delayed-exit cost — collapses in practice: 26.7% CAGR, 24.3%
+time-in-market, $1 → 1.99 (vs 38.2% / 43.8% / 2.56 symmetric). Reason: the
+VIXY day-direction leg alternates noisily; immediate exits + confirmed
+re-entries means every noise day ejects you and re-admission takes two
+clean days — you end up out of the market more than half the time the
+symmetric variant is in. Its one virtue (worst held day −9.1%) doesn't pay
+for the foregone compounding. The open question on B2 is closed:
+**symmetric 2-day confirmation is the recommendation.**
+
 **Live illustration (2026-06-12):** the gate forced the TQQQ exit at the
 open of this very session (+0.31R, fine), and QQQ tagged 723 — above the
 re-arm level — within hours. Under B2, Monday-morning whipsaw re-entries

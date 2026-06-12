@@ -131,6 +131,21 @@ describe("computeGateSeries confirmation (B2 research variant)", () => {
     expect(s.map((p) => p.raw)).toEqual(["ON", "ON", "OFF", "ON", "OFF", "OFF"]);
     expect(s.map((p) => p.effective)).toEqual(["ON", "ON", "ON", "ON", "ON", "OFF"]);
   });
+
+  test("entries-only: exits act immediately, re-entries still need 2 closes", () => {
+    const s = computeGateSeries(series(qqq, vixy), { confirmDays: 2, confirmDirection: "entries-only" });
+    expect(s.map((p) => p.raw)).toEqual(["ON", "ON", "OFF", "ON", "OFF", "OFF"]);
+    // i2: exit acts immediately (OFF); i3: single ON is an unconfirmed re-entry
+    expect(s.map((p) => p.effective)).toEqual(["ON", "ON", "OFF", "OFF", "OFF", "OFF"]);
+  });
+
+  test("entries-only: a real 2-close re-entry lands one day late", () => {
+    const qqq2 = [...Array(19).fill(100), 90, 110, 110, 110]; // OFF, then 3 ON closes
+    const vixy2 = [...Array(19).fill(20), 19, 18, 17, 16];
+    const s = computeGateSeries(series(qqq2, vixy2), { confirmDays: 2, confirmDirection: "entries-only" });
+    expect(s.map((p) => p.raw)).toEqual(["OFF", "ON", "ON", "ON"]);
+    expect(s.map((p) => p.effective)).toEqual(["OFF", "OFF", "ON", "ON"]);
+  });
 });
 
 describe("marks.csv (real file)", () => {

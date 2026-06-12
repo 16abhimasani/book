@@ -24,6 +24,10 @@ export interface GateOptions {
   // research-only until ratified (PROPOSAL B2): raw state must persist this
   // many consecutive closes before the effective gate flips. 1 = POLICY today.
   confirmDays?: number;
+  // research-only: "entries-only" confirms OFF→ON flips (re-entries) but acts
+  // on ON→OFF flips (exits) immediately — keeps the churn reduction without
+  // delaying risk-off. Default "both" (symmetric, matches confirmDays alone).
+  confirmDirection?: "both" | "entries-only";
 }
 
 export type GateResult =
@@ -126,10 +130,16 @@ export function computeGateSeries(rows: MarkRow[], opts: GateOptions = {}): Gate
     if (effective === null) {
       effective = raw;
     } else if (raw !== effective) {
-      streak++;
-      if (streak >= confirmDays) {
-        effective = raw;
+      const isExit = effective === "ON" && raw === "OFF";
+      if (isExit && opts.confirmDirection === "entries-only") {
+        effective = raw; // exits act immediately
         streak = 0;
+      } else {
+        streak++;
+        if (streak >= confirmDays) {
+          effective = raw;
+          streak = 0;
+        }
       }
     } else {
       streak = 0;
