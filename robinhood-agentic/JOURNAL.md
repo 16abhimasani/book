@@ -794,3 +794,30 @@ session and the heartbeat interleave — timestamps are authoritative.)
   intact); AMD BE ratchet level 540.74; weekend run = research only
   (bun run shadow as data lands, EARNINGS-WATCH refresh, screen dated
   catalysts for Monday capacity).
+
+## 2026-06-12 21:22 UTC · run: post-close check (Cowork heartbeat — NO-TRADE)
+
+- One-heartbeat: EOD already journaled 20:30Z; this shim run landed
+  post-close (17:20 ET, outside all trade windows) → verification-only.
+- Account: $4,729.44 (after-hours basis; ~flat vs EOD $4,735.85) ·
+  settled BP $143.13 ($933.34 settles Mon 06-15) · 4/4 slots.
+- Positions (after-hours ~21:20Z): MU 1 @ 941.50 (983.30, +4.4%) [L1,
+  BE stop 941.50] · INTC 6 @ 114.15 (124.51, +9.1%) [L1, trail 116.34]
+  · DAL 17 @ 82.67 (82.98, +0.4%) [L1, stop 76.05] · AMD 1 @ 514.99
+  (512.30, −0.5%) [L1, stop 473.79].
+- Actions: NO-TRADE (post-close by rule; zero entry capacity anyway).
+- Catalysts considered: none — outside trade windows; shadow ledger
+  unchanged (SPCX pending, resolves by 06-19).
+- STOP REGISTRY (authoritative, all broker-confirmed this run): MU 1 @
+  941.50 BE (6a2b62e1) · INTC 6 @ 116.34 TRAIL (6a2c4103, peak 126.46)
+  · DAL 17 @ 76.05 (6a2c230c) · AMD 1 @ 473.79 (6a2c5012). Matches EOD
+  registry exactly; no fills since 20:30Z.
+- Tools check: equity + watchlist only on this MCP surface — parked
+  lanes stay parked.
+- Limits check: OK — no orders; EOD ALL PASS stands (book risk 3.2% ≤
+  8%, cash 3.0% ≥ 2.5%).
+- Next watch: unchanged from EOD — Mon pre-market $933.34 settles
+  (capacity returns); gate OFF (QQQ 721.34 ≤ MA20 721.50 → no Monday
+  L2); MU time stop 06-18 / earnings 06-24 AMC; INTC trail vs peak
+  126.46, bank-1/3 127.85; DAL tell = USO reversal >+3%; AMD BE 540.74;
+  weekend run = research only.
