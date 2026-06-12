@@ -1,7 +1,7 @@
 {
   "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. Cash note: $933.34 TQQQ proceeds settle Monday 06-15 — until then settled cash for NEW buys is ~$658.",
-  "asOf": "2026-06-12T18:31:00Z",
-  "accountValue": 4737.47,
+  "asOf": "2026-06-12T19:24:00Z",
+  "accountValue": 4740.70,
   "cash": 143.13,
   "positions": [
     {
@@ -9,7 +9,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 941.5,
-      "price": 989.79,
+      "price": 989.53,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -18,7 +18,7 @@
       "qty": 6,
       "entry": 114.15,
       "stop": 116.34,
-      "price": 125.075,
+      "price": 125.32,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -27,7 +27,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 76.05,
-      "price": 82.71,
+      "price": 82.875,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -36,7 +36,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 473.79,
-      "price": 514.99,
+      "price": 513.495,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }

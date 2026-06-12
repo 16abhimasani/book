@@ -715,3 +715,36 @@ session and the heartbeat interleave — timestamps are authoritative.)
   bank-1/3 127.85; MU time stop 06-18). Weekend research run should: run
   bun run shadow (resolve SPCX as data arrives), screen liquid mid-caps
   with dated catalysts → EARNINGS-WATCH, maintain earnings.csv.
+
+## 2026-06-12 19:26 UTC · run: market-hourly (Cowork heartbeat)
+
+- Account: $4,740.70 (+0.1% vs 18:32Z snapshot) · settled cash $143.13
+  ($933.34 TQQQ proceeds settle Mon 06-15) · 4/4 slots.
+- Positions: MU 1 @ 941.50 (+5.1%) [L1, BE stop 941.50 6a2b62e1] · INTC 6
+  @ 114.15 (+9.8%) [L1, trail 116.34 6a2c4103, peak 126.46] · DAL 17 @
+  82.67 (+0.2%) [L1, stop 76.05 6a2c230c] · AMD 1 @ 514.99 (−0.3%) [L1,
+  stop 473.79 6a2c5012].
+- Actions: NO-TRADE / HOLD ×4.
+  1. INTC 125.32 — high since 18:30Z = 126.14 < tracked peak 126.46 (5m
+     bars, broker): no new peak → trail stays 116.34; bank-1/3 level
+     127.85 not hit. Stops up only ✓.
+  2. MU 989.53 — BE stop in place; trail arms 1035.65 (not reached).
+  3. DAL 82.88 — USO 125.74, −2.4% on day; oil-collapse thesis intact
+     (invalidation = USO reversal >+3%).
+  4. AMD 513.50 (−0.3% vs 514.99 entry, day +5.1%) — stop 473.79 GTC
+     confirmed; +5% BE ratchet level 540.74.
+- Catalysts considered: none scanned — zero entry capacity (4/4 slots,
+  settled cash 3.0%); shadow ledger unchanged (no candidates evaluated).
+- STOP REGISTRY (authoritative, all broker-confirmed this run): MU 1 @
+  941.50 BE (6a2b62e1) · INTC 6 @ 116.34 TRAIL (6a2c4103, peak 126.46) ·
+  DAL 17 @ 76.05 (6a2c230c) · AMD 1 @ 473.79 (6a2c5012).
+- Limits check: ALL PASS (bun run risk, book.json refreshed from ground
+  truth asOf 19:24Z): book risk $153.74 = 3.2% ≤ 8%; ai-capex 47.6% /
+  oil-benef 29.7% ≤ 65%; beta-gross 77.3% ≤ 150%; cash 3.0% ≥ 2.5%.
+  Panel: 1 informational flag (MU reports 06-24 AMC, 12d).
+- Gate: OFF per bun run gate (06-11 close: QQQ 717.12 ≤ MA20 721.42).
+  Intraday QQQ 721.83 > re-arm 721.51 — official EOD close decides
+  Monday L2 eligibility.
+- Next watch: EOD ~16:15 ET run — marks.csv row; official QQQ close vs
+  721.51; INTC peak/trail recompute + bank-1/3 127.85; MU trail arm
+  1035.65, time stop 06-18; DAL tell = USO reversal; AMD BE level 540.74.
