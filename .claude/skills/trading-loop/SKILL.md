@@ -30,7 +30,13 @@ heartbeat.
    research/journal only, never trade.
 5. **Enforce POLICY §2 before any order** (risk budget 2.5%/position &
    8% book, slot caps, beta-adjusted ≤150%, theme ≤65%, settled-funds
-   rule, daily halt, drawdown checkpoint). Execute lanes per §3 incl.
+   rule, daily halt, drawdown checkpoint). **Compute, never estimate:**
+   refresh `robinhood-agentic/data/book.json` from ground truth, then
+   `bun run risk -- robinhood-agentic/data/book.json` (candidates
+   included) must pass before any order — or fail only on journaled
+   grandfathered violations; size entries with `bun run risk -- size
+   <account> <entry> <stop>`; check the Lane-2 gate with `bun run gate`.
+   Execute lanes per §3 incl.
    exit ladder (+5% → breakeven, +10% → trail, +12% → bank 1/3) and
    entry hygiene (quote at placement, ONE chase max ≤ +1%).
    `review_equity_order` before every `place_equity_order`; surface

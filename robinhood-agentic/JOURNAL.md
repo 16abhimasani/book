@@ -368,3 +368,51 @@ session and the heartbeat interleave — timestamps are authoritative.)
   docs/HANDOFF-2026-06-12-morning.md.
 - Next watch: 8:30Z+ run executes PREMARKET doc — stops confirm at open,
   TQQQ gate exit, INTC ratchet at 119.86, UMich 10:00 ET, Iran tell.
+
+## 2026-06-12 15:25 UTC · run: market-hourly (owner-initiated, local Claude Code — owner authorized trading this session)
+
+- Account: $4,736.53 (+2.0% day on prior equity; OWNER DEPOSITED ~$1,585 pre-open
+  — capital add is owner-prerogative, noted) · cash $1,591.46 ($658.12 settled
+  buying power; $933.34 TQQQ proceeds settle Mon 06-15)
+- Positions:
+  - MU 1 @ 941.50 (996.00, +5.79%) [L1, stop 941.50 BE GTC 6a2b62e1 confirmed]
+  - INTC 6 @ 114.15 (122.58, +7.39%) [L1, stop 114.15 BE GTC 6a2c22bd confirmed]
+  - DAL 17 @ 82.6699 (new) [L1, stop 76.05 GTC 6a2c230c confirmed]
+- Actions (all reviewed→placed, fresh ref_ids; risk CLI passed pre-order):
+  1. RATCHET INTC stop 105.00→114.15 breakeven (+5% ladder hit at +7.4%;
+     old 6a2af32a cancelled, new 6a2c22bd). Stops up only ✓.
+  2. SELL TQQQ 12 @ 77.7804 (limit 77.45, price-improved; fees $0.02).
+     Reason: deterministic gate OFF (QQQ 717.12 < MA20 721.42 at 06-11
+     close) → POLICY §3 L2 exit. Round trip +$41.14 = +0.31R (first closed
+     trade in the ledger). Old stop 6a2b6887 cancelled. NOTE: QQQ trading
+     ~721.4 at execution — exactly AT the MA; if today closes >721.51 the
+     gate re-arms for Monday's run (fresh check per §3).
+  3. BUY DAL 17 @ 82.6699 (limit 82.73 marketable, improved) — Lane 1.
+     Catalyst: oil collapse on Iran framework (WTI <$86, 2-month low,
+     ~36h); UMich beat (48.9 vs 46.0e) cleared the calendar gate; green
+     confirming tape (+1.1%). Stop 76.05 (−8%) placed with fill, GTC.
+     Sized by `bun run risk -- size 4724.73 82.73 76.11` → 17 sh, $112.54
+     risk (2.38%).
+- Candidates REJECTED per PREMARKET invalidation rules: RH (AH pop fully
+  reversed, −6.6% — its own invalidation fired); MMM (overnight catalyst
+  claim failed verification — price datum didn't reconcile; no named
+  catalyst = no entry). INTC add considered and skipped (chasing +4.8%
+  intraday; not in plan).
+- Catalysts considered: per docs/PREMARKET-2026-06-12.md.
+- Limits check: ALL PASS (bun run risk, post-trade book): 3/4 slots; book
+  risk to stops $112.54 = 2.4% ≤ 8% (MU+INTC at breakeven = $0); lev ETF
+  0%; beta-gross 66.4%; themes ai-capex 36.6% / oil-benef 29.8% ≤ 65%;
+  settled-funds respected (DAL bought from pre-sale settled cash); cash
+  buffer 13.9% ≥ 5%. Grandfathered violations CLEARED by today's actions.
+- Infra: trading-loop SKILL.md step 5 now mandates the risk/gate CLIs
+  before any order (owner authorized improvements this session);
+  book.json refreshed; trades.csv TQQQ round trip + DAL row written.
+- Lesson: the deterministic gate's first live use both forced a
+  policy-compliant exit AND was nearly contradicted intraday (QQQ tagged
+  the MA within hours) — churn risk is real, exactly as the backtest
+  warned (~144 flips/3y). B2 (2-day confirmation) proposal is worth
+  ratifying soon.
+- Next watch: QQQ close vs 721.51 → Lane-2 re-entry eligibility Monday;
+  EOD run ~16:15 ET must append marks.csv row (NO heartbeat is scheduled
+  — local Cowork task retired, cloud routine not yet created); MU time
+  stop 06-18, MU earnings 06-24 AMC; DAL invalidation = oil reversal >+3%.
