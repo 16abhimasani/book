@@ -321,3 +321,50 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Next: owner (phone): claude.ai/code session on book → /schedule
   routine running /trading-loop per §B cadence → run once → verify
   journal lands on main (or PR) → delete rh-trading-loop-local.
+
+## 2026-06-12 06:11 UTC · run: overnight-research (build session per OVERNIGHT-BRIEF-2026-06-12, local Claude Code)
+
+- Account: $3,103.50 AH marks (06-11 close $3,087.27) · cash $481.40 (15.5%)
+- Positions (verified vs broker ~03:00Z, official 06-11 closes):
+  - MU 1 @ 941.50 (close 995.87, +5.77%) [L1, stop 941.50 BE GTC 6a2b62e1 queued]
+  - INTC 6 @ 114.15 (close 116.96, +2.46%) [L1, stop 105.00 GTC 6a2af32a confirmed]
+  - TQQQ 12 @ 74.35 (close 76.01, +2.23%) [L2, stop 65.43 GTC 6a2b6887 queued]
+- Actions: NO-TRADE (research/build session — no orders placed or cancelled,
+  POLICY untouched, stops untouched). Shipped P0-P4 + stretch:
+  1. P1: marks.csv backfilled 2→45 sessions (Yahoo v8; anchors match SIP to
+     the cent; stooq JS-walled) + src/trading/gate.ts (bun run gate).
+     FINDING: deterministic gate = OFF for 06-12 — QQQ 717.12 < 20d MA
+     721.42. The 01:58Z "est. mid-690s / gate ON" was wrong; estimation era
+     over. Gate was also OFF at 06-10 close (TQQQ entry day basis).
+  2. P2: src/trading/risk.ts — POLICY §2 as code (sizeFromRisk, full limits
+     checker, rMultiple; bun run risk). Tests pin entry risk $264.20 exact;
+     post-ratchet book risk = $161.94 / 5.2% (journaled "~$192/5.6%" is
+     unreproducible — mixed bases). Live book shows grandfathered v0.2
+     violations: TQQQ position risk 3.4% > 2.5%, theme ai-capex 84.1% > 65%
+     (blocks all semis/AI adds).
+  3. P3: 3y backtest (bun run backtest) → docs/BACKTEST-REGIME-GATE.md.
+     Policy gate: 39.7% CAGR / -24.5% maxDD vs TQQQ B&H 66.3% / -58.0%;
+     VIXY day-direction leg = ~144 round trips/3y churn. Proposals B1-B4.
+  4. P4: src/trading/stats.ts (§6a scoreboard; 0 closed, NOT ELIGIBLE) +
+     docs/EARNINGS-WATCH.md (MU reports 06-24 AMC CONFIRMED — held position;
+     time stop 06-18 decides first).
+  5. P0: docs/PREMARKET-2026-06-12.md — 8:30 actions pre-chewed (exit TQQQ
+     per gate OFF; INTC BE-ratchet trigger 119.86; candidates RH/MMM/DAL
+     cash-bound 2/3/5; DO-NOTHING criteria; Iran framework released late
+     Thu, 38 prior "imminent" claims — oil reversal >+3% is the tell).
+  6. Extra: docs/SKILLS-CATALOG-2026-06-12.md (owner links surveyed; install
+     = owner-only; staskh ib-* execution skills flagged never-install),
+     premarket-brief skill draft, DESIGN-EVENT-DRIVEN-RUNS.md, trades.csv
+     TQQQ note fixed to 6a2b6887. 28 tests pass; typecheck clean.
+- Catalysts considered: research only — no entries (market closed).
+- Limits check: OK — no orders. Code-computed: 3/4 slots, book risk 5.2% ≤ 8%,
+  cash 15.5% ≥ 5%, beta-gross 142.9% ≤ 150%; grandfathered theme/position-risk
+  flags as above.
+- Lesson: estimates rot silently — the gate estimate and the $192 book-risk
+  figure were both wrong within 24h of being journaled. Anything an agent can
+  compute in-head must come from a tested CLI instead (bun run gate/risk/stats).
+- Anomaly: overnight research subagents hit the session usage cap mid-run;
+  salvaged from transcripts + finished foreground post-reset. Detail in
+  docs/HANDOFF-2026-06-12-morning.md.
+- Next watch: 8:30Z+ run executes PREMARKET doc — stops confirm at open,
+  TQQQ gate exit, INTC ratchet at 119.86, UMich 10:00 ET, Iran tell.

@@ -29,9 +29,13 @@ theme ai-capex 84.1% (>65% → NO semis/AI adds) · settled cash $481.40.*
 
 ## Do NOTHING (no new entries) if
 
-- **Iran deal claim wobbles** — Trump says "approved/signable this
-  weekend"; **Iran says no MOU agreed; Israel unaware**. Tell: oil
-  reversing > +3% pre-open. Thursday's whole +3.4% rally rests on this.
+- **Iran deal wobbles** — late-Thu UPDATE (verified ~02:00 ET): a joint
+  US-Iran **framework was released** — 60-day ceasefire extension, Hormuz
+  de-mining, nuclear talks to start; signing "possibly in Europe within
+  days"; blockade stays until signed. Firmer than the earlier "Iran
+  denies MOU" reports — but CNN counts **38 prior "imminent deal" claims**
+  since February. Tell: oil reversing > +3% pre-open. Thursday's whole
+  +3.4% rally rests on this holding.
 - QQQ gaps < −2% (manage exits only; no knife-catching first hour).
 - Within 30 min of **UMich 10:00 ET** (see calendar — May printed a
   record-low 44.8; the inflation-expectations line is the mover).
