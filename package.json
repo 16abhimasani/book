@@ -7,7 +7,13 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src/trading",
+    "gate": "bun src/trading/gate.ts",
+    "risk": "bun src/trading/risk.ts",
+    "stats": "bun src/trading/stats.ts",
+    "backfill": "bun src/trading/backfill.ts",
+    "backtest": "bun src/trading/backtest.ts"
   },
   "dependencies": {
     "@mysten/sui": "^2.16.0"
