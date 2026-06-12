@@ -562,3 +562,46 @@ session and the heartbeat interleave — timestamps are authoritative.)
   721.51 (L2 re-entry eligibility Monday) + INTC trail check (125.57);
   MU time stop 06-18; MU earnings 06-24 AMC; DAL invalidation = USO
   reversal >+3%.
+
+## 2026-06-12 17:26 UTC · run: market-hourly (scheduled Cowork shim — sole heartbeat per 16:08 ratification)
+
+- Account: $4,768.48 (+0.8% vs 16:25 reading; day % still distorted by
+  today's owner deposit) · cash $1,591.46 ($658.12 settled BP; TQQQ
+  proceeds settle Mon 06-15)
+- Positions (quotes 17:21–17:25 UTC):
+  - MU 1 @ 941.50 (1002.76, +6.51%) [L1, stop 941.50 BE GTC 6a2b62e1 confirmed]
+  - INTC 6 @ 114.15 (126.46, +10.78%) [L1, stop 116.34 TRAIL GTC 6a2c4103 confirmed]
+  - DAL 17 @ 82.67 (83.29, +0.75%) [L1, stop 76.05 GTC 6a2c230c confirmed]
+- Stop registry reconciled at broker pre-action — all three stops from the
+  16:25 registry confirmed; nothing missing. Toolset unchanged (equity-only
+  order tools) — no NEW-TOOLS, lanes 4/5 stay parked.
+- Actions (review→place, fresh ref_id; risk CLI passed pre-order):
+  1. RATCHET INTC stop 114.15 → 116.34 — +10% ladder trigger hit (+10.78%,
+     peak since entry 126.46; trail = max(BE 114.15, peak−8% = 116.34)).
+     Old stop 6a2c22bd cancelled (verified), new 6a2c4103 confirmed GTC.
+     Stops up only ✓. Locks ≥ +$13.14/sh ≈ +1.9% min outcome. +12% bank
+     level 127.85 NOT hit — no partial sale.
+  2. HOLD MU +6.51% — BE stop in place; +10% trail arms at 1035.65.
+  3. HOLD DAL +0.75% — USO −2.1% on day, oil still falling, thesis intact
+     (invalidation = oil reversal >+3%).
+  4. NO new entries — no fresh vetted catalyst this window; settled BP
+     $658.12; gate OFF so L2 closed; no staged L3 candidate (tape is
+     risk-on today, mean-reversion setups scarce).
+- Catalysts considered: none new; carry-through from
+  docs/PREMARKET-2026-06-12.md (all candidates resolved or invalidated).
+- Limits check: ALL PASS (bun run risk on refreshed book.json, asOf
+  17:21Z): 3/4 slots; book risk to stops $112.54 = 2.4% ≤ 8% (DAL-only
+  risk; MU at BE, INTC locked above entry); lev ETF 0%; beta-gross 66.6%;
+  themes ai-capex 36.9% / oil-benef 29.7% ≤ 65%; cash 13.8% ≥ 5%.
+- Gate (bun run gate): OFF at 06-11 close (QQQ 717.12 ≤ MA20 721.42).
+  QQQ 723.50 intraday > 721.51 re-arm level — official close decides at
+  EOD; if close > 721.51, L2 re-entry eligible Monday on a fresh check.
+- Infra note: Cowork sandbox has no bun — risk/gate CLIs executed on the
+  owner Mac via osascript (committed code, read-only compute), same path
+  the task file authorizes for git push. Works, but installing bun in the
+  sandbox image would drop the dependency.
+- Next watch: EOD ~16:15 ET run — marks.csv row + official QQQ close vs
+  721.51 + INTC trail recompute (peak>126.46 raises stop; bank 1/3 at
+  127.85) + MU trail arm check (1035.65); MU time stop 06-18, earnings
+  06-24 AMC; DAL invalidation = USO reversal >+3%; owner sitting per
+  docs/OWNER-CHECKLIST-2026-06-13.md (governance patch + B2) still open.
