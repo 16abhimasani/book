@@ -748,3 +748,49 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Next watch: EOD ~16:15 ET run — marks.csv row; official QQQ close vs
   721.51; INTC peak/trail recompute + bank-1/3 127.85; MU trail arm
   1035.65, time stop 06-18; DAL tell = USO reversal; AMD BE level 540.74.
+
+## 2026-06-12 20:30 UTC · run: EOD (Cowork heartbeat)
+
+- Account: $4,735.85 broker total (16:00 ET basis $4,727.48; ~flat vs
+  19:26Z snapshot) · settled cash $143.13 ($933.34 TQQQ proceeds settle
+  Mon 06-15) · 4/4 slots.
+- Positions (official closes): MU 1 @ 941.50 (close 980.71, +4.2%) [L1,
+  BE stop 941.50 6a2b62e1] · INTC 6 @ 114.15 (close 124.54, +9.1%) [L1,
+  trail 116.34 6a2c4103, peak 126.46] · DAL 17 @ 82.67 (close 83.06,
+  +0.5%) [L1, stop 76.05 6a2c230c] · AMD 1 @ 514.99 (close 511.04,
+  −0.8%) [L1, stop 473.79 6a2c5012]. Unrealized +$104.2; realized today
+  TQQQ +$41.14 (0.31R, logged in trades.csv).
+- Actions: NO-TRADE (EOD = reconcile only). Reconciled: all 4 stops
+  broker-confirmed, match registry exactly; no fills since 19:26Z run.
+  Ladder recompute: INTC high since 19:20Z = 125.59 < peak 126.46 →
+  trail stays 116.34, bank-1/3 127.85 not hit; MU trail-arm 1035.65 not
+  reached (closed −1.5% on day); DAL BE level 86.80 not hit; AMD BE
+  level 540.74 not hit. Stops up only ✓. marks.csv row appended:
+  721.34 / 23.29 / 4727.48 (Yahoo v8 official closes; broker 19:59:59
+  prints 721.37/23.33 agree — two sources; sanity bounds pass).
+- Catalysts considered: none — EOD places no new entries by design
+  (4/4 slots, settled cash 3.0% anyway). Shadow ledger unchanged this
+  run: SPCX pending (resolves by 06-19), RH/MMM filtered-validated.
+- Tools check: equity + watchlist tools only on this MCP surface — no
+  crypto/options/event order tools exposed; parked lanes stay parked.
+- STOP REGISTRY (authoritative, all broker-confirmed this run): MU 1 @
+  941.50 BE (6a2b62e1) · INTC 6 @ 116.34 TRAIL (6a2c4103, peak 126.46) ·
+  DAL 17 @ 76.05 (6a2c230c) · AMD 1 @ 473.79 (6a2c5012).
+- Limits check: ALL PASS (bun run risk, book.json refreshed to EOD
+  ground truth asOf 20:25Z): book risk $153.74 = 3.2% ≤ 8%; ai-capex
+  47.3% / oil-benef 29.8% ≤ 65%; beta-gross 77.1% ≤ 150%; cash 3.0% ≥
+  2.5%. Panel flag (informational): MU reports 06-24 AMC (12d).
+- Gate: OFF — computed, official (bun run gate): QQQ close 721.34 ≤
+  MA20 721.50 by $0.16; vol leg quiet (VIXY 23.29 < prior 24.41).
+  Friday poked above intraday (high 724.01) but the close decides — no
+  Monday L2 re-entry; next gate read at Monday EOD marks row.
+- Lesson: the L2 re-arm came down to 16 cents on the official close.
+  A computed gate (two agreeing close sources, sanity-bounded) is the
+  only reason Monday doesn't start with an accidental leveraged entry.
+- Next watch: Mon pre-market — $933.34 settles (entry capacity returns;
+  settled-funds rule); MU time stop 06-18 and earnings 06-24 AMC (never
+  hold into the print); INTC trail vs peak 126.46 / bank-1/3 127.85;
+  DAL tell = USO reversal >+3% (USO closed 125.48, −2.6% — thesis
+  intact); AMD BE ratchet level 540.74; weekend run = research only
+  (bun run shadow as data lands, EARNINGS-WATCH refresh, screen dated
+  catalysts for Monday capacity).
