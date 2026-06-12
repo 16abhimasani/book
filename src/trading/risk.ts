@@ -18,7 +18,7 @@ export const SLOT_PCT = 0.4; // max single position at entry
 export const LEV_PCT = 0.5; // max combined leveraged-ETF exposure
 export const BETA_GROSS_PCT = 1.5; // beta-adjusted gross exposure
 export const THEME_PCT = 0.65; // single theme/catalyst concentration
-export const MIN_CASH_PCT = 0.05; // min cash buffer
+export const MIN_CASH_PCT = 0.025; // min cash buffer (v0.2.1: 5% → 2.5%, owner directive 2026-06-12)
 export const MAX_POSITIONS = 4;
 
 export interface PositionInput {

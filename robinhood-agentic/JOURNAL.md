@@ -650,3 +650,41 @@ session and the heartbeat interleave — timestamps are authoritative.)
   MU time stop 06-18, earnings 06-24 AMC; DAL invalidation = USO reversal
   >+3%; owner sitting per docs/OWNER-CHECKLIST-2026-06-13.md (governance
   patch + B2) still open.
+
+## 2026-06-12 18:32 UTC · run: market-action (owner-directed POLICY edit + Lane-1 entry, live session)
+
+- POLICY v0.2.1 — OWNER EDIT (live session, explicit directive): min cash
+  buffer 5% → 2.5%. Owner rationale: "I want as much exposure as possible.
+  5% hard limit leaves too much buying power sitting around." This is a
+  LOOSENING, applied at owner direction per POLICY authority rules (only
+  the owner edits limits; agent was scribe). risk.ts MIN_CASH_PCT updated
+  to match; 37 tests pass.
+- Account: $4,737.47 · settled cash $143.13 post-entry ($933.34 TQQQ
+  proceeds settle Mon 06-15). 4/4 position slots now used.
+- ACTION: BUY AMD 1 @ 514.99 (limit 514.99 GFD, filled exactly,
+  6a2c4fed; fresh ref_id). Lane 1 catalyst: Citi upgrade Neutral→Buy +
+  BofA top server-CPU pick PT $560, <12h old; tape +5.2% above prior-day
+  high. Hard stop 473.79 (−8%) GTC 6a2c5012 placed with fill. Risk
+  $41.20 = 0.9% of account. NOTE: this entry was BLOCKED under v0.2
+  (cash after = 3.0% < 5%) and passed only after the owner's buffer
+  amendment — risk CLI run pre-order: ALL PASS under v0.2.1 (book risk
+  3.2%, theme ai-capex 47.5% ≤ 65%, settled funds ✓).
+- Also this session: created RH watchlist "AI Watch" (e4352f87: SPCX,
+  AMD, NVDA, AVGO, VRT, SMCI). SPCX evaluated and SKIPPED — day-1 IPO
+  (+28% from $135 price) has no prior-day structure for entry hygiene or
+  stop placement; re-look after ≥3 sessions of tape or first post-IPO
+  catalyst.
+- STOP REGISTRY (authoritative): MU 1 @ 941.50 BE (6a2b62e1) · INTC 6 @
+  116.34 TRAIL (6a2c4103, peak 126.46) · DAL 17 @ 76.05 (6a2c230c) ·
+  AMD 1 @ 473.79 (6a2c5012). All confirmed.
+- Limits check: ALL PASS (bun run risk, v0.2.1): 4/4 slots; book risk
+  $140.47 = 3.0% ≤ 8%; themes ai-capex 47.4% / oil-benef 29.7% ≤ 65%;
+  beta-gross ~77% ≤ 150%; cash 3.0% ≥ 2.5%.
+- Lesson: the buffer edit changed exactly one check (cash) and the same
+  trade flipped blocked→allowed — POLICY-as-code made the owner's
+  trade-off visible and precise before committing real money.
+- Next watch: book is FULLY DEPLOYED (cash $143) — no new entries until
+  an exit or Monday's $933 settlement; INTC trail vs peak (bank-1/3
+  level 127.85); MU time stop 06-18; DAL oil-reversal tell; EOD run
+  ~20:15Z appends marks.csv + official close vs 721.51 decides Monday
+  L2 re-entry (if re-armed, TQQQ sizing must respect remaining cash).

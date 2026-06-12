@@ -1,7 +1,9 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.2 (2026-06-12) · **Owner:** Ash — all 9 diffs from
-  `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12
+- **Version:** 0.2.1 (2026-06-12) · **Owner:** Ash — all 9 diffs from
+  `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
+  v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
+  2026-06-12 — "I want as much exposure as possible")
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -29,7 +31,7 @@
 | Max single position (at entry) | 40% of account value |
 | Max concurrent positions | 4 |
 | Max combined leveraged-ETF exposure | 50% of account value |
-| Min cash buffer | 5% |
+| Min cash buffer | 2.5% |
 | Daily loss halt | −15% vs prior close → no new buys today, postmortem entry required |
 | Drawdown checkpoint | account < $2,000 → pause new entries until owner ACK (journal or chat) |
 | Averaging down | max once per position |

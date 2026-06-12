@@ -116,7 +116,7 @@ describe("candidate evaluation", () => {
     const report = checkLimits(book);
     const byName = (s: string) => report.checks.find((c) => c.limit.includes(s))!;
     expect(byName("settled funds").pass).toBe(true); // $300 ≤ $481.40
-    expect(byName("cash buffer").pass).toBe(true); // $181.40 ≥ $154.36
+    expect(byName("cash buffer").pass).toBe(true); // $181.40 ≥ $77.18 (2.5% per v0.2.1)
   });
 
   test("5th position trips the slot count", () => {
