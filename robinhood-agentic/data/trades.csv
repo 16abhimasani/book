@@ -1,0 +1,4 @@
+trade_id,symbol,lane,entry_date,entry_price,qty,initial_stop,risk_usd,risk_pct_acct,exit_date,exit_price,pnl_usd,r_multiple,catalyst,notes
+2026-06-11-MU,MU,L1,2026-06-11,941.50,1,866.00,75.50,2.5,,,,,ORCL capex shock → memory order books; BofA semis upgrades,open; stop GTC 6a2af328
+2026-06-11-INTC,INTC,L1,2026-06-11,114.15,6,105.00,54.90,1.8,,,,,BofA double upgrade (foundry); capex-receiver rotation,open; stop GTC 6a2af32a
+2026-06-11-TQQQ,TQQQ,L2,2026-06-11,74.35,12,63.20,133.80,4.5,,,,,regime gate ON (QQQ>20d est; VIX<25 est),open; stop GTC 6a2af57f; entry chased once 74.00→74.35

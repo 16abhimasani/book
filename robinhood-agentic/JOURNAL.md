@@ -213,3 +213,23 @@ session and the heartbeat interleave — timestamps are authoritative.)
   inclusion (prepped, pending tools or ratified API path).
 - Next: owner creates cloud routine (OPERATIONS §B) → disable local
   heartbeat per one-heartbeat rule. Owner ratifies Lane 5 terms.
+
+## 2026-06-11 22:25 UTC · run: research (strategy review, cloud session)
+
+- Account: $3,097.89 (+3.26% total) · cash $481.40
+- Positions: MU 1 @ 941.50 (+5.75%) [L1, stop 866 GTC] · INTC 6 @
+  114.15 (+2.49%) [L1, stop 105 GTC] · TQQQ 12 @ 74.35 (+2.22%)
+  [L2, stop 63.20 GTC]
+- Actions: NO-TRADE — read-only strategy review, owner-initiated.
+  Wrote docs/STRATEGY-REVIEW-2026-06-11.md (8 findings, 9 proposed
+  POLICY v0.2 diffs for owner approval). Scaffolded data/marks.csv
+  (deterministic regime-gate feed; VIX not quotable on MCP but
+  VIXY/VXX are — verified) and data/trades.csv (R-multiple ledger
+  seeded with the 3 open trades).
+- Catalysts considered: none (research run, no trading).
+- Limits check: OK (no orders). Noted: total open risk to stops =
+  8.8% of account; beta-adjusted exposure ~143%, all one theme.
+- Lesson: stop placement protects entries, not profits — MU at +5.75%
+  still has a −8%-from-entry stop, so a reversal realizes −13.7%.
+  Breakeven-ratchet proposal (review §3.5) addresses this; until
+  owner approves, hourly runs may apply tighter-than-policy judgment.
