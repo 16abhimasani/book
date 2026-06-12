@@ -255,3 +255,43 @@ session and the heartbeat interleave — timestamps are authoritative.)
   redeploy cycle). Lane 5 (crypto) ratification still open.
 - Next: 06-12 pre-market run on heartbeat schedule; owner closes the
   cloud session that produced PR #1 (its work is merged).
+
+## 2026-06-12 01:58 UTC · run: journal-only (scheduled, local, after-hours)
+
+- Account: $3,099.02 AH marks (close $3,087.27, +2.91% day; +3.30% total
+  at AH marks) · cash $481.40 (15.5%)
+- Positions (official 06-11 SIP closes):
+  - MU 1 @ 941.50 (close 995.87, +5.77%) [L1, stop 941.50 BREAKEVEN GTC
+    6a2b62e1 — state=queued, activates at open]
+  - INTC 6 @ 114.15 (close 116.96, +2.46%) [L1, stop 105.00 GTC 6a2af32a
+    confirmed]
+  - TQQQ 12 @ 74.35 (close 76.01, +2.23%) [L2, stop 63.20 GTC 6a2af57f
+    confirmed]
+- Actions: NO-TRADE (after-hours journal-only; no new entries per cadence).
+  1. Stop registry verified against broker: MU breakeven stop 6a2b62e1
+     queued (placed 01:37Z by infra session), old 866.00 stop 6a2af328
+     state=cancelled (01:36Z), INTC/TQQQ stops confirmed. All 3 positions
+     fully held-for-sells. No replacements needed.
+  2. Data maintenance per handoff caveat: marks.csv 06-11 row corrected
+     to official SIP closes (QQQ 716.44→717.12, VIXY 24.42→24.41) and
+     close-time account value (3097.89 AH→3087.27); trades.csv MU note
+     updated to stop 6a2b62e1. No round-trips closed — no P&L rows due.
+  3. Tool-surface check: equities + watchlist only; no crypto/options/
+     event-contract order tools. No NEW-TOOLS. Lanes 4–5 stay parked.
+  4. One-heartbeat check: all market-run entries to date are from the
+     local task; no cloud routine journaling yet → local remains sole
+     writer, trading permitted on next market run.
+- Catalysts considered: n/a (journal-only).
+- Regime gate: ON at close — QQQ 717.12 > est. 20d MA (mid-690s; marks.csv
+  2 rows, deterministic gate needs ≥20). VIXY 24.41 vs prior 24.42 (vol
+  leg quiet); est. VIX ~22 < 25. AH tape mildly green (QQQ 718.65).
+- Limits check: OK — no orders. (3 pos ≤4; cash 15.5% ≥5%; acct $3,099
+  > $2k; day +2.91% > −15%.)
+- NOTE: 9 POLICY v0.2 diffs in docs/STRATEGY-REVIEW-2026-06-11.md remain
+  UNRATIFIED — not treated as policy. MU breakeven ratchet stands as
+  journaled tighter-than-policy judgment. Owner queue: ratify diffs
+  (incl. TQQQ stop retro-fit 63.20→65.43), Lane 5 terms.
+- Next watch: pre-market ~8:30 ET 06-12 — confirm 6a2b62e1 flips
+  queued→confirmed at open; fresh gate check. Trail triggers: MU
+  ~1,035.65 (+10%), INTC ~125.57. TQQQ exits: gate OFF or −20% intraday.
+  Time stops 2026-06-18.
