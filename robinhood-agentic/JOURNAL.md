@@ -489,3 +489,10 @@ session and the heartbeat interleave — timestamps are authoritative.)
   gate check vs 721.51; Monday pre-market — possible L2 re-entry if gate
   re-armed (under current POLICY a single qualifying close suffices; B2
   would require two); MU time stop 06-18.
+
+## 2026-06-12 16:08 UTC · note: owner RATIFIED heartbeat decision
+
+- Owner confirmed (live session): keep `rh-trading-loop-local` (Cowork) as
+  the sole scheduled heartbeat for now. Cloud-routine cutover deferred to
+  owner's choosing per the 16:05 entry's plan. Future runs: stop flagging
+  this as an open owner action; the standing OPS FLAG is resolved.
