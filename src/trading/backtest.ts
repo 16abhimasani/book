@@ -11,7 +11,7 @@
 
 import { readFileSync } from "node:fs";
 import { parseCsvObjects } from "./csv";
-import { computeGate, type GateOptions, type MarkRow } from "./gate";
+import { computeGateSeries, type GateOptions, type MarkRow } from "./gate";
 
 interface Bar {
   date: string;
@@ -76,13 +76,14 @@ export function runGateStrategy(
   const marks: MarkRow[] = aligned.map((b) => ({ date: b.date, qqq: b.close, vixy: vixyByDate.get(b.date)! }));
   const maLen = opts.maLen ?? 20;
 
+  const effectiveByDate = new Map(computeGateSeries(marks, opts).map((p) => [p.date, p.effective]));
+
   const returns: number[] = [];
   const held: boolean[] = [];
   let flips = 0;
   let prevOn = false;
   for (let t = maLen - 1; t < aligned.length - 1; t++) {
-    const g = computeGate(marks.slice(0, t + 1), undefined, opts);
-    const on = g.status === "ok" && g.gate === "ON";
+    const on = effectiveByDate.get(aligned[t]!.date) === "ON";
     if (on !== prevOn) flips++;
     prevOn = on;
     const a0 = tqqqByDate.get(aligned[t]!.date)!.adjclose;
@@ -135,6 +136,12 @@ if (import.meta.main) {
       );
     }
   }
+  // PROPOSAL B2 anti-churn variants on the policy gate (MA20)
+  results.push(
+    runGateStrategy(qqq, vixy, tqqq, { maLen: 20, volLeg: "vixy-direction", confirmDays: 2 }, "B2: MA20 + VIXY dir + 2d confirm"),
+    runGateStrategy(qqq, vixy, tqqq, { maLen: 20, volLeg: "vixy-5d-avg" }, "B2: MA20 + VIXY<5d avg"),
+    runGateStrategy(qqq, vixy, tqqq, { maLen: 20, volLeg: "vixy-5d-avg", confirmDays: 2 }, "B2: MA20 + VIXY<5d avg + 2d confirm"),
+  );
   console.log(formatTable(results));
   console.log(
     "\nNotes: signals on raw closes (matches live marks.csv gate); returns on adjusted closes; gate variants' first held day differs by MA warmup; benchmarks start at session 50 for rough comparability.",

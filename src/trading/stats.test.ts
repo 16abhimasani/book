@@ -65,13 +65,21 @@ describe("computeStats", () => {
 });
 
 describe("trades.csv (real file)", () => {
-  test("parses and currently has 3 open / 0 closed trades", () => {
+  test("parses; ledger is internally consistent as it grows", () => {
     const path = new URL("../../robinhood-agentic/data/trades.csv", import.meta.url).pathname;
     const trades = loadTrades(path);
     expect(trades.length).toBeGreaterThanOrEqual(3);
+    // the original 2026-06-11 seeds anchor at $264.20 combined entry risk
+    const seeds = trades.filter((t) => t.entry_date === "2026-06-11");
+    expect(seeds.reduce((sum, tr) => sum + tr.risk_usd, 0)).toBeCloseTo(264.2, 2);
+    // every closed row must have a recorded R consistent with pnl/risk (±1 cent rounding)
+    for (const t of trades.filter((t) => t.exit_date !== "")) {
+      expect(t.pnl_usd).not.toBeNull();
+      expect(t.r_multiple).not.toBeNull();
+      expect(t.r_multiple!).toBeCloseTo(t.pnl_usd! / t.risk_usd, 1);
+    }
+    // stats must compute without throwing on the live file
     const s = computeStats(trades, { asOf: "2026-06-12" });
-    expect(s.closedCount).toBe(0);
-    // entry risk of the seeded book — the same $264.20 the risk tests anchor on
-    expect(trades.reduce((sum, tr) => sum + tr.risk_usd, 0)).toBeCloseTo(264.2, 2);
+    expect(s.closedCount + s.openCount).toBe(trades.length);
   });
 });

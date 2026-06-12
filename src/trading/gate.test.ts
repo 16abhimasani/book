@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { computeGate, loadMarks, type MarkRow } from "./gate";
+import { computeGate, computeGateSeries, loadMarks, type MarkRow } from "./gate";
 
 // 2026-05-01 + n days as YYYY-MM-DD (weekends don't matter for the math)
 const day = (n: number) => new Date(Date.UTC(2026, 4, 1 + n)).toISOString().slice(0, 10);
@@ -85,6 +85,51 @@ describe("computeGate", () => {
     if (g.status !== "ok") throw new Error("expected ok");
     expect(g.gate).toBe("ON");
     expect(g.maLen).toBe(10);
+  });
+});
+
+describe("vol leg: vixy-5d-avg (B2 research variant)", () => {
+  test("passes when VIXY is below its own 5-session average", () => {
+    const qqq = [...Array(20).fill(100), 110];
+    const vixy = [...Array(16).fill(20), 22, 22, 22, 22, 20]; // 5d avg 21.6, close 20
+    const g = computeGate(series(qqq, vixy), undefined, { volLeg: "vixy-5d-avg" });
+    if (g.status !== "ok") throw new Error("expected ok");
+    expect(g.volLegPass).toBe(true);
+    expect(g.gate).toBe("ON");
+  });
+
+  test("fails when VIXY is above its 5-session average even if down on the day", () => {
+    const qqq = [...Array(20).fill(100), 110];
+    const vixy = [...Array(16).fill(20), 20, 20, 26, 25, 24]; // down day-over-day, avg 23, close 24
+    const g = computeGate(series(qqq, vixy), undefined, { volLeg: "vixy-5d-avg" });
+    if (g.status !== "ok") throw new Error("expected ok");
+    expect(g.volLegPass).toBe(false);
+  });
+});
+
+describe("computeGateSeries confirmation (B2 research variant)", () => {
+  // 25 sessions (gate computable from i=19): ON, then a one-day fake-out,
+  // then a real two-day flip
+  const qqq = [
+    ...Array(19).fill(100),
+    110, // i=19: ON (first computable session)
+    110, // i=20: ON
+    90, //  i=21: raw OFF (1-day fake-out)
+    110, // i=22: raw ON again
+    90, //  i=23: raw OFF
+    90, //  i=24: raw OFF (2nd consecutive → real flip)
+  ];
+  const vixy = [...Array(19).fill(20), 19, 18, 17, 16, 15, 14]; // vol leg always quiet
+
+  test("confirmDays 1 (POLICY default): effective === raw", () => {
+    const s = computeGateSeries(series(qqq, vixy), { confirmDays: 1 });
+    expect(s.map((p) => p.effective)).toEqual(s.map((p) => p.raw));
+  });
+
+  test("confirmDays 2: one-day fake-out is ignored, real flip lands one day late", () => {
+    const s = computeGateSeries(series(qqq, vixy), { confirmDays: 2 });
+    expect(s.map((p) => p.raw)).toEqual(["ON", "ON", "OFF", "ON", "OFF", "OFF"]);
+    expect(s.map((p) => p.effective)).toEqual(["ON", "ON", "ON", "ON", "ON", "OFF"]);
   });
 });
 

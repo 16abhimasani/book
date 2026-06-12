@@ -101,6 +101,37 @@ it for survival, don't expect it to beat holding in a melt-up.
   does NOT satisfy POLICY §6a (that gate needs live closed trades). It
   validates the mechanism, not the implementation.
 
+## B2 follow-up — anti-churn variants (added 2026-06-12 intraday)
+
+Same harness, same data, three anti-churn variants on the policy gate
+(`confirmDays` + `vixy-5d-avg` now exist as research-only options in
+`gate.ts`; POLICY defaults unchanged):
+
+| Strategy | CAGR | Max DD | Time in mkt | Worst held day | Flips | $1 → |
+|---|---|---|---|---|---|---|
+| Gate MA20 + VIXY dir (POLICY) | 39.7% | -24.5% | 43.8% | -14.3% | 288 | 2.65 |
+| **B2: MA20 + VIXY dir + 2d confirm** | **38.2%** | **-24.1%** | **43.8%** | **-14.3%** | **98** | **2.56** |
+| B2: MA20 + VIXY<5d avg | 39.4% | -25.6% | 49.1% | -14.3% | 164 | 2.63 |
+| B2: MA20 + VIXY<5d avg + 2d confirm | 29.7% | -38.5% | 49.1% | -14.3% | 98 | 2.13 |
+
+**Reading:** the 2-day confirmation is the clear winner — it gives up 1.5pt
+of pre-friction CAGR and actually *improves* max drawdown slightly, while
+cutting flips from 288 to 98 (−66%). At any realistic friction estimate
+(≈3–5%/yr at 144 round trips), the confirmed variant likely **wins net**.
+Swapping the vol leg to a 5d-average is neutral alone and harmful combined
+(it delays exits the confirmation then delays again — drawdown balloons).
+
+**Sharpened PROPOSAL B2 (owner ratifies):** amend POLICY §3/§4 Lane-2 gate
+to act on a flip only after the same state prints on **2 consecutive
+closes**; keep VIXY-direction as the vol leg. Note the asymmetry trade-off:
+confirmation also delays *exits* by a day (max DD says this cost ~nothing
+in sample, but a gap-down day one is the risk you're accepting).
+
+**Live illustration (2026-06-12):** the gate forced the TQQQ exit at the
+open of this very session (+0.31R, fine), and QQQ tagged 723 — above the
+re-arm level — within hours. Under B2, Monday-morning whipsaw re-entries
+like the one now pending would be roughly 3x rarer.
+
 ## Reproduce
 
 ```

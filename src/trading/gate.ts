@@ -20,7 +20,10 @@ export interface MarkRow {
 
 export interface GateOptions {
   maLen?: number; // default 20
-  volLeg?: "vixy-direction" | "none"; // default vixy-direction
+  volLeg?: "vixy-direction" | "vixy-5d-avg" | "none"; // default vixy-direction (POLICY)
+  // research-only until ratified (PROPOSAL B2): raw state must persist this
+  // many consecutive closes before the effective gate flips. 1 = POLICY today.
+  confirmDays?: number;
 }
 
 export type GateResult =
@@ -74,7 +77,17 @@ export function computeGate(
   const maLeg = qqqClose > ma;
   const vixyClose = rows[i]!.vixy;
   const vixyPrior = rows[i - 1]!.vixy;
-  const volLegPass = volLeg === "none" ? true : vixyClose < vixyPrior;
+  let volLegPass: boolean;
+  if (volLeg === "none") {
+    volLegPass = true;
+  } else if (volLeg === "vixy-5d-avg") {
+    const n = Math.min(5, i + 1);
+    let vSum = 0;
+    for (let k = i - n + 1; k <= i; k++) vSum += rows[k]!.vixy;
+    volLegPass = vixyClose < vSum / n;
+  } else {
+    volLegPass = vixyClose < vixyPrior; // POLICY: "below prior close", strict
+  }
   return {
     status: "ok",
     asOf: rows[i]!.date,
@@ -87,6 +100,43 @@ export function computeGate(
     vixyPrior,
     volLegPass,
   };
+}
+
+export interface GateSeriesPoint {
+  date: string;
+  raw: "ON" | "OFF";
+  effective: "ON" | "OFF";
+}
+
+/**
+ * Gate state for every computable session, with optional flip confirmation
+ * (PROPOSAL B2): the effective state changes only after the raw state has
+ * disagreed with it for `confirmDays` consecutive closes. confirmDays 1 (or
+ * unset) reproduces POLICY behavior exactly: effective === raw.
+ */
+export function computeGateSeries(rows: MarkRow[], opts: GateOptions = {}): GateSeriesPoint[] {
+  const confirmDays = opts.confirmDays ?? 1;
+  const out: GateSeriesPoint[] = [];
+  let effective: "ON" | "OFF" | null = null;
+  let streak = 0; // consecutive raw readings disagreeing with effective
+  for (let i = 0; i < rows.length; i++) {
+    const g = computeGate(rows.slice(0, i + 1), undefined, opts);
+    if (g.status !== "ok") continue;
+    const raw = g.gate;
+    if (effective === null) {
+      effective = raw;
+    } else if (raw !== effective) {
+      streak++;
+      if (streak >= confirmDays) {
+        effective = raw;
+        streak = 0;
+      }
+    } else {
+      streak = 0;
+    }
+    out.push({ date: g.asOf, raw, effective });
+  }
+  return out;
 }
 
 const MARKS_PATH = new URL("../../robinhood-agentic/data/marks.csv", import.meta.url).pathname;

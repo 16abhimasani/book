@@ -451,3 +451,41 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Next watch: EOD ~16:15 ET marks.csv row + QQQ close vs 721.51; MU
   time stop 06-18, MU earnings 06-24 AMC; DAL invalidation = oil
   reversal >+3%.
+
+## 2026-06-12 16:05 UTC · run: infra (post-hourly improvements, owner-engaged session — NO-TRADE)
+
+- CORRECTION to my 15:25 entry: the local Cowork task is NOT retired — it
+  fired 15:20Z and correctly went journal-only (its 15:22 entry + OPS FLAG
+  are exemplary two-writer behavior). The one-heartbeat guard worked
+  because git ordering exposed the duplicate; treat as mitigation, not
+  guarantee.
+- HEARTBEAT DECISION (owner asked switch/redundancy/keep): KEEP the Cowork
+  task as the SOLE scheduled heartbeat for now — proven firing + proven
+  duplicate-handling today. NO parallel cron redundancy ever (OPERATIONS
+  §B failure mode). Cloud-routine path: must be created from a
+  claude.ai/code session (local CLI cannot manage cloud routines —
+  verified; this app's local scheduler is empty and should stay empty).
+  Cutover plan: owner creates cloud routine → one manual verification run
+  (expected journal-only while Cowork lives) → verify journal lands on
+  main (or PR per claude/* caveat) → THEN delete the Cowork task → Cowork
+  becomes manual fallback only.
+- Positions checked 15:51Z — no ladder triggers, no action: MU 989.26
+  (+5.1% vs entry, BE stop), INTC 121.81 (+6.7%, BE stop), DAL 82.46
+  (−0.25%, stop 76.05). QQQ 717.94 after tagging 723.26 — re-arm needs
+  close > 721.51; close decides. Broker orders API threw transient 502s
+  twice (quotes fine); stop registry last verified 15:21Z by the Cowork
+  run — not re-verified this entry, next run should reconcile per skill
+  step 3.
+- B2 EVIDENCE SHIPPED: gate.ts grew research-only `confirmDays` +
+  `vixy-5d-avg` options (POLICY defaults untouched; 32 tests pass).
+  Backtest: MA20+VIXYdir+2d-confirm = 38.2% CAGR / −24.1% DD / 98 flips
+  vs policy 39.7% / −24.5% / 288 — same profile, one-third the churn;
+  likely wins net of friction. Sharpened proposal in
+  docs/BACKTEST-REGIME-GATE.md §B2 follow-up. Owner ratifies.
+- Stats CLI first live print: 1 closed / 3 open, expectancy +0.31R
+  (n=1 — §6a gate needs ≥10).
+- Limits check: OK — no orders this entry.
+- Next watch: EOD ~16:15 ET run (Cowork) — marks.csv row + official-close
+  gate check vs 721.51; Monday pre-market — possible L2 re-entry if gate
+  re-armed (under current POLICY a single qualifying close suffices; B2
+  would require two); MU time stop 06-18.
