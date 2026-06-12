@@ -46,6 +46,25 @@ describe("assemblePanel", () => {
     expect(p.flags.some((f) => f.startsWith("§2"))).toBe(true);
   });
 
+  test("held position reporting within 14 days raises the earnings flag", () => {
+    const p = assemblePanel(cleanBook, marks, trades, day(20), [
+      { symbol: "BBB", report_date: day(30), session: "AMC" }, // 10 days out
+      { symbol: "ZZZ", report_date: day(22), session: "BMO" }, // not held — ignored
+    ]);
+    expect(p.flags.some((f) => f.includes("BBB reports") && f.includes("never hold into the print"))).toBe(true);
+  });
+
+  test("earnings beyond 14 days or already past do not flag", () => {
+    const p = assemblePanel(cleanBook, marks, trades, day(20), [
+      { symbol: "BBB", report_date: day(40), session: "AMC" }, // 20 days out
+    ]);
+    expect(p.flags).toEqual([]);
+    const past = assemblePanel(cleanBook, marks, trades, day(20), [
+      { symbol: "BBB", report_date: day(10), session: "AMC" },
+    ]);
+    expect(past.flags).toEqual([]);
+  });
+
   test("limit breach surfaces as a flag", () => {
     const breach = {
       ...cleanBook,

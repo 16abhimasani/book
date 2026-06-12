@@ -1,0 +1,4 @@
+candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exit_price,shadow_r,notes
+2026-06-12-RH,RH,2026-06-12,filtered,,,,own invalidation fired pre-open (AH pop reversed; opened below prior-day high),,,,PREMARKET candidate; fell -6.6% on entry day — filter validated
+2026-06-12-MMM,MMM,2026-06-12,filtered,,,,catalyst failed verification (price datum did not reconcile; no named catalyst),,,,PREMARKET candidate; flat tape on the day
+2026-06-12-SPCX,SPCX,2026-06-12,triggered_shadow,172.69,158.87,2,entry hygiene: day-1 IPO has no prior-day structure for confirm/stop,,,,evaluated 17:28Z at +28% from $135 IPO price; would have been a discretionary momentum buy absent the hygiene rule

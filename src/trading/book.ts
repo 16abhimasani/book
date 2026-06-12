@@ -18,11 +18,20 @@ export interface Panel {
   flags: string[]; // non-empty = something needs attention
 }
 
+export interface EarningsRow {
+  symbol: string;
+  report_date: string;
+  session: string;
+}
+
+const EARNINGS_WARN_DAYS = 14; // flag held names reporting within this window
+
 export function assemblePanel(
   book: BookInput & { asOf?: string; _note?: string },
   marks: ReturnType<typeof loadMarks>,
   trades: ReturnType<typeof loadTrades>,
   asOfDate: string, // YYYY-MM-DD "today" for staleness checks
+  earnings: EarningsRow[] = [],
 ): Panel {
   const lines: string[] = [];
   const flags: string[] = [];
@@ -48,6 +57,16 @@ export function assemblePanel(
   if (lastMark) {
     const markAge = (Date.parse(asOfDate) - Date.parse(lastMark.date)) / 86400_000;
     if (markAge > 4) flags.push(`marks.csv last row is ${lastMark.date} (${Math.floor(markAge)}d old) — EOD appends are not landing`);
+  }
+
+  // --- earnings proximity (never hold into a print — POLICY §3 L1 discipline) ---
+  for (const p of book.positions) {
+    const e = earnings.find((e) => e.symbol === p.symbol && e.report_date >= asOfDate);
+    if (!e) continue;
+    const days = Math.round((Date.parse(e.report_date) - Date.parse(asOfDate)) / 86400_000);
+    if (days <= EARNINGS_WARN_DAYS) {
+      flags.push(`${p.symbol} reports ${e.report_date} ${e.session} (${days}d away) — never hold into the print`);
+    }
   }
 
   // --- POLICY §2 limits ---
@@ -82,7 +101,18 @@ if (import.meta.main) {
   const i = args.indexOf("--as-of");
   const asOf = i >= 0 ? args[i + 1]! : new Date().toISOString().slice(0, 10);
   const book = JSON.parse(readFileSync(DATA + "book.json", "utf8"));
-  const panel = assemblePanel(book, loadMarks(DATA + "marks.csv"), loadTrades(DATA + "trades.csv"), asOf);
+  let earnings: EarningsRow[] = [];
+  try {
+    const { parseCsvObjects } = await import("./csv");
+    earnings = parseCsvObjects(readFileSync(DATA + "earnings.csv", "utf8")).rows.map((r) => ({
+      symbol: r.symbol ?? "",
+      report_date: r.report_date ?? "",
+      session: r.session ?? "",
+    }));
+  } catch {
+    // earnings.csv is optional; the panel runs without it
+  }
+  const panel = assemblePanel(book, loadMarks(DATA + "marks.csv"), loadTrades(DATA + "trades.csv"), asOf, earnings);
   console.log(`=== Book panel — repo state, queried for ${asOf} ===`);
   console.log(panel.lines.join("\n"));
   process.exit(panel.flags.length ? 4 : 0);

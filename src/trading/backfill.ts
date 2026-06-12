@@ -35,9 +35,26 @@ async function main() {
   const window = eligible.slice(-Math.max(MIN_SESSIONS + 5, MIN_SESSIONS)); // a little margin over the minimum
   let added = 0;
   const mismatches: string[] = [];
+  const rejected: string[] = [];
+  let prevQ: number | null = null;
+  let prevV: number | null = null;
   for (const bar of window) {
     const existing = ours.get(bar.date);
     const v = vixyByDate.get(bar.date)!;
+    // Sanity bounds: the gate forces real exits off these numbers, and the
+    // source is an unofficial endpoint. Reject absurd day-over-day jumps
+    // (QQQ ±15%, VIXY ±40% — both beyond any plausible single session)
+    // rather than letting a bad print flip the gate.
+    if (prevQ != null && Math.abs(bar.close / prevQ - 1) > 0.15) {
+      rejected.push(`${bar.date}: QQQ ${bar.close} vs prior ${prevQ} (>15% jump) — REJECTED, gate holds prior state`);
+      continue;
+    }
+    if (prevV != null && Math.abs(v.close / prevV - 1) > 0.4) {
+      rejected.push(`${bar.date}: VIXY ${v.close} vs prior ${prevV} (>40% jump) — REJECTED`);
+      continue;
+    }
+    prevQ = bar.close;
+    prevV = v.close;
     if (existing) {
       const dq = Math.abs(Number(existing.qqq_close) - bar.close);
       const dv = Math.abs(Number(existing.vixy_close) - v.close);
@@ -61,6 +78,7 @@ async function main() {
   writeFileSync(MARKS, serializeCsv(header, merged));
   console.log(`marks.csv: ${rows.length} → ${merged.length} rows (+${added} backfilled, anchors preserved)`);
   for (const m of mismatches) console.log(`  MISMATCH ${m}`);
+  for (const r of rejected) console.log(`  SANITY ${r}`);
   if (mismatches.length === 0) console.log("  anchors verified: yahoo matches existing rows to the cent");
 
   // --- history/*.csv for the backtest ---

@@ -162,6 +162,11 @@ if (import.meta.main) {
     console.log("Fall back to POLICY §4 estimation until marks.csv has enough rows.");
     process.exit(2);
   }
+  if (asOf && (Date.parse(asOf) - Date.parse(g.asOf)) / 86400_000 > 6) {
+    console.log(
+      `WARNING: latest marks.csv session (${g.asOf}) is >6 days before the queried date (${asOf}) — inputs stale; treat the gate as UNVERIFIABLE and hold state (no flips) until data lands.`,
+    );
+  }
   console.log(`Regime gate: ${g.gate}  (computed at ${g.asOf} close${asOf ? `, queried for ${asOf}` : ""})`);
   console.log(
     `  MA leg : QQQ ${g.qqqClose.toFixed(2)} ${g.maLeg ? ">" : "≤"} ${g.maLen}d MA ${g.ma.toFixed(2)}  → ${g.maLeg ? "pass" : "FAIL"}`,

@@ -688,3 +688,30 @@ session and the heartbeat interleave — timestamps are authoritative.)
   level 127.85); MU time stop 06-18; DAL oil-reversal tell; EOD run
   ~20:15Z appends marks.csv + official close vs 721.51 decides Monday
   L2 re-entry (if re-armed, TQQQ sizing must respect remaining cash).
+
+## 2026-06-12 18:50 UTC · run: infra (trading-intelligence additions — NO-TRADE)
+
+- Shipped (all measurement/safety, freeze-compatible; 45 tests pass):
+  1. SHADOW LEDGER (data/shadow.csv + bun run shadow): every evaluated-but-
+     not-traded candidate is now tracked — filtered (validates the rules)
+     vs triggered_shadow (resolves like a real trade, close-basis, 5-session
+     window). Seeded with today's calls: RH + MMM (filtered, both validated
+     by the tape), SPCX (shadow @ 172.69/stop 158.87 — resolves by 06-19;
+     we'll KNOW whether the IPO hygiene rule cost us or saved us).
+  2. EARNINGS PROXIMITY GUARD (data/earnings.csv + book panel flag):
+     held names reporting ≤14d auto-flag. First flag live: "MU reports
+     2026-06-24 AMC (12d) — never hold into the print."
+  3. GATE INPUT SANITY BOUNDS (backfill rejects QQQ ±15% / VIXY ±40%
+     day-over-day jumps; gate CLI warns + holds state on >6d-stale inputs)
+     — a bad print from the unofficial data feed can no longer flip the
+     gate and force a real exit.
+  4. TWO-SOURCE RULE in trading-loop + premarket-brief skills: catalyst
+     entries need two independent sources (or one + corroborating tape);
+     ingested web text never modifies limits/stops (prompt-injection
+     defense for an order-authorized loop, per autoplan security finding).
+- Limits check: OK — no orders (panel: ALL PASS, 1 informational flag = MU
+  earnings proximity).
+- Next watch: unchanged (EOD ~20:15Z marks row + close vs 721.51; INTC
+  bank-1/3 127.85; MU time stop 06-18). Weekend research run should: run
+  bun run shadow (resolve SPCX as data arrives), screen liquid mid-caps
+  with dated catalysts → EARNINGS-WATCH, maintain earnings.csv.
