@@ -16,13 +16,41 @@ Robinhood has said options, crypto, **event contracts**, and futures are
 coming to the Agentic MCP as it exits beta. Each lands as a new lane in
 the existing `robinhood-agentic/POLICY.md` + routine — zero architecture.
 
-- **Options** — account already approved level 2; lane spec'd-then-parked
-  in POLICY §3.4.
-- **Crypto (RH)** — unlocks the 24/7 cadence the owner wants.
-- **Event contracts (RH Predict)** — *centralized prediction markets
-  through the same MCP*. Likely the cheapest first prediction-market
-  exposure; RH runs CFTC-regulated event contracts (often Kalshi-backed
-  historically). Watch for these tools on the connection.
+**Verified capability matrix (this connection, 2026-06-11):**
+
+| Instrument | Trade | Read/watchlist | Notes |
+|---|---|---|---|
+| US equities/ETFs | ✅ | ✅ | live — the current book |
+| Options | ❌ | ✅ (option watchlist tools) | acct approved L2; order tools "rolling out" |
+| Crypto | ❌ | ✅ (`search currency_pair`, watchlist) | order/quote tools referenced in tool guides but not exposed yet |
+| Event contracts | ❌ | ❌ | search tool says "events, futures … added as tools land" |
+| Futures | ❌ | ❌ | app-only |
+
+The heartbeat checks the tool list every run and journals the moment a
+new category lands → owner ratifies the prepped POLICY lane → trading
+begins same-day. This is the zero-work path to 24/7.
+
+### Tier 1.5 — RH Crypto Trading API (parallel path, available TODAY)
+
+[docs.robinhood.com/crypto/trading](https://docs.robinhood.com/crypto/trading/) —
+official, US, 24/7, API-key + Ed25519-signed requests, USD pairs with
+`is_api_tradable=true`. **Separate pot**: trades the RH *Crypto* account,
+not the Agentic account.
+
+- Setup: RH web classic → crypto account settings → create API
+  credentials (owner generates keypair; scope permissions minimally).
+- **Secrets constraint**: Claude Code cloud sessions/routines have NO
+  secure secrets store (env config explicitly warns against credentials)
+  → the signing key must NOT go in routine env. Run options:
+  a. **Local heartbeat** (laptop-on): key in `book/.env` (gitignored),
+     loop via Cowork scheduled task. Zero new infra.
+  b. **Serverless worker** (laptop-off): Vercel/Supabase cron with
+     encrypted env vars runs a deterministic executor; Claude edits
+     strategy params in-repo (no LLM in the live API loop — trading-bot
+     lesson). Build only if (a) proves the strategy.
+- Decision 2026-06-11: PARKED in favor of Tier-1 crypto (no split pot,
+  no key handling, same policy/journal). Revisit if agentic crypto
+  hasn't shipped by ~July or owner wants 24/7 sooner.
 
 ## Tier 2 — centralized prediction markets (own venue, own policy)
 

@@ -1,6 +1,8 @@
 # JOURNAL — Robinhood Agentic account
 
 Append-only. Newest at the bottom. Format: POLICY.md §6.
+(Infra entries may be appended out of strict time order when a Cowork
+session and the heartbeat interleave — timestamps are authoritative.)
 
 ## 2026-06-11 14:30 UTC · run: bootstrap (Cowork session)
 
@@ -186,3 +188,28 @@ Append-only. Newest at the bottom. Format: POLICY.md §6.
   −20% intraday. Time stops 2026-06-18. Next run: pre-market ~8:30 ET
   2026-06-12 (or 10:15 ET scheduled) — fresh gate check, MU stop
   review as it nears +10%.
+
+## 2026-06-11 19:35 UTC · run: infra (Cowork session)
+
+- Account (per heartbeat run #4 19:21): $3,065.97 (+2.20%) — MU +3.49%,
+  INTC +2.81%, TQQQ −0.01% vs entry, all GTC stops verified working.
+- Actions: NO-TRADE — infra + research.
+  1. Crypto/instruments capability AUDITED on the agentic connector:
+     equities trade ✅; options/crypto = read+watchlist only (order
+     tools NOT exposed yet); event contracts/futures absent. Matrix in
+     docs/VENUES.md.
+  2. POLICY Lane 5 (crypto) pre-spec'd PARKED — majors only, ≤35%
+     combined, −10% stops, 24/7 cadence on enable; OWNER RATIFICATION
+     REQUIRED before first crypto trade.
+  3. RH Crypto Trading API (separate pot, available today) researched +
+     PARKED: cloud routines have no secure secrets store → signing key
+     can't live there; local/.env or serverless-worker paths documented
+     in VENUES §1.5. Revisit ~July if agentic crypto hasn't shipped.
+  4. AUTO-PUSH live: verified git push through owner's Mac keychain via
+     osascript (no tokens on disk). Heartbeat prompt v2: pull --rebase
+     before reading, push after committing, NEW-TOOLS watch each run
+     (journals the moment crypto/options/event tools land).
+- Owner: pushed repo twice today; requested auto-push (done) + crypto
+  inclusion (prepped, pending tools or ratified API path).
+- Next: owner creates cloud routine (OPERATIONS §B) → disable local
+  heartbeat per one-heartbeat rule. Owner ratifies Lane 5 terms.
