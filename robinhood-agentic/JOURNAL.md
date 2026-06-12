@@ -605,3 +605,48 @@ session and the heartbeat interleave — timestamps are authoritative.)
   127.85) + MU trail arm check (1035.65); MU time stop 06-18, earnings
   06-24 AMC; DAL invalidation = USO reversal >+3%; owner sitting per
   docs/OWNER-CHECKLIST-2026-06-13.md (governance patch + B2) still open.
+
+## 2026-06-12 18:22 UTC · run: market-hourly (scheduled Cowork shim — sole heartbeat per 16:08 ratification)
+
+- Account: $4,737.47 (−0.65% vs 17:26 reading $4,768.48; day % still
+  distorted by today's owner deposit) · cash $1,591.46 ($658.12 settled
+  BP; TQQQ proceeds settle Mon 06-15). Δ vs 17:26 = −$31.01, fully
+  explained by position marks (MU −12.97, INTC −8.31, DAL −9.86); cash
+  unchanged.
+- Positions (quotes 18:21–18:22 UTC):
+  - MU 1 @ 941.50 (989.79, +5.13%) [L1, stop 941.50 BE GTC 6a2b62e1 confirmed]
+  - INTC 6 @ 114.15 (125.08, +9.57%) [L1, stop 116.34 TRAIL GTC 6a2c4103 confirmed]
+  - DAL 17 @ 82.67 (82.71, +0.05%) [L1, stop 76.05 GTC 6a2c230c confirmed]
+- Stop registry reconciled at broker pre-action (get_equity_orders
+  state=confirmed) — all three stops from the 17:26 registry confirmed
+  (6a2c4103 / 6a2c230c / 6a2b62e1); nothing missing. Toolset unchanged
+  (equity-only order tools) — no NEW-TOOLS, lanes 4/5 stay parked.
+- Actions: NO-TRADE / HOLD ×3.
+  1. INTC pulled back to +9.57% from the 17:26 peak (126.46, +10.78%) —
+     no new high this window, so trail stop stays 116.34
+     (= max(BE 114.15, peak−8% 116.34)); +12% bank level 127.85 NOT hit.
+     Stops up only ✓ — no ratchet (current mark < tracked peak).
+  2. HOLD MU +5.13% — BE stop in place; +10% trail arms 1035.65 (MU
+     eased 1002.76 → 989.79, still well above BE).
+  3. HOLD DAL +0.05% — USO 126.27, −1.99% on the day; oil still falling,
+     thesis intact (invalidation = oil reversal >+3%).
+  4. NO new entries — gate OFF (bun run gate: QQQ 717.12 ≤ MA20 721.42 at
+     06-11 close; vol leg quiet, VIXY 24.41 < 25.68 prior) so L2 closed;
+     no fresh vetted catalyst this window; no staged L3 candidate (risk-on
+     tape). Settled BP $658.12 held.
+- Catalysts considered: none new; carry-through from
+  docs/PREMARKET-2026-06-12.md (all candidates resolved/invalidated).
+- Limits check: ALL PASS (bun run risk on book.json refreshed from ground
+  truth, asOf 18:22Z): 3/4 slots; book risk to stops $112.54 = 2.4% ≤ 8%
+  (DAL-only; MU at BE, INTC locked above entry); lev ETF 0%; beta-gross
+  66.4% ≤ 150%; themes ai-capex 36.7% / oil-benef 29.7% ≤ 65%; cash 13.9%
+  ≥ 5%. bun run book: 0 flags.
+- Gate (bun run gate): OFF at 06-11 close. QQQ 720.64 intraday < 721.51
+  re-arm level — official close decides at EOD; if close > 721.51, L2
+  re-entry eligible Monday on a fresh check.
+- Next watch: EOD ~16:15 ET run — marks.csv row + official QQQ close vs
+  721.51 (L2 re-entry eligibility Monday) + INTC trail recompute (peak >
+  126.46 raises stop; bank 1/3 at 127.85) + MU trail arm check (1035.65);
+  MU time stop 06-18, earnings 06-24 AMC; DAL invalidation = USO reversal
+  >+3%; owner sitting per docs/OWNER-CHECKLIST-2026-06-13.md (governance
+  patch + B2) still open.
