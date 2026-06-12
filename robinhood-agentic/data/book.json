@@ -1,0 +1,11 @@
+{
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time; stops from the journal stop registry. Snapshot basis: 2026-06-12 ~02:55 UTC (account AH value; prices = official 2026-06-11 SIP closes).",
+  "accountValue": 3103.5,
+  "cash": 481.4,
+  "positions": [
+    { "symbol": "MU", "qty": 1, "entry": 941.5, "stop": 941.5, "price": 995.87, "levMultiplier": 1, "theme": "ai-capex" },
+    { "symbol": "INTC", "qty": 6, "entry": 114.15, "stop": 105.0, "price": 116.96, "levMultiplier": 1, "theme": "ai-capex" },
+    { "symbol": "TQQQ", "qty": 12, "entry": 74.35, "stop": 65.43, "price": 76.01, "levMultiplier": 3, "theme": "ai-capex" }
+  ],
+  "candidates": []
+}
