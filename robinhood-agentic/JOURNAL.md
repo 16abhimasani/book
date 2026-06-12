@@ -233,3 +233,25 @@ session and the heartbeat interleave — timestamps are authoritative.)
   still has a −8%-from-entry stop, so a reversal realizes −13.7%.
   Breakeven-ratchet proposal (review §3.5) addresses this; until
   owner approves, hourly runs may apply tighter-than-policy judgment.
+
+## 2026-06-12 01:45 UTC · run: infra + risk action (Cowork session)
+
+- PR #1 reviewed and MERGED to main (47f91e1); remote branch deleted.
+  Review verdict: additive-only (350+/0−), POLICY/OPERATIONS untouched,
+  F1 risk table / F2 143% beta-adjusted / F3 $355 giveback all
+  recomputed and correct. Artifacts now in repo: STRATEGY-REVIEW
+  (9 proposed v0.2 diffs), HANDOFF-2026-06-12, data/marks.csv,
+  data/trades.csv.
+- RISK ACTION (tighter-than-policy judgment, per handoff urgent item):
+  MU stop ratcheted 866.00 → 941.50 (breakeven). Old stop 6a2af328
+  cancelled; new GTC stop 6a2b62e1 queued (activates at open). MU
+  998.88 AH (+6.1% vs entry) — position worst case now ≈ $0 ex-gap.
+- Heartbeat prompt v3: pull-rebase → read handoffs → CSV maintenance
+  contract (EOD marks.csv row; trades.csv round-trips) → breakeven-at-
+  +5% ratchet as standing judgment → updated stop registry → auto-push.
+- OWNER DECISION QUEUE (open): ratify the 9 POLICY v0.2 diffs
+  (recommendation: ratify all; on ratification also retro-fit TQQQ stop
+  63.20 → −12% = 65.43 and add settled-funds rule before any sell-and-
+  redeploy cycle). Lane 5 (crypto) ratification still open.
+- Next: 06-12 pre-market run on heartbeat schedule; owner closes the
+  cloud session that produced PR #1 (its work is merged).
