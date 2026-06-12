@@ -27,6 +27,18 @@ POLICY edits from phone: open a Claude Code cloud session on the repo →
 "change X in robinhood-agentic/POLICY.md, bump version, commit, push."
 No laptop required for anything once the routine exists.
 
+### A3. Auto-push (no manual git, verified 2026-06-11)
+
+- **Local runs** (Cowork sessions + heartbeat task): after committing,
+  push through the owner's Mac keychain via the Control-your-Mac tool:
+  osascript `do shell script "cd ~/dev/book && git pull --rebase --autostash 2>&1 && git push 2>&1"`.
+  No tokens on disk; uses the same creds as manual pushes.
+- **Cloud routine**: commits/pushes natively via the Claude GitHub app —
+  nothing to configure.
+- **Two-writer hygiene**: every writer (local task, cloud routine, ad-hoc
+  session) must `git pull --rebase --autostash` BEFORE reading journal /
+  writing entries, so journals never fork.
+
 ## B. The heartbeat — Claude Code Routine (cloud, laptop-off)
 
 Routines = prompt + repo + connectors running on Anthropic-managed cloud
