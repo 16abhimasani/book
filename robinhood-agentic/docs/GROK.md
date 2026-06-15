@@ -2,7 +2,16 @@
 
 Thin wrapper `src/trading/grok.ts` → `bun run grok "<query>" [--handles a,b] [--days N] [--model ID]`.
 Live X (Twitter) + Web search via xAI's `/v1/responses`; prints answer, citations, and per-call cost.
-Needs `XAI_API_KEY` (in `~/.zshenv`).
+
+## Key wiring (so the SCHEDULED loop works, not just an interactive shell)
+
+`XAI_API_KEY` lives in TWO places, both intentional:
+- `~/.zshenv` — interactive/manual use.
+- **repo-root `.env` (gitignored)** — Bun auto-loads it, so `bun run grok`
+  has the key no matter which shell the Cowork scheduler spawns. Verified by
+  running with the ambient env var stripped. **The loop must run from the repo
+  root** (it does — same as every other `bun run`). If you ever rotate the key,
+  update BOTH. Never commit `.env` (it's in `.gitignore`).
 
 ## API vs consumer products (don't conflate)
 

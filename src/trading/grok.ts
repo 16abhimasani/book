@@ -4,7 +4,10 @@
 // ~$0.07/search (a typical query ≈ $0.20–0.25). It is a SECOND source for the
 // POLICY §3 two-source rule and a discovery tool, not an every-heartbeat call.
 //
-// Needs XAI_API_KEY in the env (it's in ~/.zshenv).
+// Needs XAI_API_KEY. Two sources, both work: ~/.zshenv (interactive shells)
+// AND a gitignored repo-root `.env` (Bun auto-loads it). The .env is what makes
+// the SCHEDULED Cowork loop work regardless of which shell it spawns — verified
+// by running this with the ambient var stripped. Loop must run from repo root.
 // CLI: bun run grok "<query>" [--handles a,b,c] [--days N] [--model ID]
 //
 // ponytail: x_search + web_search both on by default (owner wants both);
