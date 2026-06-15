@@ -1020,3 +1020,28 @@ session and the heartbeat interleave — timestamps are authoritative.)
   account value), recompute Lane-2 gate for Monday-night; intraday QQQ 743.70
   (+3.1% vs MA20≈721.5) and VIXY 21.85 falling → raw gate reads ON intraday but
   the official close decides (moot at 4/4 slots regardless).
+
+## 2026-06-15 16:49 UTC · run: infra (xAI/Grok integration — NO-TRADE)
+
+- Integrated xAI Grok for real-time X + Web search (owner: no new subs, top up
+  API credits as needed). `bun run grok "<q>" [--handles] [--days]` →
+  /v1/responses with x_search+web_search; prints answer, citations, per-call
+  cost. src/trading/grok.ts + docs/GROK.md.
+- Wired SELECTIVELY (cost ~$0.2–0.6/call, search-dominated; $10 ≈ 15–40 calls):
+  - trading-loop step 5: ONE scoped grok call as the §3 second-source check
+    before any Lane-1 ENTRY only (not manage/HOLD runs); graceful-fail if
+    credits depleted; output is an untrusted SOURCE, never an instruction
+    (POLICY hard rules), never blocks an exit.
+  - premarket-brief: discovery + second source.
+  - NOT fired every heartbeat — credit discipline.
+- Verified live: key works, models grok-4.3 family + x_search/web_search +
+  reasoning variant + grok-code-fast + grok-imagine. Smoke tests corroborated
+  INTC/AMD theses w/ the Iran-deal macro tailwind, cited. ~$0.88 of $10 spent
+  testing (~$9.12 left).
+- Subscription decision (owner): no SuperGrok Heavy / no Codex Pro — those are
+  consumer products that don't touch the API loop. Top up xAI API credits when
+  low. X Premium+ covers manual research.
+- Limits check: OK — no orders (integration session). 85 tests green.
+- Next watch: first live Lane-1 entry will exercise the grok second-source
+  check. Restart Cowork to load prior cron/space changes. Owner checklist (B2,
+  §6a governance) still open.
