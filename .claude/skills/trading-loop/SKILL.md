@@ -24,10 +24,16 @@ heartbeat.
 3. **Ground truth**: `get_portfolio`, `get_equity_positions`, open
    `get_equity_orders`. Reconcile against the stop registry in the last
    journal entry; replace any missing stop immediately.
-4. **Run-type** from ET clock: pre-market (~8:30–9:30) plan only;
-   market-hourly (9:30–15:30) manage + execute; EOD (~16:15) reconcile,
-   append `data/marks.csv` row, NO new entries; weekend/other =
-   research/journal only, never trade.
+4. **Run-type** from ET clock (POLICY §4, v0.3 — extended hours enabled):
+   - **pre-market extended (~7:00–9:30)**: manage + MAY enter/exit per
+     POLICY §3.7 — LIMIT orders only, liquidity guard, place the
+     regular-hours protective stop with each fill.
+   - **regular session (9:30–16:00)**: manage + execute, full lane logic,
+     stops placed with fills.
+   - **after-hours extended (~16:00–20:00)**: manage, react to news, MAY
+     enter/exit per §3.7 (LIMIT-only, liquidity guard).
+   - **EOD reconcile (~16:15 run)**: also append the `data/marks.csv` row.
+   - **weekend / outside 7:00–20:00**: research/journal only, never trade.
 5. **Enforce POLICY §2 before any order** (risk budget 2.5%/position &
    8% book, slot caps, beta-adjusted ≤150%, theme ≤65%, settled-funds
    rule, daily halt, drawdown checkpoint). **Compute, never estimate:**
@@ -39,6 +45,11 @@ heartbeat.
    Execute lanes per §3 incl.
    exit ladder (+5% → breakeven, +10% → trail, +12% → bank 1/3) and
    entry hygiene (quote at placement, ONE chase max ≤ +1%).
+   **Extended-hours orders (§3.7):** pass `market_hours: extended_hours`
+   (or `all_day_hours`), type `limit` ONLY — the broker rejects
+   stop/market outside regular hours. Check the bid/ask spread first;
+   skip if > 1.0% of mid. Still place the regular-hours protective stop
+   immediately after any extended-hours fill (it activates at the open).
    `review_equity_order` before every `place_equity_order`; surface
    `market_data_disclosure` verbatim; fresh UUID `ref_id` per order.
 6. **Data upkeep**: new fill → `data/trades.csv` row; round-trip close →

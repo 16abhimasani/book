@@ -1,9 +1,12 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.2.1 (2026-06-12) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.3 (2026-06-15) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
-  2026-06-12 — "I want as much exposure as possible")
+  2026-06-12 — "I want as much exposure as possible");
+  v0.3: extended-hours trading enabled — new §3.7, cadence §4 expanded
+  to pre-market + after-hours (owner ratified live session 2026-06-15,
+  posture C: full overnight entries, stop-gap risk accepted).
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -81,6 +84,42 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
 - Rationale: momentum and mean reversion on the same book at the same time
   cancel each other. The regime gate decides which one is live.
 
+### 3.7 — Extended-hours trading (owner ratified 2026-06-15, posture C)
+
+Applies to ALL lanes during pre-market, after-hours, and the overnight
+24-hour market. Regular-session rules are unchanged. **The §2 hard limits
+and §3 entry hygiene / two-source rule all still bind** — this section
+only governs the *extra* risk of trading when stops cannot rest.
+
+- **Broker constraint (verified 2026-06-15):** extended/all-day sessions
+  accept **LIMIT orders only** — Robinhood rejects stop/market orders
+  outside regular hours (`EQUITY_ALL_DAY_TRADING_ERROR: order type must
+  be limit`). Therefore **no protective stop can rest in extended hours.**
+- **Orders:** marketable LIMIT at the inside quote only; never market.
+  ONE chase max ≤ +1% from the original limit, then stand down (§3
+  hygiene). Quote immediately before placement.
+- **Stop still required:** every extended-hours entry MUST still get its
+  regular-hours protective stop placed immediately after the fill
+  (−8% singles / −12% lev), even though it only *activates* at the 9:30
+  ET open. It is the floor and it is free — it does NOT protect against
+  an intra-session or overnight gap. Stops ratchet UP only.
+- **Overnight gap is accepted (posture C):** the owner accepts that a
+  gap can blow through the stop (it triggers at the open; the fill may
+  be worse than the stop price). Size with that in mind: the §2
+  2.5%/position budget binds off (entry − stop) as always, AND for any
+  position **carried overnight without an active stop** plan the
+  worst-case fill as the stop price *plus slippage* — assume ≥ 2% through
+  for singles, ≥ the −14.3% worst-held figure (BACKTEST §B3) for
+  leveraged. If that worst case would breach the daily-loss halt or the
+  drawdown checkpoint, do not size up.
+- **Liquidity guard:** before any extended-hours order, check the
+  bid/ask spread. If spread > **1.0% of mid**, stand down — thin
+  extended books fill badly. (Regular-session spreads are not gated.)
+- **Settled funds / GFV still bind:** extended-hours buys need settled
+  cash; never sell shares bought with unsettled proceeds (cash account).
+- **Daily-loss halt, drawdown checkpoint, max-positions, theme/lev/
+  beta-gross/cash-buffer caps** all apply across every session.
+
 ### Lane 4 — Options (PARKED)
 - Blocked until options tools appear on the MCP connection. When they do:
   journal the discovery, do NOT trade; owner will spec the lane first.
@@ -100,17 +139,26 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
 
 ## 4. Cadence
 
-- Pre-market run (~8:30 ET): scan catalysts, plan the day, queue entries.
-- Hourly during market hours: manage positions, execute plan, react.
-- EOD run (~16:15 ET): reconcile fills, P&L, journal lessons; append one
-  row to `data/marks.csv` (date, QQQ close, VIXY close, account value).
-  Regime gate inputs come from this file: QQQ > 20-session MA (estimate
-  until 20 rows exist) AND vol leg = VIXY below prior close (or est.
-  VIX < 25 while the series builds). Never use VIXY's absolute level as
-  the VIX<25 leg — decaying ETP, direction only.
-- Weekend run: research + propose policy diffs (NO trades, ever).
-- 24/7 cadence activates only when 24/7 instruments (crypto/event
-  contracts) ship on the MCP and the owner adds lanes for them.
+Schedule (v0.3): the heartbeat runs ~hourly **7:35 ET → 8:35 ET next
+boundary, i.e. across pre-market, regular session, and after-hours**,
+weekdays. Run-types by ET clock:
+
+- **Pre-market extended (~7:00–9:30 ET):** scan catalysts, manage
+  positions, and MAY enter/exit per §3.7 (LIMIT-only, liquidity guard,
+  regular-hours stop placed with each fill).
+- **Regular session (9:30–16:00 ET, hourly):** manage + execute, full
+  lane logic, stops placed with fills (unchanged).
+- **After-hours extended (~16:00–20:00 ET):** manage, react to news, and
+  MAY enter/exit per §3.7 (LIMIT-only, liquidity guard).
+- **EOD reconcile (~16:15 ET run):** reconcile fills, P&L, journal
+  lessons; append one row to `data/marks.csv` (date, QQQ close, VIXY
+  close, account value). Regime gate inputs come from this file:
+  QQQ > 20-session MA AND vol leg = VIXY below prior close. Never use
+  VIXY's absolute level as the VIX<25 leg — decaying ETP, direction only.
+- **Weekend run:** research + propose policy diffs (NO trades, ever).
+- True 24/7 cadence (crypto/event contracts) still activates only when
+  those instruments ship on the MCP and the owner adds lanes; equities
+  now trade the extended sessions above per §3.7.
 
 ## 5. Per-run process
 
