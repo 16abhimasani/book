@@ -12,9 +12,13 @@ heartbeat.
 ## Steps
 
 0. **Sync**: `git pull --rebase --autostash`. Never read stale state.
-   Then `bun run verify` — if it exits non-zero (corrupt/blank CSV or
-   book.json row), append a `DATA-INVALID` journal entry, commit/push,
-   and STOP. Never trade on data that failed integrity checks.
+   Then `bun run verify` (run it on the HOST via osascript if the sandbox
+   lacks `bun`, same as every other `bun run` here). Interpret the EXIT
+   CODE precisely: **exit 5 = data is actually invalid** → append a
+   `DATA-INVALID` journal entry, commit/push, STOP. A different failure
+   (command-not-found, bun unavailable, network) is an INFRA problem, not
+   bad data — resolve it (route to host) or treat as `TOOLS-DOWN`; do NOT
+   journal DATA-INVALID or halt on it.
 1. **Read** `robinhood-agentic/POLICY.md` (fully), last 5 entries of
    `robinhood-agentic/JOURNAL.md`, newest `robinhood-agentic/docs/HANDOFF-*.md`
    if present. POLICY status `HALT` → journal and stop.
