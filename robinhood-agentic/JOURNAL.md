@@ -924,3 +924,40 @@ session and the heartbeat interleave — timestamps are authoritative.)
   proceeds settle 06-16. EOD run (~16:15 ET): append marks.csv row (QQQ/VIXY
   official closes + account value), recompute gate for Monday-night L2, ladder
   recompute on official closes.
+
+## 2026-06-15 15:50 UTC · run: infra (POLICY v0.3 extended-hours + Cowork cleanup, owner live session — NO-TRADE)
+
+- COWORK CLEANUP (owner request, canonical name = robinhood-agentic):
+  - Removed stale folder ref `/Users/ash/dev/book/Agentic Trading` (dir no
+    longer exists) from the Cowork "robinhood-agentic" space (spaces.json).
+    Space now: /dev/book, /brain, /.agents. Backup saved.
+  - Scheduled task rh-trading-loop-local was already bound to the
+    robinhood-agentic space — no rename needed.
+  - Cron expanded 15 10-16 → **35 6-19 * * 1-5** (CDT) = 7:35am–8:35pm ET,
+    covering pre-market → after-hours. Backup saved. (App-managed files;
+    restart Cowork to load.)
+- POLICY v0.3 — OWNER RATIFIED (live session): extended-hours trading,
+  posture C (full overnight entries, stop-gap risk accepted).
+  - BROKER FACT verified via review probe: RH extended/all-day sessions
+    accept LIMIT orders ONLY — stops cannot rest there
+    (EQUITY_ALL_DAY_TRADING_ERROR: "order type must be limit"). So a
+    position entered/held in extended hours has NO active stop until the
+    9:30 ET open.
+  - New POLICY §3.7: limit-only; regular-hours protective stop STILL placed
+    with every fill (activates at open, the floor); 1.0%-of-mid spread
+    liquidity guard; overnight-gap sizing (worst-case = stop + slippage,
+    ≥2% singles / ≥−14.3% lev per BACKTEST §B3); ALL §2 limits +
+    settled-funds/GFV still bind. Cadence §4 expanded to the 7:00–20:00 ET
+    weekday window with pre-market/regular/after-hours/EOD run-types.
+  - trading-loop SKILL.md step 4 (run-types) + step 5 (extended-hours order
+    enforcement: market_hours flag, limit-only, spread check, stop-with-fill)
+    updated. POLICY §2 limit VALUES unchanged → drift test green (85 tests).
+- Live book (read-only this session, no orders): account $4,911.95 · cash
+  $1,334.15 · BP $1,076.47. Stops confirmed (regular_hours, all trailed up by
+  the heartbeat): MU 991.34 (6a301b94) · INTC 4@122.00 (6a301bea; 2sh banked
+  +12% earlier → +1.61R) · DAL 17@82.67 (6a301b7f) · AMD 514.99 (6a301b6c).
+- Limits check: OK — no orders placed (config/policy session).
+- Next watch: first extended-hours-eligible runs begin on the new cron after
+  Cowork restart. After-hours window today 16:00–20:00 ET is the first live
+  test of §3.7 (limit-only, spread guard, stop-with-fill). MU time stop 06-18;
+  MU earnings 06-24 AMC. Owner checklist (B2 ratification) still open.
