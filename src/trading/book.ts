@@ -44,6 +44,14 @@ export function assemblePanel(
     const pl = ((mark / p.entry - 1) * 100).toFixed(1);
     lines.push(`  ${p.symbol.padEnd(5)} ${String(p.qty).padStart(3)} @ ${p.entry.toFixed(2)}  stop ${stop}  mark ${mark.toFixed(2)} (${pl}%)`);
     if (p.stop == null) flags.push(`${p.symbol}: NO STOP on record`);
+    // A stop above entry is a profit-locking trailing stop — good news, but it
+    // reads identically to a transposed-digit data error (both zero out tracked
+    // risk). Surface it for a human glance; do NOT fail any check.
+    else if (p.stop > p.entry) {
+      flags.push(
+        `${p.symbol}: stop ${p.stop.toFixed(2)} is ABOVE entry ${p.entry.toFixed(2)} — profit locked +$${((p.stop - p.entry) * p.qty).toFixed(2)}; confirm intentional trailing stop (not a data error)`,
+      );
+    }
   }
 
   // --- snapshot staleness ---

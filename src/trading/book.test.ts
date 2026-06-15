@@ -73,4 +73,20 @@ describe("assemblePanel", () => {
     const p = assemblePanel(breach, marks, trades, day(20));
     expect(p.flags.some((f) => f.includes("cash buffer"))).toBe(true);
   });
+
+  test("stop above entry raises an informational profit-lock flag (not a §2 failure)", () => {
+    const trailed = {
+      ...cleanBook,
+      positions: [{ symbol: "BBB", qty: 10, entry: 50, stop: 52, price: 53 }],
+    };
+    const p = assemblePanel(trailed, marks, trades, day(20));
+    expect(p.flags.some((f) => f.includes("ABOVE entry") && f.includes("+$20.00"))).toBe(true);
+    // it must NOT be reported as a §2 limit violation
+    expect(p.flags.some((f) => f.startsWith("§2"))).toBe(false);
+  });
+
+  test("a normal stop-below-entry position raises no profit-lock flag", () => {
+    const p = assemblePanel(cleanBook, marks, trades, day(20));
+    expect(p.flags.some((f) => f.includes("ABOVE entry"))).toBe(false);
+  });
 });

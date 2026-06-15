@@ -14,10 +14,14 @@ limit, that is a STOP condition.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
-| 001  | Schema-validate all CSV/JSON loads + `bun run verify` | P1 | M | — | TODO |
-| 002  | Harden yahoo.ts (schema + bounds + tests) & fix backfill sanity carry | P1 | M | 001 (soft) | TODO |
-| 003  | POLICY.md ↔ risk.ts constant-drift test | P2 | S | — | TODO |
-| 004  | Stop-above-entry informational panel flag | P2 | S | — | TODO |
+| 001  | Schema-validate all CSV/JSON loads + `bun run verify` | P1 | M | — | DONE (2026-06-14, commit after f099511) |
+| 002  | Harden yahoo.ts (schema + bounds + tests) & fix backfill sanity carry | P1 | M | 001 (soft) | DONE (2026-06-14) |
+| 003  | POLICY.md ↔ risk.ts constant-drift test | P2 | S | — | DONE (2026-06-14) |
+| 004  | Stop-above-entry informational panel flag | P2 | S | — | DONE (2026-06-14) |
+
+All four implemented directly by the advisor at owner request ("do it all"),
+2026-06-14. 40 new tests (45 → 85 total); typecheck clean; backtest numbers
+unchanged; `bun run verify` exits 0 on live data. POLICY untouched.
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (reason) | REJECTED (rationale)
 
