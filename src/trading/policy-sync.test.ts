@@ -1,0 +1,65 @@
+import { describe, expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
+import {
+  RISK_PCT,
+  BOOK_RISK_PCT,
+  SLOT_PCT,
+  LEV_PCT,
+  BETA_GROSS_PCT,
+  THEME_PCT,
+  MIN_CASH_PCT,
+  MAX_POSITIONS,
+} from "./risk";
+
+// Drift guard: the binding POLICY.md §2 table and the risk.ts constants that
+// actually gate orders must never disagree. Edit one without the other and this
+// fails. Plan 003.
+
+const POLICY = readFileSync(
+  new URL("../../robinhood-agentic/POLICY.md", import.meta.url).pathname,
+  "utf8",
+);
+
+// phrase = stable substring identifying the §2 table row; constant = the code
+// value. A percentage cell ("40% of account") reads as a fraction; a bare
+// integer cell ("4") reads as itself.
+const ROWS: { phrase: string; constant: number }[] = [
+  { phrase: "Max single position (at entry)", constant: SLOT_PCT },
+  { phrase: "Max concurrent positions", constant: MAX_POSITIONS },
+  { phrase: "Max combined leveraged-ETF exposure", constant: LEV_PCT },
+  { phrase: "Min cash buffer", constant: MIN_CASH_PCT },
+  { phrase: "Max risk per position at entry", constant: RISK_PCT },
+  { phrase: "Max total open risk to stops", constant: BOOK_RISK_PCT },
+  { phrase: "Beta-adjusted gross exposure", constant: BETA_GROSS_PCT },
+  { phrase: "Single theme/catalyst concentration at entry", constant: THEME_PCT },
+];
+
+function valueForRow(phrase: string): number {
+  const line = POLICY.split("\n").find((l) => l.includes(phrase) && l.trimStart().startsWith("|"));
+  if (!line) throw new Error(`POLICY §2 row not found for phrase: "${phrase}"`);
+  const pct = line.match(/(\d+(?:\.\d+)?)\s*%/); // a percentage anywhere in the value cell
+  if (pct) return Number(pct[1]) / 100;
+  const int = line.match(/\|\s*(\d+)\s*\|?\s*$/); // a bare integer value cell
+  return Number(int?.[1] ?? NaN);
+}
+
+describe("POLICY.md §2 ↔ risk.ts constants", () => {
+  test("every code constant matches its POLICY row", () => {
+    for (const row of ROWS) {
+      const policyValue = valueForRow(row.phrase);
+      expect(`${row.phrase} = ${policyValue}`).toBe(`${row.phrase} = ${row.constant}`);
+    }
+  });
+
+  test("the parser matched every expected row (no vacuous pass)", () => {
+    // Guards against a POLICY reformat silently making the regex match nothing.
+    const found = ROWS.filter((r) => {
+      try {
+        return Number.isFinite(valueForRow(r.phrase));
+      } catch {
+        return false;
+      }
+    });
+    expect(found.length).toBe(ROWS.length);
+  });
+});
