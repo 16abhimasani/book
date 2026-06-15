@@ -89,4 +89,12 @@ describe("assemblePanel", () => {
     const p = assemblePanel(cleanBook, marks, trades, day(20));
     expect(p.flags.some((f) => f.includes("ABOVE entry"))).toBe(false);
   });
+
+  test("return is computed vs contributions, not the seed", () => {
+    const withContrib = { ...cleanBook, accountValue: 4911.89, contributions: 4585 };
+    const text = assemblePanel(withContrib, marks, trades, day(20)).lines.join("\n");
+    expect(text).toContain("Return +7.1% (value $4911.89 vs $4585 contributed)");
+    // absent contributions → no Return line (backward compatible)
+    expect(assemblePanel(cleanBook, marks, trades, day(20)).lines.join("\n")).not.toContain("Return ");
+  });
 });

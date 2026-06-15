@@ -38,6 +38,13 @@ export function assemblePanel(
 
   // --- positions & stops ---
   lines.push(`Account $${book.accountValue.toFixed(2)} · settled cash $${book.cash.toFixed(2)} · ${book.positions.length} position(s)`);
+  // Honest return = value vs total CONTRIBUTED (seed + deposits), never vs the
+  // $3,000 seed alone — a deposit makes the vs-seed number a vanity lie.
+  const contrib = (book as { contributions?: number }).contributions;
+  if (contrib && contrib > 0) {
+    const ret = ((book.accountValue - contrib) / contrib) * 100;
+    lines.push(`Return ${ret >= 0 ? "+" : ""}${ret.toFixed(1)}% (value $${book.accountValue.toFixed(2)} vs $${contrib.toFixed(0)} contributed)`);
+  }
   for (const p of book.positions) {
     const stop = p.stop == null ? "NO STOP" : p.stop.toFixed(2);
     const mark = p.price ?? p.entry;
