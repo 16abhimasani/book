@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 16:40Z market-hourly run: NO-TRADE manage-only, positions/stops byte-identical to 15:37Z post-action snapshot (no new peaks crossing ladder tiers, 4/4 slots = no new entries). Prices refreshed to live quotes. cash = settled buying power $1,076.47; total cash is $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
-  "asOf": "2026-06-15T16:40:00Z",
-  "accountValue": 4911.89,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 17:42Z market-hourly run (regular session, 13:42 ET): NO-TRADE manage-only — 4/4 slots full (no new entries), no stop ratchets (no position made a new high above its registry peak / next ladder tier: MU 1075.16<peak 1077.54, INTC 127.50<peak 132.61, AMD 550.35<+10% arm 566.49, DAL at BE). Prices refreshed to live quotes. cash = settled buying power $1,076.47; total cash is $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
+  "asOf": "2026-06-15T17:42:00Z",
+  "accountValue": 4906.49,
   "cash": 1076.47,
   "contributions": 4585,
   "positions": [
@@ -10,7 +10,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 991.34,
-      "price": 1077.45,
+      "price": 1075.16,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -19,7 +19,7 @@
       "qty": 4,
       "entry": 114.15,
       "stop": 122.0,
-      "price": 128.00,
+      "price": 127.50,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -28,7 +28,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 84.55,
+      "price": 84.52,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -37,7 +37,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 550.08,
+      "price": 550.35,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }

@@ -1045,3 +1045,61 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Next watch: first live Lane-1 entry will exercise the grok second-source
   check. Restart Cowork to load prior cron/space changes. Owner checklist (B2,
   §6a governance) still open.
+
+## 2026-06-15 17:42 UTC · run: market-hourly (NO-TRADE — manage only)
+
+- Account: $4,906.49 (+3.8% day vs Fri 06-12 close basis $4,727.48; +7.0% vs
+  $4,585 contributed) · settled cash/BP $1,076.47 (total cash $1,334.15 incl.
+  $257.68 INTC bank proceeds settling T+1 06-16) · 4/4 slots. Unrealized ≈
+  +$254 (MU +134, INTC +53, DAL +31, AMD +35); realized to date +$70.52.
+- Positions (last vs avg): MU 1 @ 941.50 (+14.2%, last 1075.16) [L1, TRAIL
+  991.34 / 6a301b94, peak 1077.54] · INTC 4 @ 114.15 (+11.7%, last 127.50)
+  [L1, TRAIL 122.00 / 6a301bea, peak 132.61] · DAL 17 @ 82.67 (+2.2%, last
+  84.52) [L1, BE 82.67 / 6a301b7f] · AMD 1 @ 514.99 (+6.9%, last 550.35)
+  [L1, BE 514.99 / 6a301b6c].
+- Actions: NO-TRADE. (1) No new entries — 4/4 slots full (capacity cap, §2);
+  settled BP $1,076 exists but no slot for a 5th name regardless. (2) No stop
+  ratchets: MU last 1075.16 < peak 1077.54 and INTC 127.50 < peak 132.61 → no
+  new highs, −8% trails hold; DAL +2.2% and AMD +6.9% both below their +10%
+  trail-arms (90.94 / 566.49), already at BE. Stops ratchet up only → nothing
+  to raise this run.
+- Catalysts considered: held names only (no slot to act, no L1 entry → no grok
+  second-source call this run). USO 119.91 (−4.4% day) — bearish-oil tape
+  intact, supports DAL airline cost-tailwind thesis; semis/AI broad-up day
+  holds (MU last 1075 vs Fri close 981.61 = +9.5%; AMD 550 vs 511.57 = +7.6%)
+  with no thesis-breaking news on any holding.
+- Tools check: get_accounts OK; agentic_allowed=true = 786675686 (••••5686).
+  Equity + watchlist tools only on this MCP surface — no crypto/options/
+  event-contract ORDER tools → parked lanes (L4/L5) stay parked; no NEW-TOOLS.
+- STOP REGISTRY (authoritative, all four broker-verified `confirmed`/
+  regular_hours this run via get_equity_orders — none missing): MU 991.34
+  (6a301b94, peak 1077.54) · INTC 122.00 (6a301bea, peak 132.61) · DAL 82.67
+  (6a301b7f) · AMD 514.99 (6a301b6c). Unchanged from 16:41Z.
+- Limits check: ALL PASS (bun run verify exit 0 + risk on host, book.json
+  refreshed to live quotes asOf 17:42Z; sandbox lacks bun → ran via osascript).
+  book risk to stops $0 (0.0%) ≤ 8% — book fully locked breakeven-or-better;
+  4/4 ≤ 4 slots; risk/position within $122.66 budget; lev-ETF 0%; beta-gross
+  $3,572.35 (72.8%) ≤ 150%; theme ai-capex 43.5% + oil-collapse-beneficiary
+  29.3% ≤ 65%; cash $1,076.47 (21.9% settled) ≥ 2.5%. Daily-loss halt +
+  drawdown checkpoint clear. (book panel exit-4 = by-design informational
+  FLAGS: profit-locked trailing stops + MU earnings 06-24; not a data/risk
+  fault — verify gate itself was exit 0.)
+- Run-type: regular session (13:42 ET). §3.7 extended-hours rules not engaged.
+  Positions byte-identical to prior snapshot; only intraday prices moved (book
+  ticked $4,911.89→$4,906.49 as MU/INTC eased a touch off peaks), which cannot
+  change risk-to-stops (every stop sits at/above entry).
+- §6a (bun run stats): 2 closed / 4 open, hit 100%, expectancy 0.96R/trade
+  (L1 1.61R, L2 0.31R). Capital-add gate NOT ELIGIBLE (2 closed < 10; 0.6 wk
+  < 4) — sample building, expected.
+- Gate: OFF (bun run gate — QQQ 721.34 ≤ MA20 721.50 at official 06-12 close;
+  VIXY 23.29 < prior 24.41 quiet). Intraday QQQ 743.95 (+3.1%) > MA20 and VIXY
+  21.88 falling → raw gate reads ON intraday, but POLICY §4 takes the regime
+  read from the official EOD marks row; moot at 4/4 slots regardless.
+- Next watch: MU time stop 06-18 (Thu) + earnings 06-24 AMC — plan exit BEFORE
+  the print, never hold into it; MU trail 991.34 vs new peaks, INTC trail 122.00
+  vs peak 132.61 (ratchet up only); AMD +10% trail-arm 566.49 (high today ~558,
+  close — arm if it prints); DAL BE 82.67, tell = USO reversal >+3% (USO 119.91,
+  −4.4% intact). Capacity 4/4 → no new entries until a slot frees or (for L2)
+  the gate flips ON at an official close. INTC proceeds settle 06-16. EOD run
+  (~16:15 ET): append marks.csv row (QQQ/VIXY official closes + account value),
+  recompute Lane-2 gate for Monday-night.
