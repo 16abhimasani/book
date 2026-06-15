@@ -961,3 +961,14 @@ session and the heartbeat interleave — timestamps are authoritative.)
   Cowork restart. After-hours window today 16:00–20:00 ET is the first live
   test of §3.7 (limit-only, spread guard, stop-with-fill). MU time stop 06-18;
   MU earnings 06-24 AMC. Owner checklist (B2 ratification) still open.
+
+## 2026-06-15 16:00 UTC · run: market-hourly (NO-TRADE — manage only)
+
+- Account: $4,908.29 (≈+3.6% day vs 06-12 close, +63.6% total vs $3,000 seed) · cash $1,334.15 (settled BP $1,076.47; $257.68 INTC bank proceeds settle 06-16)
+- Positions (unrealized vs avg): MU 1 @ 941.50 (+13.7%, last 1070.36) [L1, TRAIL stop 991.34 / 6a301b94, peak 1077.54] · INTC 4 @ 114.15 (+12.3%, last 128.18) [L1, TRAIL stop 122.00 / 6a301bea, peak 132.61] · DAL 17 @ 82.67 (+2.8%, last 84.97) [L1, BE stop 82.67 / 6a301b7f] · AMD 1 @ 514.99 (+6.3%, last 547.23) [L1, BE stop 514.99 / 6a301b6c]. Total unrealized ≈ +$256.
+- STOP REGISTRY (authoritative, all broker-confirmed `confirmed`/regular_hours this run, UNCHANGED from 15:37Z): MU 991.34 (6a301b94) · INTC 122.00 (6a301bea) · DAL 82.67 (6a301b7f) · AMD 514.99 (6a301b6c). All four stops verified live via get_equity_orders — none missing.
+- Actions: NO-TRADE. (1) No new entries — 4/4 slots full (capacity cap, §2). (2) No stop ratchets: MU last 1070.36 < peak 1077.54 and INTC 128.18 < peak 132.61 → no new highs, −8% trails hold; DAL +2.8% and AMD +6.3% both below next ladder tier (+10% trail-arms 90.94 / 566.49), already at BE. Stops ratchet up only → nothing to raise.
+- Catalysts considered: held names only (no slot to act on anything new). USO 119.66 (−4.6% day) — bearish-oil tape intact, supports DAL airline cost-tailwind thesis. Semis/AI broad-up day continues (MU +9.0%, AMD +7.0% vs Friday) but no thesis-breaking news on any holding.
+- Limits check: ALL PASS (bun run risk on host, book.json asOf 15:37Z = identical positions/stops to now): book risk to stops $0 (0.0%) ≤ 8%; 4/4 ≤ 4 slots; risk/position within budget; lev-ETF 0%; beta-gross 73.0% ≤ 150%; theme ai-capex 43.5% + oil-collapse-beneficiary 29.5% ≤ 65%; cash 21.9% (settled) ≥ 2.5%. (sandbox lacks bun → ran on host via osascript.)
+- Note: positions byte-identical to prior post-action snapshot; only intraday prices moved, which cannot change risk-to-stops since every stop sits at/above entry (book fully locked breakeven-or-better).
+- Next watch: MU time stop 06-18 (3 sessions out) + earnings 06-24 AMC — plan exit BEFORE the print, never hold into it; MU/INTC trails vs new peaks (ratchet up only); AMD +10% trail-arm 566.49 (today's high 558.37, not yet armed); DAL BE 82.67, tell = USO reversal >+3%. Capacity 4/4 + no settled room for a 5th name regardless → no entries until a slot frees. INTC proceeds settle 06-16. EOD run (~16:15 ET): append marks.csv row (QQQ/VIXY official closes + account value), recompute Lane-2 gate for Monday-night.
