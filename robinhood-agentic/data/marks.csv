@@ -45,3 +45,4 @@ date,qqq_close,vixy_close,account_value,notes
 2026-06-10,693.69,25.68,,prior-session closes via MCP (pre-launch)
 2026-06-11,717.12,24.41,3087.27,day 1; corrected 06-12 to official SIP closes + 16:00 ET account value (was 19:59 prints / 22:20 AH value)
 2026-06-12,721.34,23.29,4727.48,"EOD run (Cowork); yahoo v8 official closes — broker 19:59:59 prints 721.37/23.33 agree; account = 16:00 ET position closes + total cash 1076.47 (incl 933.34 unsettled TQQQ proceeds)"
+2026-06-15,743.84,21.72,4901.55,"EOD reconcile (Cowork after-hours ~16:40 ET); broker 19:59:59 regular prints QQQ 743.84 / VIXY 21.72 (official SIP close not yet posted at run time — may differ by cents, correct on a later run if needed); account=total_value (equity at 16:00 marks + total cash 1334.15 incl 257.68 INTC proceeds settling 06-16)"

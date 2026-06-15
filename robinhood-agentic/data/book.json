@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 19:45Z market-hourly run (regular session, 15:45 ET, ~15min to close): MANAGE — ratcheted MU trail stop 1001.15->1009.67 on TRUE session high 1097.47 (5min historicals; prior runs tracked observed-last peak 1088.21 and under-ratcheted). Cancelled 6a30481d (confirmed cancelled, no fill raced), placed+confirmed 6a305638 (sell stop_market qty1 GTC regular_hours, stop 1009.67 = 1097.47 x0.92), locks +7.24%/+0.91R on MU. AMD true high today 558.37 < +10% arm 566.49 -> not armed (BE holds); INTC 128.54 << peak 132.61, DAL +1.9% -> no ratchet. 4/4 slots full (no new entries). cash = settled buying power $1,076.47; total cash $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
-  "asOf": "2026-06-15T19:45:00Z",
-  "accountValue": 4917.03,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 20:40Z EOD reconcile (Cowork after-hours, ~16:40 ET, post-close): MANAGE / NO-TRADE — no ratchets (MU true session high 1097.47 unchanged from registry peak; INTC high 130.90 < peak 132.61; AMD high 558.37 < +10% arm 566.49; DAL high 85.40 < +10% arm 90.94 → all trails/BE hold, ratchet-up-only), no entries (4/4 slots full), no exits. Appended data/marks.csv EOD row (QQQ 743.84 / VIXY 21.72 / acct 4901.55). prices below = broker 19:59:59 regular-session closes. cash = settled buying power $1,076.47; total cash $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
+  "asOf": "2026-06-15T20:40:00Z",
+  "accountValue": 4901.55,
   "cash": 1076.47,
   "contributions": 4585,
   "positions": [
@@ -10,7 +10,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 1009.67,
-      "price": 1085.40,
+      "price": 1087.80,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -19,7 +19,7 @@
       "qty": 4,
       "entry": 114.15,
       "stop": 122.0,
-      "price": 128.54,
+      "price": 127.78,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -28,7 +28,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 84.28,
+      "price": 84.07,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -37,7 +37,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 547.625,
+      "price": 547.27,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }

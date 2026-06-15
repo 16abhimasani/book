@@ -1237,3 +1237,70 @@ session and the heartbeat interleave — timestamps are authoritative.)
   low. Pulling 5min historicals at manage time sets the trail on the actual
   peak (ratchet up only, so strictly protective). Worth doing for any position
   actively trailing near its peak.
+
+## 2026-06-15 20:47 UTC · run: EOD reconcile + after-hours extended (NO-TRADE — manage only; gate flipped ON)
+
+- Account: $4,901.55 (+3.7% day vs Fri 06-12 close basis $4,727.48; +6.9% vs
+  $4,585 contributed) · settled cash/BP $1,076.47 (total cash $1,334.15 incl.
+  $257.68 INTC bank proceeds settling T+1 06-16) · 4/4 slots. Unrealized ≈
+  +$257 (MU +146, INTC +55, DAL +24, AMD +32); realized to date +$70.52.
+- Positions (official close vs avg): MU 1 @ 941.50 (+15.5%, close 1087.80) [L1,
+  TRAIL 1009.67 / 6a305638, peak 1097.47] · INTC 4 @ 114.15 (+11.9%, close
+  127.78) [L1, TRAIL 122.00 / 6a301bea, peak 132.61] · DAL 17 @ 82.67 (+1.7%,
+  close 84.07) [L1, BE 82.67 / 6a301b7f] · AMD 1 @ 514.99 (+6.3%, close 547.27)
+  [L1, BE 514.99 / 6a301b6c].
+- Actions: NO-TRADE / manage-only. (1) No ratchets — pulled today's RTH
+  historicals: MU true session high 1097.47 = registry peak (no new high → trail
+  1009.67 holds); INTC high 130.90 < peak 132.61; AMD high 558.37 < +10% arm
+  566.49 (BE holds); DAL high 85.40 < +10% arm 90.94 (BE holds). Stops ratchet
+  up only → nothing to raise. (2) No new entries — 4/4 slots full (capacity cap
+  §2); settled BP $1,076 but no slot for a 5th name regardless → no L1 entry →
+  no grok second-source call this run (step-5 entry-only rule). (3) No exits —
+  no stop hit, no time stop due (MU time stop 06-18). EOD reconcile: appended
+  data/marks.csv row (QQQ 743.84 / VIXY 21.72 / acct 4901.55).
+- Catalysts considered: held names only (no slot to act). USO close 121.26
+  (−3.3% day vs 125.43) — bearish-oil tape intact, supports DAL airline
+  cost-tailwind thesis; semis/AI broad-up day held into the close (MU close
+  1087.80 vs Fri 981.61 = +10.8%; AMD 547.27 vs 511.57 = +7.0%; INTC 127.78 vs
+  124.57 = +2.6%) with no thesis-breaking news on any holding.
+- Tools check: get_accounts OK; agentic_allowed=true = 786675686 (••••5686);
+  all 3 other accounts agentic_allowed=false. Equity + watchlist + historicals
+  tools only on this MCP surface — no crypto/options/event-contract ORDER tools
+  → parked lanes L4/L5 stay parked; no NEW-TOOLS.
+- STOP REGISTRY (authoritative, all four broker-verified `confirmed`/
+  regular_hours this run via get_equity_orders — none missing): MU 1009.67
+  (6a305638, peak 1097.47) · INTC 122.00 (6a301bea, peak 132.61) · DAL 82.67
+  (6a301b7f) · AMD 514.99 (6a301b6c). All shares held_for_sells = stops cover
+  full size. Unchanged from 19:46Z. (Stops are regular_hours GTC; they rest for
+  the 9:30 open — cannot trigger in extended hours, accepted per §3.7 posture C.)
+- Limits check: ALL PASS (bun run verify exit 0 + risk exit 0 on host; book.json
+  refreshed to official closes asOf 20:40Z; sandbox lacks bun → ran via
+  osascript). book risk to stops $0 (0.0%) ≤ 8% — book fully locked
+  breakeven-or-better; 4/4 ≤ 4 slots; risk/position within $122.54 budget;
+  lev-ETF 0%; beta-gross $3,575.38 (72.9%) ≤ 150%; theme ai-capex 43.8% +
+  oil-collapse-beneficiary 29.2% ≤ 65%; cash $1,076.47 (22.0% settled) ≥ 2.5%.
+  Daily-loss halt (−15%) + drawdown checkpoint ($2k) clear (acct +3.7% day,
+  $4,901).
+- Run-type: EOD reconcile + after-hours extended (16:47 ET). §3.7 extended-hours
+  entry rules available but moot at 4/4 slots (no entries possible).
+- §6a (bun run stats): 2 closed / 4 open, hit 100%, expectancy 0.96R/trade
+  (L1 1.61R, L2 0.31R). Capital-add gate NOT ELIGIBLE (2 closed < 10; 0.6 wk
+  < 4) — sample building, expected. 0 limit breaches.
+- Gate: FLIPPED ON (bun run gate, computed at 2026-06-15 close) — QQQ 743.84 >
+  20d MA 723.25 (pass) AND VIXY 21.72 < prior 23.29 (quiet pass). Was OFF on the
+  06-12 official marks; today's close is the first regime-ON read since launch.
+  Lane-2 (lev-ETF rotation) is now regime-permitted — but moot until a slot
+  frees (4/4). A freed slot tomorrow re-runs a FRESH gate check before any L2
+  entry; do NOT auto-fire (§3 hygiene + two-source rule still bind).
+- Next watch: MU time stop 06-18 (Thu, 3 sessions) + earnings 06-24 AMC — plan
+  exit BEFORE the print, never hold into it; MU trail 1009.67 / INTC trail
+  122.00 vs new peaks (ratchet up only); AMD +10% arm 566.49 (today high 558.37
+  — arm if it prints); DAL BE 82.67, tell = USO reversal >+3% (USO −3.3%
+  intact). Capacity 4/4 → no new entries until a slot frees; with the gate now
+  ON, a freed slot could go L1 catalyst OR L2 lev-ETF (fresh gate check at that
+  time). INTC $257.68 proceeds settle 06-16 (T+1) → adds settled BP tomorrow.
+  Next run: pre-market extended (~7:00 ET Tue) or first regular hourly.
+- Lesson: the regime gate flipped OFF→ON at today's close — the first ON read
+  since launch. Logged so a slot freeing tomorrow is evaluated under a fresh
+  gate check (Lane-2 eligible), not the stale OFF read; gate-ON permits the
+  lane, it does not by itself trigger an entry.
