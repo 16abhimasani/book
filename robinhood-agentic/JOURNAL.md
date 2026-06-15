@@ -857,3 +857,70 @@ session and the heartbeat interleave — timestamps are authoritative.)
   checklist (governance patch + B2). New: `bun run verify` is now available as a
   pre-trade data-integrity gate — wiring it into the trading-loop skill step 0
   is a proposed follow-up (skill edit, owner ratifies).
+
+## 2026-06-15 15:37 UTC · run: market-hourly (Cowork heartbeat)
+
+- Account: $4,911.71 (+3.9% vs Fri 06-12 close basis $4,727.48) · settled
+  cash $1,076.47 (total cash $1,334.15 incl. $257.68 INTC bank proceeds
+  settling T+1 on 06-16) · 4/4 slots. Total since launch ≈ +7% on ~$4,585
+  invested ($3,000 initial + $1,585 owner deposit 06-12; approximate — deposit
+  muddies a precise total). Unrealized +$266; realized to date +$70.52
+  (TQQQ +41.14, INTC bank +29.38).
+- Positions (first session since Fri; broad semis/AI gap-up): MU 1 @ 941.50
+  (+13.8%) [L1, TRAIL 991.34 6a301b94, peak 1077.54] · INTC 4 @ 114.15
+  (+12.8%) [L1, TRAIL 122.00 6a301bea, peak 132.61; banked 2/6 @ 128.84] ·
+  DAL 17 @ 82.6699 (+3.2%) [L1, BE 82.67 6a301b7f] · AMD 1 @ 514.99 (+6.5%)
+  [L1, BE 514.99 6a301b6c].
+- Actions: 4× ladder management, all stops ratcheted UP (cancel→review→place,
+  every place_equity_order review'd, fresh UUID ref_ids, market_data_disclosure
+  surfaced verbatim each time):
+  1. MU — past +12% (high 1077.54 = +14.4%). Trailed 941.50→991.34 (−8% from
+     peak). +12% "sell 1/3" not executable on a 1-share lot → trail only; the
+     06-24 earnings hard-exit is the backstop. Stops up only ✓.
+  2. INTC — past +12% (high 132.61 = +16.2%). Banked 1/3: sold 2 of 6 @
+     128.8401 (limit 128.80, order 6a301bc7; +$29.38 = +1.61R on the tranche,
+     logged as trades.csv row 2026-06-11-INTC-b1). Trailed remaining 4
+     116.34→122.00 (−8% from peak 132.61).
+  3. AMD — crossed +5% (high 558.37 = +8.4%, below +10% trail-arm 566.49).
+     Stop 473.79→BE 514.99.
+  4. DAL — high-water-mark 87.38 = +5.7% > +5% level 86.80. Stop 76.05→BE
+     82.67. Now +3.2%; tell USO −4.4% (oil-collapse thesis intact).
+- Catalysts considered: none scanned for entries — 4/4 slots (no L1 capacity)
+  and gate OFF (no L2). Shadow ledger unchanged (no candidates evaluated; SPCX
+  pending resolution by 06-19).
+- Tools check: get_accounts OK; agentic_allowed=true = 786675686 (••••5686).
+  Equity + watchlist tools only on this MCP surface — no crypto/options/
+  event-contract ORDER tools → parked lanes (L4/L5) stay parked; no NEW-TOOLS.
+- STOP REGISTRY (authoritative, all broker-confirmed this run): MU 1 @ 991.34
+  TRAIL (6a301b94, peak 1077.54) · INTC 4 @ 122.00 TRAIL (6a301bea, peak
+  132.61) · DAL 17 @ 82.67 BE (6a301b7f) · AMD 1 @ 514.99 BE (6a301b6c).
+  Prior stops 6a2b62e1 / 6a2c4103 / 6a2c230c / 6a2c5012 all cancelled this run.
+- Limits check: ALL PASS (bun run risk + book, book.json refreshed to
+  post-action ground truth asOf 15:37Z): book risk to stops $0 (0.0%) ≤ 8% —
+  entire book now locked breakeven-or-better (was $153.74 / 3.1% pre-run);
+  ai-capex 43.5% / oil-benef 29.5% ≤ 65%; beta-gross 73.0% ≤ 150%; lev-ETF 0%;
+  cash 21.9% ≥ 2.5%; 4/4 ≤ 4 slots. Flags (informational): MU/INTC/DAL
+  profit-locked stops (by-design, plan-004 flag); MU earnings 06-24 AMC (9d).
+- §6a (bun run stats): 2 closed / 4 open, hit 100%, expectancy 0.96R/trade
+  (L1 1.61R from INTC bank; L2 0.31R from TQQQ). Capital-add gate NOT ELIGIBLE
+  (2 closed < 10; 0.6 wk < 4) — sample still building, expected.
+- Gate: OFF — computed (bun run gate), official 06-12 close: QQQ 721.34 ≤ MA20
+  721.50; vol quiet (VIXY 23.29 < prior 24.41). Intraday QQQ 742.88 (+3.0%)
+  well above MA20 and VIXY 22.17 falling → raw gate would read ON intraday, but
+  POLICY §4 takes the regime read from the official EOD marks row; today's close
+  decides Monday-night L2 eligibility. Moot regardless: 4/4 slots = no L2 room.
+- Lesson: first session since Friday opened with a broad semis/AI gap-up (MU
+  +9.4%, AMD +7.4% on the day); four positions crossed ladder tiers in one run.
+  Mechanically ratcheting every stop up (two trails, two breakevens) + the one
+  executable bank-1/3 took the book from $153.74 (3.1%) open risk to $0 — fully
+  de-risked to stops while keeping all four winners working. A 1-share lot
+  can't honor the +12% "sell 1/3" leg; the −8% trail is the faithful substitute.
+- Next watch (next market-hourly): MU trail 991.34 vs new peaks (ratchet up
+  only), time stop 06-18, earnings 06-24 AMC (plan exit before the print —
+  never hold into it); INTC trail 122.00 vs peak 132.61; DAL BE 82.67, tell =
+  USO reversal >+3% (USO 119.98, −4.4% intact); AMD BE 514.99, +10% trail-arm
+  566.49 (high 558.37 today, close). Capacity: 4/4 + gate OFF → no new entries
+  until a slot frees or gate flips ON at an official close; $257.68 INTC
+  proceeds settle 06-16. EOD run (~16:15 ET): append marks.csv row (QQQ/VIXY
+  official closes + account value), recompute gate for Monday-night L2, ladder
+  recompute on official closes.
