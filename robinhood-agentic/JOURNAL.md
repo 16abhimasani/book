@@ -821,3 +821,39 @@ session and the heartbeat interleave — timestamps are authoritative.)
   L2); MU time stop 06-18 / earnings 06-24 AMC; INTC trail vs peak
   126.46, bank-1/3 127.85; DAL tell = USO reversal >+3%; AMD BE 540.74;
   weekend run = research only.
+
+## 2026-06-14 21:40 UTC · run: infra (implemented /improve audit plans 001-004 — NO-TRADE)
+
+- Implemented all 4 plans from the 2026-06-14 /improve audit (plans/). Owner
+  directive: "do it all." Read-only/observability/test work — freeze-compatible,
+  no strategy surface, POLICY untouched. 45 → 85 tests; typecheck clean; backtest
+  numbers unchanged; bun run verify exits 0 on live data.
+  1. P001 — schema-validate every CSV/JSON load (src/trading/validate.ts) + new
+     `bun run verify`. Closes the silent-coercion hole: Number(r.risk_usd||0) and
+     friends now THROW on blank/NaN/inconsistent fields instead of becoming a
+     real $0-risk trade the limit checker waves through. Wired into loadTrades/
+     loadMarks/loadShadow + a verify CLI (exit 5 on bad data). +24 tests.
+  2. P002 — yahoo.ts parseChartResponse: explicit shape narrowing (no blind
+     cast) + per-close bounds, so a feed shape-change throws instead of
+     returning [] the gate reads as "no data". Fixed backfill carry-bug:
+     filterSaneBars measures each jump vs the ACTUAL predecessor, not the
+     last-accepted close — two consecutive bad bars are now both rejected.
+     +12 tests; backtest invariant.
+  3. P003 — policy-sync.test.ts asserts POLICY §2 table == risk.ts constants
+     (+ completeness guard). Verified it fails on a deliberate constant change.
+     Drift between the binding doc and the code can no longer merge.
+  4. P004 — book panel flags stop-above-entry as "profit locked +$X; confirm
+     intentional" — distinguishes a trailing stop from a typo (both zero out
+     tracked risk). Informational only; risk math untouched. Live panel now
+     flags INTC (stop 116.34 > entry 114.15, +$13.14 locked).
+- Provenance: plans came from the shadcn/improve skill (installed global this
+  session) — 4 fresh-context subagents + self-vetting that REJECTED a false
+  "CRITICAL stop>=entry bug" (by-design profit-lock; P004 is its correct form)
+  and an already-done finding. plans/ + plans/README.md committed.
+- Limits check: OK — no orders. bun run verify: all data files valid.
+- Stop registry unchanged (no broker actions): MU 941.50 (6a2b62e1) · INTC
+  116.34 TRAIL (6a2c4103) · DAL 76.05 (6a2c230c) · AMD 473.79 (6a2c5012).
+- Next watch: unchanged — MU time stop 06-18, MU earnings 06-24 AMC; owner
+  checklist (governance patch + B2). New: `bun run verify` is now available as a
+  pre-trade data-integrity gate — wiring it into the trading-loop skill step 0
+  is a proposed follow-up (skill edit, owner ratifies).
