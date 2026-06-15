@@ -18,6 +18,54 @@ const ROOT = new URL("../../robinhood-agentic/data/", import.meta.url).pathname;
 const MARKS = ROOT + "marks.csv";
 const MIN_SESSIONS = 40;
 
+export interface SaneBar {
+  date: string;
+  qqqClose: number;
+  vixyClose: number;
+}
+
+/**
+ * Reject bars whose day-over-day jump exceeds the bounds (QQQ ±15%, VIXY ±40%)
+ * so a bad print can't flip the regime gate. The baseline for each comparison
+ * is the ACTUAL previous close, not the last accepted one — otherwise two
+ * consecutive bad bars could slip through if the second's jump from the last
+ * good close happens to be under the threshold. Pure + testable.
+ */
+export function filterSaneBars(
+  bars: { date: string; close: number }[],
+  vixyByDate: Map<string, number>,
+  opts: { qqqJump?: number; vixyJump?: number } = {},
+): { kept: SaneBar[]; rejected: string[] } {
+  const qqqJump = opts.qqqJump ?? 0.15;
+  const vixyJump = opts.vixyJump ?? 0.4;
+  const kept: SaneBar[] = [];
+  const rejected: string[] = [];
+  let prevQ: number | null = null;
+  let prevV: number | null = null;
+  for (const bar of bars) {
+    const vClose = vixyByDate.get(bar.date);
+    if (vClose == null) {
+      rejected.push(`${bar.date}: no VIXY close — skipped`);
+      continue; // no full data for this bar; do not move the baselines
+    }
+    const reason =
+      prevQ != null && Math.abs(bar.close / prevQ - 1) > qqqJump
+        ? `${bar.date}: QQQ ${bar.close} vs prior ${prevQ} (>${(qqqJump * 100).toFixed(0)}% jump) — REJECTED, gate holds prior state`
+        : prevV != null && Math.abs(vClose / prevV - 1) > vixyJump
+          ? `${bar.date}: VIXY ${vClose} vs prior ${prevV} (>${(vixyJump * 100).toFixed(0)}% jump) — REJECTED`
+          : null;
+    // advance baselines to the immediate predecessor, accepted or not
+    prevQ = bar.close;
+    prevV = vClose;
+    if (reason) {
+      rejected.push(reason);
+      continue;
+    }
+    kept.push({ date: bar.date, qqqClose: bar.close, vixyClose: vClose });
+  }
+  return { kept, rejected };
+}
+
 async function main() {
   const { header, rows } = parseCsvObjects(readFileSync(MARKS, "utf8"));
   const ours = new Map(rows.map((r) => [r.date!, r]));
@@ -30,45 +78,28 @@ async function main() {
   ]);
 
   // --- marks.csv: merge, anchors win ---
-  const vixyByDate = new Map(vixy.map((b) => [b.date, b]));
+  const vixyByDate = new Map(vixy.map((b) => [b.date, b.close]));
   const eligible = qqq.filter((b) => b.date <= lastDate && vixyByDate.has(b.date));
   const window = eligible.slice(-Math.max(MIN_SESSIONS + 5, MIN_SESSIONS)); // a little margin over the minimum
+  const { kept, rejected } = filterSaneBars(window, vixyByDate);
   let added = 0;
   const mismatches: string[] = [];
-  const rejected: string[] = [];
-  let prevQ: number | null = null;
-  let prevV: number | null = null;
-  for (const bar of window) {
+  for (const bar of kept) {
     const existing = ours.get(bar.date);
-    const v = vixyByDate.get(bar.date)!;
-    // Sanity bounds: the gate forces real exits off these numbers, and the
-    // source is an unofficial endpoint. Reject absurd day-over-day jumps
-    // (QQQ ±15%, VIXY ±40% — both beyond any plausible single session)
-    // rather than letting a bad print flip the gate.
-    if (prevQ != null && Math.abs(bar.close / prevQ - 1) > 0.15) {
-      rejected.push(`${bar.date}: QQQ ${bar.close} vs prior ${prevQ} (>15% jump) — REJECTED, gate holds prior state`);
-      continue;
-    }
-    if (prevV != null && Math.abs(v.close / prevV - 1) > 0.4) {
-      rejected.push(`${bar.date}: VIXY ${v.close} vs prior ${prevV} (>40% jump) — REJECTED`);
-      continue;
-    }
-    prevQ = bar.close;
-    prevV = v.close;
     if (existing) {
-      const dq = Math.abs(Number(existing.qqq_close) - bar.close);
-      const dv = Math.abs(Number(existing.vixy_close) - v.close);
+      const dq = Math.abs(Number(existing.qqq_close) - bar.qqqClose);
+      const dv = Math.abs(Number(existing.vixy_close) - bar.vixyClose);
       if (dq > 0.005 || dv > 0.005) {
         mismatches.push(
-          `${bar.date}: ours QQQ ${existing.qqq_close}/VIXY ${existing.vixy_close} vs yahoo ${bar.close}/${v.close} — KEEPING OURS`,
+          `${bar.date}: ours QQQ ${existing.qqq_close}/VIXY ${existing.vixy_close} vs yahoo ${bar.qqqClose}/${bar.vixyClose} — KEEPING OURS`,
         );
       }
       continue;
     }
     ours.set(bar.date, {
       date: bar.date,
-      qqq_close: bar.close.toFixed(2),
-      vixy_close: v.close.toFixed(2),
+      qqq_close: bar.qqqClose.toFixed(2),
+      vixy_close: bar.vixyClose.toFixed(2),
       account_value: "",
       notes: "backfill 2026-06-12 (yahoo raw close; pre-launch, no account)",
     });
