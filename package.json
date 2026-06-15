@@ -15,7 +15,8 @@
     "backfill": "bun src/trading/backfill.ts",
     "backtest": "bun src/trading/backtest.ts",
     "book": "bun src/trading/book.ts",
-    "shadow": "bun src/trading/shadow.ts"
+    "shadow": "bun src/trading/shadow.ts",
+    "verify": "bun src/trading/verify.ts"
   },
   "dependencies": {
     "@mysten/sui": "^2.16.0"

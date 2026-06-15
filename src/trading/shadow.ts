@@ -23,6 +23,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { parseCsvObjects, serializeCsv } from "./csv";
 import { fetchDailyBars, type DailyBar } from "./yahoo";
+import { validateShadowRow } from "./validate";
 
 const SHADOW_PATH = new URL("../../robinhood-agentic/data/shadow.csv", import.meta.url).pathname;
 const HOLD_SESSIONS = 5; // mirror POLICY §3 L1 time stop
@@ -48,20 +49,7 @@ export function loadShadow(path = SHADOW_PATH): { header: string[]; rows: Shadow
     header,
     rows: rows
       .filter((r) => r.candidate_id)
-      .map((r) => ({
-        candidate_id: r.candidate_id!,
-        symbol: r.symbol ?? "",
-        eval_date: r.eval_date ?? "",
-        status: r.status ?? "",
-        entry: r.entry ? Number(r.entry) : null,
-        stop: r.stop ? Number(r.stop) : null,
-        qty: r.qty ? Number(r.qty) : null,
-        reason_skipped: r.reason_skipped ?? "",
-        exit_date: r.exit_date ?? "",
-        exit_price: r.exit_price ? Number(r.exit_price) : null,
-        shadow_r: r.shadow_r ? Number(r.shadow_r) : null,
-        notes: r.notes ?? "",
-      })),
+      .map((r, i) => validateShadowRow(r, `shadow.csv row ${i + 1}`)),
   };
 }
 

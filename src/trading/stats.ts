@@ -10,6 +10,7 @@
 
 import { readFileSync } from "node:fs";
 import { parseCsvObjects } from "./csv";
+import { validateTradeRow } from "./validate";
 
 export interface TradeRow {
   trade_id: string;
@@ -26,16 +27,7 @@ export function loadTrades(path: string): TradeRow[] {
   const { rows } = parseCsvObjects(readFileSync(path, "utf8"));
   return rows
     .filter((r) => r.trade_id)
-    .map((r) => ({
-      trade_id: r.trade_id!,
-      symbol: r.symbol ?? "",
-      lane: r.lane ?? "",
-      entry_date: r.entry_date ?? "",
-      risk_usd: Number(r.risk_usd || 0),
-      exit_date: r.exit_date ?? "",
-      pnl_usd: r.pnl_usd ? Number(r.pnl_usd) : null,
-      r_multiple: r.r_multiple ? Number(r.r_multiple) : null,
-    }));
+    .map((r, i) => validateTradeRow(r, `trades.csv row ${i + 1}`));
 }
 
 export interface Stats {

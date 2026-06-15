@@ -11,6 +11,7 @@
 
 import { readFileSync } from "node:fs";
 import { parseCsvObjects } from "./csv";
+import { validateMarkRow } from "./validate";
 
 export interface MarkRow {
   date: string;
@@ -48,12 +49,8 @@ export type GateResult =
 export function loadMarks(path: string): MarkRow[] {
   const { rows } = parseCsvObjects(readFileSync(path, "utf8"));
   return rows
-    .filter((r) => r.date && r.qqq_close && r.vixy_close)
-    .map((r) => ({
-      date: r.date!,
-      qqq: Number(r.qqq_close),
-      vixy: Number(r.vixy_close),
-    }))
+    .filter((r) => r.date) // drop fully-blank trailing rows; a date with blank closes now throws
+    .map((r, i) => validateMarkRow(r, `marks.csv row ${i + 1}`))
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
