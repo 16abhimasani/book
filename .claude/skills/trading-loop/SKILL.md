@@ -12,6 +12,9 @@ heartbeat.
 ## Steps
 
 0. **Sync**: `git pull --rebase --autostash`. Never read stale state.
+   Then `bun run verify` — if it exits non-zero (corrupt/blank CSV or
+   book.json row), append a `DATA-INVALID` journal entry, commit/push,
+   and STOP. Never trade on data that failed integrity checks.
 1. **Read** `robinhood-agentic/POLICY.md` (fully), last 5 entries of
    `robinhood-agentic/JOURNAL.md`, newest `robinhood-agentic/docs/HANDOFF-*.md`
    if present. POLICY status `HALT` → journal and stop.
