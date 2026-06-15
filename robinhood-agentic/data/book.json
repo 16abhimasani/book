@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. POST-ACTION snapshot for the 2026-06-15 market-hourly run: all four stops ratcheted up this run (MU/INTC trailed, DAL/AMD to breakeven), INTC banked 1/3 (2 sh @ 128.84). cash = settled buying power $1,076.47; total cash is $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
-  "asOf": "2026-06-15T15:37:00Z",
-  "accountValue": 4911.71,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 16:40Z market-hourly run: NO-TRADE manage-only, positions/stops byte-identical to 15:37Z post-action snapshot (no new peaks crossing ladder tiers, 4/4 slots = no new entries). Prices refreshed to live quotes. cash = settled buying power $1,076.47; total cash is $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
+  "asOf": "2026-06-15T16:40:00Z",
+  "accountValue": 4911.89,
   "cash": 1076.47,
   "positions": [
     {
@@ -9,7 +9,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 991.34,
-      "price": 1071.52,
+      "price": 1077.45,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -18,7 +18,7 @@
       "qty": 4,
       "entry": 114.15,
       "stop": 122.0,
-      "price": 128.75,
+      "price": 128.00,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -27,7 +27,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 85.29,
+      "price": 84.55,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -36,7 +36,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 548.36,
+      "price": 550.08,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }

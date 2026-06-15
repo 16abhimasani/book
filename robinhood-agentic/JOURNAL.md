@@ -972,3 +972,51 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Limits check: ALL PASS (bun run risk on host, book.json asOf 15:37Z = identical positions/stops to now): book risk to stops $0 (0.0%) ≤ 8%; 4/4 ≤ 4 slots; risk/position within budget; lev-ETF 0%; beta-gross 73.0% ≤ 150%; theme ai-capex 43.5% + oil-collapse-beneficiary 29.5% ≤ 65%; cash 21.9% (settled) ≥ 2.5%. (sandbox lacks bun → ran on host via osascript.)
 - Note: positions byte-identical to prior post-action snapshot; only intraday prices moved, which cannot change risk-to-stops since every stop sits at/above entry (book fully locked breakeven-or-better).
 - Next watch: MU time stop 06-18 (3 sessions out) + earnings 06-24 AMC — plan exit BEFORE the print, never hold into it; MU/INTC trails vs new peaks (ratchet up only); AMD +10% trail-arm 566.49 (today's high 558.37, not yet armed); DAL BE 82.67, tell = USO reversal >+3%. Capacity 4/4 + no settled room for a 5th name regardless → no entries until a slot frees. INTC proceeds settle 06-16. EOD run (~16:15 ET): append marks.csv row (QQQ/VIXY official closes + account value), recompute Lane-2 gate for Monday-night.
+
+## 2026-06-15 16:41 UTC · run: market-hourly (NO-TRADE — manage only)
+
+- Account: $4,911.89 (+3.9% day vs Fri 06-12 close basis $4,727.48) · settled
+  cash/BP $1,076.47 (total cash $1,334.15 incl. $257.68 INTC bank proceeds
+  settling T+1 06-16) · 4/4 slots. Unrealized ≈ +$258 (MU +136, INTC +55,
+  DAL +32, AMD +35); realized to date +$70.52.
+- Positions (last vs avg): MU 1 @ 941.50 (+14.4%, last 1077.45) [L1, TRAIL
+  991.34 / 6a301b94, peak 1077.54] · INTC 4 @ 114.15 (+12.1%, last 128.00)
+  [L1, TRAIL 122.00 / 6a301bea, peak 132.61] · DAL 17 @ 82.67 (+2.3%, last
+  84.55) [L1, BE 82.67 / 6a301b7f] · AMD 1 @ 514.99 (+6.8%, last 550.08)
+  [L1, BE 514.99 / 6a301b6c].
+- Actions: NO-TRADE. (1) No new entries — 4/4 slots full (capacity cap, §2);
+  settled BP $1,076 exists but no slot for a 5th name regardless. (2) No stop
+  ratchets: MU last 1077.45 < peak 1077.54 and INTC 128.00 < peak 132.61 → no
+  new highs, −8% trails hold; DAL +2.3% and AMD +6.8% both below their +10%
+  trail-arms (90.94 / 566.49), already at BE. Stops ratchet up only → nothing
+  to raise this run.
+- Catalysts considered: held names only (no slot to act). USO 119.76 (−4.5%
+  day) — bearish-oil tape intact, supports DAL airline cost-tailwind thesis;
+  semis/AI broad-up day continues (MU last 1077 vs Fri close 981.61 = +9.8%;
+  AMD 550 vs 511.57 = +7.5%) with no thesis-breaking news on any holding.
+- Tools check: get_accounts OK; agentic_allowed=true = 786675686 (••••5686).
+  Equity + watchlist tools only on this MCP surface — no crypto/options/
+  event-contract ORDER tools → parked lanes (L4/L5) stay parked; no NEW-TOOLS.
+- STOP REGISTRY (authoritative, all four broker-verified `confirmed`/
+  regular_hours this run via get_equity_orders — none missing): MU 991.34
+  (6a301b94, peak 1077.54) · INTC 122.00 (6a301bea, peak 132.61) · DAL 82.67
+  (6a301b7f) · AMD 514.99 (6a301b6c). Unchanged from 15:37Z/16:00Z.
+- Limits check: ALL PASS (bun run verify + risk on host, book.json refreshed to
+  live quotes asOf 16:40Z; sandbox lacks bun → ran via osascript). book risk to
+  stops $0 (0.0%) ≤ 8% — book fully locked breakeven-or-better; 4/4 ≤ 4 slots;
+  risk/position within $122.79 budget; lev-ETF 0%; beta-gross $3,584.81 (73.0%)
+  ≤ 150%; theme ai-capex 43.5% + oil-collapse-beneficiary 29.5% ≤ 65%; cash
+  $1,076.47 (21.9% settled) ≥ 2.5%. Daily-loss halt + drawdown checkpoint clear.
+- Run-type: regular session (12:41 ET). §3.7 extended-hours rules not engaged.
+  Positions byte-identical to prior snapshot; only intraday prices moved, which
+  cannot change risk-to-stops (every stop sits at/above entry).
+- Next watch: MU time stop 06-18 (Thu) + earnings 06-24 AMC — plan exit BEFORE
+  the print, never hold into it; MU trail 991.34 vs new peaks, INTC trail 122.00
+  vs peak 132.61 (ratchet up only); AMD +10% trail-arm 566.49 (high today
+  558.37, close — arm if it prints); DAL BE 82.67, tell = USO reversal >+3%
+  (USO 119.76, −4.5% intact). Capacity 4/4 → no new entries until a slot frees
+  or (for L2) the gate flips ON at an official close. INTC proceeds settle
+  06-16. EOD run (~16:15 ET): append marks.csv row (QQQ/VIXY official closes +
+  account value), recompute Lane-2 gate for Monday-night; intraday QQQ 743.70
+  (+3.1% vs MA20≈721.5) and VIXY 21.85 falling → raw gate reads ON intraday but
+  the official close decides (moot at 4/4 slots regardless).
