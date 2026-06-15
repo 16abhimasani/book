@@ -24,6 +24,8 @@ export interface EarningsRow {
   session: string;
 }
 
+const usd = (n: number) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 const EARNINGS_WARN_DAYS = 14; // flag held names reporting within this window
 
 export function assemblePanel(
@@ -42,8 +44,11 @@ export function assemblePanel(
   // $3,000 seed alone — a deposit makes the vs-seed number a vanity lie.
   const contrib = (book as { contributions?: number }).contributions;
   if (contrib && contrib > 0) {
-    const ret = ((book.accountValue - contrib) / contrib) * 100;
-    lines.push(`Return ${ret >= 0 ? "+" : ""}${ret.toFixed(1)}% (value $${book.accountValue.toFixed(2)} vs $${contrib.toFixed(0)} contributed)`);
+    const profit = book.accountValue - contrib;
+    const ret = (profit / contrib) * 100;
+    lines.push(
+      `Invested ${usd(contrib)} · Current ${usd(book.accountValue)} · Profit ${profit >= 0 ? "+" : "-"}${usd(Math.abs(profit))} (${ret >= 0 ? "+" : ""}${ret.toFixed(1)}%)`,
+    );
   }
   for (const p of book.positions) {
     const stop = p.stop == null ? "NO STOP" : p.stop.toFixed(2);
