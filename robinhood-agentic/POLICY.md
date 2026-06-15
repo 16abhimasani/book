@@ -1,12 +1,15 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.3 (2026-06-15) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.3.1 (2026-06-15) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
   v0.3: extended-hours trading enabled — new §3.7, cadence §4 expanded
   to pre-market + after-hours (owner ratified live session 2026-06-15,
-  posture C: full overnight entries, stop-gap risk accepted).
+  posture C: full overnight entries, stop-gap risk accepted);
+  v0.3.1: §1 capital figure updated to contributed basis ($4,585) and §6a
+  scoped to agent-recommended adds (owner deposits exempt) — owner ratified
+  2026-06-15.
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -19,9 +22,12 @@
 
 - Trade ONLY the account with `agentic_allowed: true` from `get_accounts`
   (nickname "Agentic", `••••5686`). Never any other account.
-- Capital: ~$3,000. Risk capital — owner accepts total loss. Brakes below
-  exist to protect the *experiment* (survival = information), not to
-  guarantee capital.
+- Capital: ~$4,585 contributed ($3,000 initial seed + $1,585 owner deposit
+  2026-06-12). Risk capital — owner accepts total loss. Brakes below exist to
+  protect the *experiment* (survival = information), not to guarantee capital.
+  Report return against contributed capital, never against the $3,000 seed
+  alone (`bun run book` prints it). Owner deposits are always allowed and
+  journaled when they land; they are NOT the agent capital-adds §6a gates.
 - Instruments: **long US equities and ETFs only** (leveraged ETFs allowed).
   No options, crypto, futures, or event contracts until (a) the MCP exposes
   the tools AND (b) the owner adds a lane here. Re-check available tools
@@ -177,7 +183,10 @@ Log every round-trip in `data/trades.csv` with its R-multiple
 (P&L ÷ initial $ risk). Weekly review computes hit rate, avg win R,
 avg loss R, expectancy/trade = `win% × avgWinR − loss% × avgLossR`.
 **Adding capital requires: ≥ 10 closed trades, expectancy > +0.25R,
-zero limit breaches, ≥ 4 weeks elapsed.**
+zero limit breaches, ≥ 4 weeks elapsed.** This gate governs *agent-recommended*
+capital adds. Owner deposits are always permitted, need no gate, and are not
+a limit breach — journal each when it lands and update the §1 contributed
+figure + `data/book.json` `contributions`.
 
 ## 6. Journal entry format
 

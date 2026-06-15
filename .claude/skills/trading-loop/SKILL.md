@@ -67,7 +67,10 @@ heartbeat.
    `review_equity_order` before every `place_equity_order`; surface
    `market_data_disclosure` verbatim; fresh UUID `ref_id` per order.
 6. **Data upkeep**: new fill → `data/trades.csv` row; round-trip close →
-   fill exit/pnl/R columns; EOD → `data/marks.csv` row.
+   fill exit/pnl/R columns; EOD → `data/marks.csv` row. After `book.json`
+   is refreshed, run `bun run snapshot` to rewrite the README portfolio
+   mirror (it's committed with the journal, so the README always shows the
+   latest book).
 7. **Journal** per POLICY §6 (even NO-TRADE), commit
    (`journal: <UTC ts> <run-type>`), push. If the runtime pushes to a
    `claude/*` branch, open a PR immediately so main never lags.
