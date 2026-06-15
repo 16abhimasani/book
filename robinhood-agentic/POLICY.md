@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.3.1 (2026-06-15) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.3.2 (2026-06-15) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -145,9 +145,10 @@ only governs the *extra* risk of trading when stops cannot rest.
 
 ## 4. Cadence
 
-Schedule (v0.3): the heartbeat runs ~hourly **7:35 ET → 8:35 ET next
-boundary, i.e. across pre-market, regular session, and after-hours**,
-weekdays. Run-types by ET clock:
+Schedule (v0.3.2): the heartbeat runs **every 30 minutes, ~7:05 ET →
+8:35 ET, across pre-market, regular session, and after-hours**, weekdays
+(owner bumped hourly → 30-min 2026-06-15 for reactivity). Run-types by
+ET clock:
 
 - **Pre-market extended (~7:00–9:30 ET):** scan catalysts, manage
   positions, and MAY enter/exit per §3.7 (LIMIT-only, liquidity guard,
