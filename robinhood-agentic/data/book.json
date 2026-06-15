@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 20:40Z EOD reconcile (Cowork after-hours, ~16:40 ET, post-close): MANAGE / NO-TRADE — no ratchets (MU true session high 1097.47 unchanged from registry peak; INTC high 130.90 < peak 132.61; AMD high 558.37 < +10% arm 566.49; DAL high 85.40 < +10% arm 90.94 → all trails/BE hold, ratchet-up-only), no entries (4/4 slots full), no exits. Appended data/marks.csv EOD row (QQQ 743.84 / VIXY 21.72 / acct 4901.55). prices below = broker 19:59:59 regular-session closes. cash = settled buying power $1,076.47; total cash $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
-  "asOf": "2026-06-15T20:40:00Z",
-  "accountValue": 4901.55,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 21:43Z after-hours extended (Cowork, ~17:43 ET): MANAGE / NO-TRADE — 4/4 slots full → no entries (gate ON but moot); no ratchets (MU non-reg 1082.25 < peak 1097.47; INTC 126.00 < peak 132.61; AMD 546.95 < +10% arm 566.49; DAL 84.07 < +10% arm 90.94 → all trails/BE hold, ratchet-up-only); no exits (no stop hit; MU time stop 06-18). All 4 regular-hours GTC stops broker-confirmed resting for the 9:30 open (cannot trigger in ext hours, §3.7 posture C). prices below = broker extended-hours last (non-reg) ~21:42Z. cash = settled buying power $1,076.47; total cash $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
+  "asOf": "2026-06-15T21:43:00Z",
+  "accountValue": 4896.42,
   "cash": 1076.47,
   "contributions": 4585,
   "positions": [
@@ -10,7 +10,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 1009.67,
-      "price": 1087.80,
+      "price": 1082.25,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -19,7 +19,7 @@
       "qty": 4,
       "entry": 114.15,
       "stop": 122.0,
-      "price": 127.78,
+      "price": 126.00,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -37,7 +37,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 547.27,
+      "price": 546.95,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }
