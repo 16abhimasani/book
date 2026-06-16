@@ -1816,3 +1816,23 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Gate: confirmed OFF (2-day, POLICY §3 B2, at 2026-06-16 close) per bun run gate — MA leg QQQ 729.78 > 20d MA 724.44 pass; vol leg VIXY 21.77 ≥ prior 21.72 → rising (FAIL). Lane 2 = exit entirely / no new entries. Re-arm needs QQQ>MA20 AND VIXY falling held for 2 confirmed closes.
 - Lesson: none durably new — an after-hours manage-only hold; today's vol-leg flip + three clean stop-out exits (INTC +0.86R, MU +1.04R, AMD ~0.00R) already re-validated existing LESSONS ("gate inputs matter to the cent"; "stops protect profits / ratchet to BE early"). LESSONS left unchanged (curate, don't pad).
 - Next watch: DAL lone hold, BE 82.67 (+0.5%); +5% rung 86.80; time stop 06-18 (Thu, session 3 of 5) — exit if it hasn't worked by then; tell = USO oil reversal >+3% (oil soft −4.7%, cost-tailwind thesis intact). Gate confirmed OFF (vol leg rising) — Lane 2 closed; re-arm needs QQQ>MA20 AND VIXY falling for 2 confirmed closes. 5 free slots (cap 6) → next run may take an AI/space-basket L1 entry only on a <48h catalyst + confirming tape + two-source (SPCX skip — parabolic). Settled BP $1,334.15; +$2,023.13 INTC+MU+AMD proceeds settle 06-17 T+1 → much more dry powder tomorrow. OWNER ACTION still pending: option order tools live on the agentic MCP → Lane 4 needs an owner spec before any option trade. Next run: after-hours extended closes 20:00 ET (~18 min) → tomorrow's pre-market extended heartbeat (~7:05 ET), or next 30-min heartbeat if scheduled.
+
+## 2026-06-16 23:59 UTC · run: infra (POLICY v0.3.5 tiered trail — owner directive "protect gains" — NO-TRADE)
+
+- DIAGNOSIS of 06-16 give-back (owner asked "why did we lose profit"): we did
+  NOT lose locked money — realized P&L rose +$110 today (INTC +0.86R, MU +1.04R,
+  AMD ~0.00R breakeven; the trailing stops exited all three UP/flat in the broad
+  semis risk-off). The "loss" is give-back from a thin premarket peak (+$372
+  unrealized, MU +19%) that was never locked → ended ~+$185 / +4.0% realized.
+  Two real ratchet gaps: (a) flat −8% trail loose on extended names (MU kept
+  +8.4% of a +19% peak); (b) +5%→+10% dead zone let AMD round-trip +8%→BE.
+- FIX (owner ratified B, tiered): POLICY v0.3.5 Lane-1 ladder — +8% locks +3%
+  (dead-zone fix), trail tightens −8%/−6%/−5%/−4% as peak gain grows. New
+  src/trading/trail.ts (bun run trail -- <entry> <peak>) computes the exact
+  stop — compute-don't-estimate. On today's trades it would have locked ~+$37
+  more (MU +10.7% vs +8.4%; AMD +3% vs 0). Skill step 5 + LESSONS.md updated.
+  108 tests; §2 drift green. Honest trade-off journaled: tighter isn't free
+  (MU bounced post-stop) — tiered locks more only when extended, not whipsaw.
+- Book: DAL lone hold (+0.5%, BE stop), 1/6 slots, +$2,023 (INTC+MU+AMD
+  proceeds) settles 06-17 → dry powder. Next: MU time-stop moot (exited);
+  watch a basket L1 entry on a real <48h catalyst (the new trail now applies).
