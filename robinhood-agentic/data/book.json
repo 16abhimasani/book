@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 12:43Z pre-market extended (Cowork, ~08:43 ET, within 7:00-9:30 ET pre-market window): MANAGE-ONLY / NO-TRADE. Extended hours = LIMIT-only, so no stop can be placed/ratcheted now; the 4 regular-hours GTC stops rest for the 9:30 open. Ground truth reconciles to broker (get_portfolio/get_equity_positions/get_equity_orders state=confirmed): 4 positions, all 4 stops broker-confirmed resting (MU 1009.67/6a305638, INTC 122.00/6a301bea, DAL 82.67/6a301b7f, AMD 514.99/6a301b6c), cumulative_quantity 0 on all, shares_held_for_sells=full size, intraday_quantity 0 = no overnight fills, no missing stops. No ratchets executable pre-market (limit-only); MU's prior-run premkt high 1123.10 > registry peak 1097.47 -> ratchet MU trail off the TRUE session high at the regular open (MU has since eased to 1101.37). No exits (no stop hit; MU time stop 06-18 Thu, earnings 06-24 AMC). 2 free slots (cap 6) but NO entry: watchlist movers flat-to-down premkt (RKLB -0.5%, ASTS -0.7%, PLTR -0.6% = no confirming tape), SPCX +4.4% parabolic 4-day IPO/no clean stop (LESSONS: don't chase), SNDK 2135/sh > cash. No verified <48h named catalyst + two-source + confirming tape -> NO entry. Confirmed gate OFF (raw ON pending 2nd close) -> no Lane-2. prices below = broker pre-market non-reg last ~12:43Z. cash 1334.15 = settled BP.",
-  "asOf": "2026-06-16T12:43:00Z",
-  "accountValue": 4917.93,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 13:42Z regular session (Cowork, ~09:42 ET, first regular run of the day). Ground truth reconciles to broker (get_portfolio total_value 4941.64 / cash 1334.15; get_equity_positions 4 long; get_equity_orders state=confirmed): 4 positions, all 4 stops broker-confirmed resting, cumulative_quantity 0 on all, shares_held_for_sells=full size, intraday_quantity 0 = no overnight/open fills. ACTION this run: ratcheted MU trail UP 1009.67 -> 1020.50 (cancelled 6a305638, placed 6a315388, confirmed) off the TRUE regular-session high 1109.24 (5-min 13:35Z bar) x0.92 — NOT the thin premkt 1123.10 print (LESSONS). New registry: MU 1020.50/6a315388 (peak 1109.24), INTC 122.00/6a301bea (peak 132.61), DAL 82.67/6a301b7f, AMD 514.99/6a301b6c. No exits (no stop hit; MU time stop 06-18 Thu, earnings 06-24 AMC). INTC last 127.13 < peak 132.61 (no ratchet); AMD 541.95 < +10% arm 566.49 (no arm); DAL +3.1% < +5% rung (stop stays BE). 2 free slots (cap 6) but NO entry: confirmed gate OFF (raw ON pending 2nd close) -> no Lane-2; tape risk-ON so no Lane-3; SPCX parabolic +9.8% (LESSONS don't-chase, no clean stop); no verified <48h named catalyst + two-source + confirming tape. prices below = broker regular last ~13:42Z. cash 1334.15 = settled BP.",
+  "asOf": "2026-06-16T13:42:00Z",
+  "accountValue": 4941.64,
   "cash": 1334.15,
   "contributions": 4585,
   "positions": [
@@ -9,8 +9,8 @@
       "symbol": "MU",
       "qty": 1,
       "entry": 941.5,
-      "stop": 1009.67,
-      "price": 1101.37,
+      "stop": 1020.5,
+      "price": 1106.69,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -19,7 +19,7 @@
       "qty": 4,
       "entry": 114.15,
       "stop": 122.0,
-      "price": 125.25,
+      "price": 127.13,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -28,7 +28,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 84.61,
+      "price": 85.22,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -37,7 +37,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 542.57,
+      "price": 541.95,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }
