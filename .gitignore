@@ -40,3 +40,6 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 .gstack/
+
+# event watcher local log (observer mode)
+robinhood-agentic/data/events.log

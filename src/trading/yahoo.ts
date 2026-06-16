@@ -66,6 +66,26 @@ export function parseChartResponse(json: unknown, symbol: string): DailyBar[] {
   return bars;
 }
 
+export interface Quote {
+  symbol: string;
+  price: number; // current/last regular-market price
+  prevClose: number;
+}
+
+/** Near-real-time quote from the chart endpoint's meta. For the watcher. */
+export async function fetchQuote(symbol: string): Promise<Quote> {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=1d`;
+  const res = await fetch(url, { headers: { "User-Agent": UA } });
+  if (!res.ok) throw new Error(`yahoo ${symbol}: HTTP ${res.status}`);
+  const json = (await res.json()) as { chart?: { result?: Array<{ meta?: Record<string, unknown> }> } };
+  const meta = json.chart?.result?.[0]?.meta;
+  const price = meta?.regularMarketPrice;
+  if (typeof price !== "number" || !(price > 0)) throw new Error(`yahoo ${symbol}: no live price`);
+  const prev = typeof meta?.chartPreviousClose === "number" ? meta.chartPreviousClose
+    : typeof meta?.previousClose === "number" ? meta.previousClose : price;
+  return { symbol, price, prevClose: prev };
+}
+
 export async function fetchDailyBars(
   symbol: string,
   range: string, // e.g. "3mo", "3y"

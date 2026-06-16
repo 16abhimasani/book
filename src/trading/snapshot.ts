@@ -9,6 +9,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { validateBook } from "./validate";
 import { loadTrades, computeStats, computeLaneStats } from "./stats";
 import { loadMarks, computeGate } from "./gate";
+import { MAX_POSITIONS } from "./risk";
 
 const ROOT = new URL("../../", import.meta.url).pathname;
 const DATA = ROOT + "robinhood-agentic/data/";
@@ -36,7 +37,7 @@ function buildSnapshot(asOfDate: string): string {
     L(`**Current ${usd(book.accountValue)}**`);
   }
   L("");
-  L(`Settled cash ${usd(book.cash)} · ${book.positions.length}/4 slots · open risk to stops ${usd(bookRisk)} (${((bookRisk / book.accountValue) * 100).toFixed(1)}%)`);
+  L(`Settled cash ${usd(book.cash)} · ${book.positions.length}/${MAX_POSITIONS} slots · open risk to stops ${usd(bookRisk)} (${((bookRisk / book.accountValue) * 100).toFixed(1)}%)`);
   L("");
   L("| Position | Qty | Entry | Stop | Mark | P&L | Theme |");
   L("|---|--:|--:|--:|--:|--:|---|");

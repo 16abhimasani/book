@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.3.2 (2026-06-15) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.3.3 (2026-06-15) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -9,7 +9,11 @@
   posture C: full overnight entries, stop-gap risk accepted);
   v0.3.1: §1 capital figure updated to contributed basis ($4,585) and §6a
   scoped to agent-recommended adds (owner deposits exempt) — owner ratified
-  2026-06-15.
+  2026-06-15;
+  v0.3.2: heartbeat cadence hourly → every 30 min (reactivity);
+  v0.3.3: max concurrent positions 4 → 6 + new §3.8 rotation & laggard-exit
+  rule (owner directive 2026-06-15 — room for the AI/space basket, recycle
+  capital from weak holdings).
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -38,7 +42,7 @@
 | Limit | Value |
 |---|---|
 | Max single position (at entry) | 40% of account value |
-| Max concurrent positions | 4 |
+| Max concurrent positions | 6 |
 | Max combined leveraged-ETF exposure | 50% of account value |
 | Min cash buffer | 2.5% |
 | Daily loss halt | −15% vs prior close → no new buys today, postmortem entry required |
@@ -125,6 +129,29 @@ only governs the *extra* risk of trading when stops cannot rest.
   cash; never sell shares bought with unsettled proceeds (cash account).
 - **Daily-loss halt, drawdown checkpoint, max-positions, theme/lev/
   beta-gross/cash-buffer caps** all apply across every session.
+
+### 3.8 — Rotation & laggard exits (owner ratified 2026-06-15)
+
+Capital is finite and slots are scarce. Don't let a stalled position squat a
+slot while a better setup goes untraded.
+
+- **Laggard exit (proactive profit-take):** a holding that has stopped working
+  — no new high in ~3 sessions, drifting back toward its trailing stop, or its
+  thesis fading — is a candidate to exit for the gain NOW rather than wait for
+  the stop to round-trip it. Banking a small win and freeing the slot beats
+  babysitting a laggard. Journal the reason.
+- **Rotation:** when slots are FULL and a new Lane-1 candidate clears full entry
+  hygiene (two-source < 48h catalyst + confirming tape) AND has a clearly
+  stronger setup than the weakest current holding, the agent MAY exit the
+  weakest to make room, then enter the new name with its stop. Bank the rotated
+  position's gain.
+- **Weakest holding** = pick objectively and journal which and why: lowest
+  unrealized R, weakest relative strength vs its group, nearest its time stop,
+  or thesis most degraded.
+- **Guards:** rotate to upgrade the book, never to churn. The new candidate must
+  be clearly better, not marginally. At most one rotation decision per run. All
+  §2 limits and entry hygiene still apply to the replacement. Stops still ratchet
+  up only; rotation is a deliberate exit, not a loosened stop.
 
 ### Lane 4 — Options (PARKED)
 - Blocked until options tools appear on the MCP connection. When they do:

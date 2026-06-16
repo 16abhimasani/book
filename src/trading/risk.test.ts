@@ -86,7 +86,7 @@ describe("known book — 2026-06-11 (regression anchors)", () => {
     const report = checkLimits(CURRENT_BOOK);
     const byName = (s: string) => report.checks.find((c) => c.limit.includes(s))!;
     expect(byName("book risk").pass).toBe(true); // $161.94 = 5.2%
-    expect(byName("max 4").pass).toBe(true); // 3 of 4 slots
+    expect(byName("max 6").pass).toBe(true); // 3 of 6 slots
     expect(byName("cash buffer").pass).toBe(true); // 15.6%
     expect(byName("leveraged-ETF").pass).toBe(true); // TQQQ mark $912 = 29.5%
     expect(byName("beta-adjusted").pass).toBe(true); // ~143.6% < 150%
@@ -105,7 +105,7 @@ describe("candidate evaluation", () => {
     const report = checkLimits(book);
     const byName = (s: string) => report.checks.find((c) => c.limit.includes(s))!;
     expect(byName("settled funds").pass).toBe(false); // $600 > $481.40
-    expect(byName("max 4").pass).toBe(true); // 4th slot is allowed
+    expect(byName("max 6").pass).toBe(true); // 4th slot is allowed
   });
 
   test("candidate inside cash + buffer passes the cash checks", () => {
@@ -119,15 +119,13 @@ describe("candidate evaluation", () => {
     expect(byName("cash buffer").pass).toBe(true); // $181.40 ≥ $77.18 (2.5% per v0.2.1)
   });
 
-  test("5th position trips the slot count", () => {
+  test("exceeding 6 slots trips the count", () => {
+    // CURRENT_BOOK has 3 positions; 4 candidates → 7 total > 6 cap
     const book: BookInput = {
       ...CURRENT_BOOK,
-      candidates: [
-        { symbol: "A", qty: 1, entry: 10, stop: 9.2, theme: "x" },
-        { symbol: "B", qty: 1, entry: 10, stop: 9.2, theme: "y" },
-      ],
+      candidates: ["A", "B", "C", "D"].map((symbol) => ({ symbol, qty: 1, entry: 10, stop: 9.2, theme: symbol })),
     };
-    expect(checkLimits(book).checks.find((c) => c.limit.includes("max 4"))!.pass).toBe(false);
+    expect(checkLimits(book).checks.find((c) => c.limit.includes("max 6"))!.pass).toBe(false);
   });
 
   test("missing stop fails the risk check outright", () => {

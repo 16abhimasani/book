@@ -1,0 +1,6 @@
+{
+  "_note": "Observer watcher config (bun run watch). symbols = watchlist names to scan for fast moves; held names come from book.json automatically. Thresholds are deliberately loose for week-1 false-positive measurement — tighten after reviewing events.log.",
+  "symbols": ["SPCX", "NVDA", "PLTR", "RKLB", "ASTS", "LUNR", "SNDK", "TSM", "AVGO", "DELL"],
+  "moveAlertPct": 5,
+  "stopProximityPct": 3
+}

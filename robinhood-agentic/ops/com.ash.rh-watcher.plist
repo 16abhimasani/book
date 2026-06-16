@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Observer-mode event watcher. Runs `bun run watch` every 120s; appends fast
+     moves to robinhood-agentic/data/events.log (gitignored). No order authority,
+     does not wake the trading loop — week-1 it only measures the trigger rate.
+     Reference copy; the live one lives at ~/Library/LaunchAgents/.
+     Enable:  launchctl load ~/Library/LaunchAgents/com.ash.rh-watcher.plist
+     Disable: launchctl unload ~/Library/LaunchAgents/com.ash.rh-watcher.plist
+     Watch:   tail -f robinhood-agentic/data/events.log -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>          <string>com.ash.rh-watcher</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/ash/.bun/bin/bun</string>
+    <string>run</string>
+    <string>watch</string>
+  </array>
+  <key>WorkingDirectory</key> <string>/Users/ash/dev/book</string>
+  <key>StartInterval</key>    <integer>120</integer>
+  <key>RunAtLoad</key>       <true/>
+  <key>StandardOutPath</key>  <string>/tmp/rh-watcher.log</string>
+  <key>StandardErrorPath</key><string>/tmp/rh-watcher.log</string>
+</dict>
+</plist>

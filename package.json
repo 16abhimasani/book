@@ -18,7 +18,8 @@
     "shadow": "bun src/trading/shadow.ts",
     "verify": "bun src/trading/verify.ts",
     "grok": "bun src/trading/grok.ts",
-    "snapshot": "bun src/trading/snapshot.ts"
+    "snapshot": "bun src/trading/snapshot.ts",
+    "watch": "bun src/trading/watcher.ts"
   },
   "dependencies": {
     "@mysten/sui": "^2.16.0"
