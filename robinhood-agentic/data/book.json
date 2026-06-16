@@ -1,25 +1,16 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 15:41Z regular session (Cowork, ~11:41 ET). Ground truth reconciles to broker (get_portfolio total_value 4798.98 / equity 2976.79 / cash settled-BP 1334.15, total cash 1822.19 incl unsettled INTC proceeds settling T+1 06-17; get_equity_positions 3 long; get_equity_orders state=confirmed): 3 positions, all 3 stops broker-confirmed resting, cumulative_quantity 0, shares_held_for_sells=full size, intraday_quantity 0 (no fills since 14:47Z run). MANAGE-ONLY / NO-TRADE: risk-OFF tape (QQQ 735.03 -1.2%, semis red MU -4.7%/AMD -5.0%) pulled held names back toward stops but none triggered. No ratchets (all DOWN today, no new highs vs peaks: MU 1036.39 < peak 1109.24; AMD 519.87 < +5% rung 540.74; DAL +1.33% < +5% rung). No exits (no stop hit, MU time stop 06-18 not due). No entries: confirmed gate OFF (raw ON pending 2nd close; QQQ may close < MA20 today) -> no Lane-2; no verified <48h named catalyst + two-source + confirming tape (SPCX +9.3% parabolic 4-day IPO = don't-chase LESSONS; RKLB/ASTS/PLTR red = tape not confirming) -> no Lane-1; VIXY quiet 21.68 (not fear) + single-day pullback -> no Lane-3 setup. Registry: MU 1020.50/6a315388 (peak 1109.24), DAL 82.67/6a301b7f, AMD 514.99/6a301b6c. prices below = broker regular last ~15:41Z. cash 1334.15 = settled BP.",
-  "asOf": "2026-06-16T15:41:00Z",
-  "accountValue": 4798.98,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 16:43Z regular session (Cowork, ~12:43 ET). MU stopped out 15:48:41Z (trailing stop 1020.50 / 6a315388 filled 1 @ 1020.18, +1.04R) — removed; 2 positions remain. Ground truth reconciles to broker (get_portfolio total_value 4789.60 / equity 1947.26 / settled-BP cash 1334.15; total cash 2842.34 incl unsettled INTC $488.04 + MU $1020.15 proceeds, both settle T+1 06-17; get_equity_positions 2 long DAL+AMD; get_equity_orders: DAL 6a301b7f + AMD 6a301b6c stops state=confirmed resting, cum 0, shares_held_for_sells = full size). MANAGE / EXIT-RECONCILE: MU auto-stopped; DAL/AMD HELD (no new high → no ratchet; both BE stops → $0 book risk). NO entries: confirmed gate OFF (raw ON pending 2nd close) → no Lane-2; no verified <48h named catalyst + two-source + confirming tape (SPCX +12% parabolic 4-day IPO = don't-chase; RKLB/ASTS/PLTR red = tape not confirming) → no Lane-1; VIXY quiet 21.61 + single-session pullback → no Lane-3. 4 free slots (2/6). Registry: DAL 82.67/6a301b7f, AMD 514.99/6a301b6c. prices below = broker regular last ~16:43Z. cash 1334.15 = settled BP.",
+  "asOf": "2026-06-16T16:43:00Z",
+  "accountValue": 4789.60,
   "cash": 1334.15,
   "contributions": 4585,
   "positions": [
-    {
-      "symbol": "MU",
-      "qty": 1,
-      "entry": 941.5,
-      "stop": 1020.5,
-      "price": 1036.39,
-      "levMultiplier": 1,
-      "theme": "ai-capex"
-    },
     {
       "symbol": "DAL",
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 83.77,
+      "price": 83.95,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -28,7 +19,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 519.87,
+      "price": 520.39,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }
