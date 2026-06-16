@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 21:43Z after-hours-extended (Cowork, ~17:43 ET). Ground truth reconciles to broker (get_portfolio total_value 4770.49 / equity 1413.21 / settled-BP cash 1334.15; total cash 3357.28 incl unsettled INTC 488.04 + MU 1020.15 + AMD 514.94 proceeds, all settle T+1 06-17; get_equity_positions 1 long DAL shares_held_for_sells 17 = full size; DAL stop 6a301b7f-7b33-42c2-ac24-7d4554f4603d state=confirmed stop_price 82.67 cum 0 resting). DAL lone hold +0.56% above BE (regular close 83.14, AH last 83.13); no ratchet (well below +5% rung 86.80), BE stop -> $0 book risk. NO entries: gate confirmed OFF (vol leg VIXY rising at 06-16 close; MA leg QQQ 729.78 > MA20 724.44 pass) -> no Lane-2; risk-off tape (QQQ -1.9% day), whole watchlist red, only mover SPCX parabolic 4-day IPO (AH 206.55, ~+7% = don't-chase LESSONS) -> no verified <48h named catalyst + two-source + confirming tape -> no Lane-1; VIXY quiet single-session pullback -> no Lane-3; AH §3.7 limit-only + liquidity guard moot (nothing qualified). 5 free slots (1/6). Registry: DAL 82.67/6a301b7f. price = broker AH last ~21:43Z. cash 1334.15 = settled BP.",
-  "asOf": "2026-06-16T21:43:00Z",
-  "accountValue": 4770.49,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 22:43Z after-hours-extended (Cowork, ~18:43 ET). Ground truth reconciles to broker (get_portfolio total_value 4769.98 / equity 1412.70 / settled-BP cash 1334.15; total cash 3357.28 incl unsettled INTC 488.04 + MU 1020.15 + AMD 514.94 proceeds, all settle T+1 06-17; get_equity_positions 1 long DAL shares_held_for_sells 17 = full size; DAL stop 6a301b7f-7b33-42c2-ac24-7d4554f4603d state=confirmed stop_price 82.67 cum 0 resting). NEW-TOOLS: option order/read tools (place/review/cancel_option_order, get_option_*) now exposed on the agentic MCP — Lane 4 stays PARKED, NO options traded (owner specs the lane first per POLICY §1/§3 L4); get_option_positions + get_option_orders both empty (zero option exposure). DAL lone hold +0.52% above BE (regular close 83.14, AH last 83.10); no ratchet (well below +5% rung 86.80), BE stop -> $0 book risk. NO entries: gate confirmed OFF (vol leg VIXY rising at 06-16 close; MA leg QQQ 729.78 > MA20 724.44 pass) -> no Lane-2; risk-off tape (QQQ -1.9% day), whole watchlist red, only mover SPCX parabolic 4-day IPO (AH ~204.7, ~+6% = don't-chase LESSONS) -> no verified <48h named catalyst + two-source + confirming tape -> no Lane-1; VIXY quiet single-session pullback -> no Lane-3; AH §3.7 limit-only + liquidity guard moot (nothing qualified). 5 free slots (1/6). Registry: DAL 82.67/6a301b7f. price = broker AH last ~22:43Z. cash 1334.15 = settled BP.",
+  "asOf": "2026-06-16T22:43:00Z",
+  "accountValue": 4769.98,
   "cash": 1334.15,
   "contributions": 4585,
   "positions": [
@@ -10,7 +10,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 83.13,
+      "price": 83.10,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     }
