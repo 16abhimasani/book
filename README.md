@@ -73,7 +73,7 @@ Closed trades:
 
 **Measurement gate (POLICY §6a):** 2 closed / 4 open · expectancy 0.96R · capital-add not eligible (needs ≥10 closed / >+0.25R / 0 breaches / ≥4wk). Per lane: L1 1.61R (1 closed) · L2 0.31R (1 closed).
 
-**Lane-2 regime gate:** ON (QQQ 743.84 vs 20d MA 723.25, as of 2026-06-15).
+**Lane-2 regime gate:** OFF (confirmed 2-day; QQQ 743.84 vs 20d MA 723.25, as of 2026-06-15) — raw ON pending one more close.
 <!-- SNAPSHOT:END -->
 
 ## The engine (`src/trading/`)
@@ -92,7 +92,7 @@ them; you can run any of them yourself.
 | `bun run shadow` | Score the trades we skipped — is the selection adding value? |
 | `bun run snapshot` | Rewrite the snapshot block above from the committed book |
 | `bun run backtest` | 3-year regime-gate validation (see `docs/BACKTEST-REGIME-GATE.md`) |
-| `bun test src/trading` | The whole suite (86 tests) |
+| `bun test src/trading` | The whole engine test suite |
 
 ## Guardrails worth knowing
 

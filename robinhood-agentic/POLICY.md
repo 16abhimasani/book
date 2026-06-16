@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.3.3 (2026-06-15) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.3.4 (2026-06-16) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -13,7 +13,9 @@
   v0.3.2: heartbeat cadence hourly → every 30 min (reactivity);
   v0.3.3: max concurrent positions 4 → 6 + new §3.8 rotation & laggard-exit
   rule (owner directive 2026-06-15 — room for the AI/space basket, recycle
-  capital from weak holdings).
+  capital from weak holdings);
+  v0.3.4: Lane-2 gate flips on 2-close confirmation (B2 — owner ratified
+  2026-06-16; cuts single-close whipsaw ~3x at equal return/drawdown).
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -79,10 +81,17 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
 - Regime gate ON (allowed): QQQ above its 20-day average AND VIX < 25
   (estimate from quotes/news if no direct feed). Gate OFF → exit lane
   entirely, no new entries.
+- **Gate flips on 2-close confirmation (B2, ratified 2026-06-15).** Act on
+  the CONFIRMED state from `bun run gate`, not a single-close flip: the
+  regime must hold its new state for two consecutive official closes before
+  it enters OR exits the lane. A one-day flip is unconfirmed — `bun run gate`
+  shows it as "raw … pending". This cuts single-close whipsaw (~288 → ~98
+  flips/3y at equal return/drawdown; see `docs/BACKTEST-REGIME-GATE.md`). The
+  −12% hard stop backstops the one-day lag on a confirmed exit.
 - Sizing within the 50% combined cap AND the §2 risk budget. Hard stop
   **−12%** from entry, placed with the fill; ratchets up only, re-checked
-  every hourly run. Gate flipping OFF exits the lane regardless of stop.
-  Re-enter only on a fresh gate check next run.
+  every run. A confirmed gate-OFF exits the lane regardless of stop.
+  Re-enter only on a fresh confirmed gate-ON.
 - Entry hygiene (all lanes): quote immediately before placement; place
   the marketable limit at decision time. Max ONE chase per order, ≤ +1%
   from the original limit; otherwise stand down until the next run.

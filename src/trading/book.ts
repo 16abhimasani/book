@@ -8,7 +8,7 @@
 
 import { readFileSync } from "node:fs";
 import { checkLimits, formatReport, type BookInput } from "./risk";
-import { computeGate, loadMarks } from "./gate";
+import { confirmedGate, loadMarks } from "./gate";
 import { computeLaneStats, computeStats, formatStats, loadTrades } from "./stats";
 
 const DATA = new URL("../../robinhood-agentic/data/", import.meta.url).pathname;
@@ -94,12 +94,13 @@ export function assemblePanel(
   lines.push("", formatReport(report));
   for (const c of report.checks.filter((c) => !c.pass)) flags.push(`§2 ${c.limit}: ${c.actual}`);
 
-  // --- regime gate ---
-  const g = computeGate(marks, asOfDate);
-  if (g.status === "ok") {
-    lines.push("", `Gate: ${g.gate} (as of ${g.asOf} close · QQQ ${g.qqqClose.toFixed(2)} vs MA${g.maLen} ${g.ma.toFixed(2)} · vol ${g.volLegPass ? "quiet" : "rising"})`);
+  // --- regime gate (confirmed, B2) ---
+  const cg = confirmedGate(marks, asOfDate);
+  if (cg.status === "ok") {
+    const g = cg.detail!;
+    lines.push("", `Gate: ${cg.confirmed} (confirmed 2-day · as of ${g.asOf} · QQQ ${g.qqqClose.toFixed(2)} vs MA${g.maLen} ${g.ma.toFixed(2)} · vol ${g.volLegPass ? "quiet" : "rising"}${cg.pending ? ` · raw ${cg.raw} pending` : ""})`);
   } else {
-    lines.push("", `Gate: INSUFFICIENT DATA (${g.have}/${g.need})`);
+    lines.push("", `Gate: INSUFFICIENT DATA (${cg.have}/${cg.need})`);
     flags.push("gate has insufficient data — marks.csv backfill broken?");
   }
 

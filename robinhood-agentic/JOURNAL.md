@@ -1615,3 +1615,28 @@ session and the heartbeat interleave — timestamps are authoritative.)
   AI/space-basket L1 entry or a fresh-gate L2, on a <48h catalyst + confirming
   tape only. INTC $257.68 proceeds settle T+1 today 06-16 → adds settled BP.
   Next run: pre-market extended (~7:05 ET Tue 06-16) or the first regular hourly.
+
+## 2026-06-16 01:29 UTC · run: infra (B2 ratified — gate 2-close confirmation, owner directive — NO-TRADE)
+
+- OWNER RATIFIED B2 (POLICY v0.3.4): the Lane-2 regime gate now acts only on a
+  state that holds 2 consecutive official closes — single-close flips are
+  unconfirmed and change nothing. Cuts whipsaw ~288→98 flips/3y at equal
+  return/drawdown (BACKTEST §B2).
+- Implemented: gate.ts confirmedGate() is the one source of truth; bun run gate,
+  bun run book, and the README snapshot all report the CONFIRMED state (+ raw/
+  pending for transparency). POLICY §3 Lane 2 encodes it; LESSONS.md + BACKTEST
+  doc updated to "live". 94 tests; drift test green (POLICY §2 unchanged).
+- LIVE EFFECT (working as intended): raw gate flipped ON yesterday (QQQ 743.84 >
+  MA 723.25, first ON since launch) but it is UNCONFIRMED — confirmed gate stays
+  OFF, so a slot freeing today does NOT trigger a Lane-2 leveraged entry on a
+  one-day blip. Needs one more ON close to confirm. Exactly the accidental entry
+  B2 prevents.
+- Also this run (earlier): fixed watcher dedupe (was spamming events.log
+  off-hours), operationalized true-session-high trailing (get_equity_historicals)
+  for gain protection. Watcher running via launchd (owner loaded it).
+- NOTE: the 30-min cron did NOT persist the app restart (back to hourly 35 6-19);
+  the running app overwrites scheduled-tasks.json. Durable change = Cowork UI.
+  The 2-min watcher is the real reactivity regardless.
+- Book unchanged: +$300 (+6.5%) on $4,585, all stops locked BE+, $0 risk to
+  stops. Next: MU time stop 06-18, earnings 06-24. System is now mature — focus
+  shifts to accumulating the §6a sample (2/10) + watcher data.

@@ -8,7 +8,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { validateBook } from "./validate";
 import { loadTrades, computeStats, computeLaneStats } from "./stats";
-import { loadMarks, computeGate } from "./gate";
+import { loadMarks, confirmedGate } from "./gate";
 import { MAX_POSITIONS } from "./risk";
 
 const ROOT = new URL("../../", import.meta.url).pathname;
@@ -67,8 +67,11 @@ function buildSnapshot(asOfDate: string): string {
 
   // regime gate
   try {
-    const g = computeGate(loadMarks(DATA + "marks.csv"), asOfDate);
-    if (g.status === "ok") L(`\n**Lane-2 regime gate:** ${g.gate} (QQQ ${g.qqqClose.toFixed(2)} vs ${g.maLen}d MA ${g.ma.toFixed(2)}, as of ${g.asOf}).`);
+    const cg = confirmedGate(loadMarks(DATA + "marks.csv"), asOfDate);
+    if (cg.status === "ok") {
+      const g = cg.detail!;
+      L(`\n**Lane-2 regime gate:** ${cg.confirmed} (confirmed 2-day; QQQ ${g.qqqClose.toFixed(2)} vs ${g.maLen}d MA ${g.ma.toFixed(2)}, as of ${g.asOf})${cg.pending ? ` — raw ${cg.raw} pending one more close` : ""}.`);
+    }
   } catch {
     // marks unreadable → omit gate line
   }

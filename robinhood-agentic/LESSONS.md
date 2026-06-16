@@ -48,10 +48,12 @@ falls out of context — it lives here instead, and compounds.
 
 ## Regime gate
 
-- **The gate churns near its moving average.** First live use forced a correct
-  exit but was nearly reversed intraday (QQQ tagged the MA within hours);
-  backtest shows ~144 flips/3y. The 2-day-confirmation variant (B2) is the
-  pending fix.
+- **The gate churns near its moving average — so we confirm flips (B2, live).**
+  First live use forced a correct exit but was nearly reversed intraday (QQQ
+  tagged the MA within hours). The fix is ratified and live: the gate acts only
+  after the new state holds 2 consecutive closes (POLICY §3 Lane 2). Act on the
+  CONFIRMED state from `bun run gate`; a one-day flip shows as "raw … pending"
+  and changes nothing.
 - **Gate inputs matter to the cent.** A Lane-2 re-arm came down to 16 cents on
   the official close. Two agreeing close sources + sanity bounds are the only
   reason a bad print can't trigger an accidental leveraged entry.

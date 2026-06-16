@@ -121,9 +121,10 @@ cutting flips from 288 to 98 (−66%). At any realistic friction estimate
 Swapping the vol leg to a 5d-average is neutral alone and harmful combined
 (it delays exits the confirmation then delays again — drawdown balloons).
 
-**Sharpened PROPOSAL B2 (owner ratifies):** amend POLICY §3/§4 Lane-2 gate
-to act on a flip only after the same state prints on **2 consecutive
-closes**; keep VIXY-direction as the vol leg. Note the asymmetry trade-off:
+**PROPOSAL B2 — RATIFIED & LIVE 2026-06-16 (POLICY v0.3.4).** The Lane-2 gate
+acts on a flip only after the same state prints on **2 consecutive closes**;
+VIXY-direction stays the vol leg. `bun run gate` / `bun run book` / the README
+snapshot all report the confirmed state. Original proposal text: Note the asymmetry trade-off:
 confirmation also delays *exits* by a day (max DD says this cost ~nothing
 in sample, but a gap-down day one is the risk you're accepting).
 

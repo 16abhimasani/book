@@ -146,30 +146,50 @@ export function computeGateSeries(rows: MarkRow[], opts: GateOptions = {}): Gate
   return out;
 }
 
+export interface ConfirmedGate {
+  status: "ok" | "insufficient-data";
+  confirmed: "ON" | "OFF" | null; // the state we ACT on (B2: holds 2 closes)
+  raw: "ON" | "OFF" | null; // today's single-session state
+  pending: boolean; // raw differs from confirmed → a flip is mid-confirmation
+  detail: Extract<GateResult, { status: "ok" }> | null;
+  have?: number;
+  need?: number;
+  asOf?: string | null;
+}
+
+/**
+ * The LIVE Lane-2 gate (POLICY §3 B2, ratified 2026-06-15): the regime state
+ * only flips after it holds for `confirmDays` consecutive closes — cuts the
+ * single-close whipsaw (~288 → ~98 flips/3y at equal return/drawdown). The loop
+ * acts on `confirmed`; `raw`/`pending` are shown for transparency.
+ */
+export function confirmedGate(rows: MarkRow[], asOfDate?: string, confirmDays = 2): ConfirmedGate {
+  const g = computeGate(rows, asOfDate);
+  if (g.status !== "ok") {
+    return { status: "insufficient-data", confirmed: null, raw: null, pending: false, detail: null, have: g.have, need: g.need, asOf: g.asOf };
+  }
+  const upTo = asOfDate ? rows.filter((r) => r.date <= asOfDate) : rows;
+  const confirmed = computeGateSeries(upTo, { confirmDays }).at(-1)?.effective ?? g.gate;
+  return { status: "ok", confirmed, raw: g.gate, pending: g.gate !== confirmed, detail: g };
+}
+
 const MARKS_PATH = new URL("../../robinhood-agentic/data/marks.csv", import.meta.url).pathname;
 
 if (import.meta.main) {
   const asOf = process.argv[2];
-  const rows = loadMarks(MARKS_PATH);
-  const g = computeGate(rows, asOf);
-  if (g.status === "insufficient-data") {
-    console.log(
-      `GATE: INSUFFICIENT DATA (${g.have}/${g.need} sessions${g.asOf ? ` through ${g.asOf}` : ""}).`,
-    );
+  const cg = confirmedGate(loadMarks(MARKS_PATH), asOf);
+  if (cg.status === "insufficient-data") {
+    console.log(`GATE: INSUFFICIENT DATA (${cg.have}/${cg.need} sessions${cg.asOf ? ` through ${cg.asOf}` : ""}).`);
     console.log("Fall back to POLICY §4 estimation until marks.csv has enough rows.");
     process.exit(2);
   }
+  const g = cg.detail!;
   if (asOf && (Date.parse(asOf) - Date.parse(g.asOf)) / 86400_000 > 6) {
-    console.log(
-      `WARNING: latest marks.csv session (${g.asOf}) is >6 days before the queried date (${asOf}) — inputs stale; treat the gate as UNVERIFIABLE and hold state (no flips) until data lands.`,
-    );
+    console.log(`WARNING: latest marks.csv session (${g.asOf}) is >6 days before queried ${asOf} — inputs stale; treat as UNVERIFIABLE, hold state until data lands.`);
   }
-  console.log(`Regime gate: ${g.gate}  (computed at ${g.asOf} close${asOf ? `, queried for ${asOf}` : ""})`);
-  console.log(
-    `  MA leg : QQQ ${g.qqqClose.toFixed(2)} ${g.maLeg ? ">" : "≤"} ${g.maLen}d MA ${g.ma.toFixed(2)}  → ${g.maLeg ? "pass" : "FAIL"}`,
-  );
-  console.log(
-    `  Vol leg: VIXY ${g.vixyClose.toFixed(2)} ${g.volLegPass ? "<" : "≥"} prior ${g.vixyPrior.toFixed(2)}  → ${g.volLegPass ? "quiet (pass)" : "rising (FAIL)"}`,
-  );
-  if (g.gate === "OFF") console.log("  Lane 2: exit entirely, no new entries (POLICY §3).");
+  console.log(`Regime gate (confirmed, 2-day · POLICY §3 B2): ${cg.confirmed}  (at ${g.asOf} close${asOf ? `, queried ${asOf}` : ""})`);
+  if (cg.pending) console.log(`  NOTE: raw gate just flipped to ${cg.raw} — UNCONFIRMED, needs one more close. Act on the confirmed state.`);
+  console.log(`  MA leg : QQQ ${g.qqqClose.toFixed(2)} ${g.maLeg ? ">" : "≤"} ${g.maLen}d MA ${g.ma.toFixed(2)}  → ${g.maLeg ? "pass" : "FAIL"}`);
+  console.log(`  Vol leg: VIXY ${g.vixyClose.toFixed(2)} ${g.volLegPass ? "<" : "≥"} prior ${g.vixyPrior.toFixed(2)}  → ${g.volLegPass ? "quiet (pass)" : "rising (FAIL)"}`);
+  if (cg.confirmed === "OFF") console.log("  Lane 2: exit entirely, no new entries (POLICY §3).");
 }

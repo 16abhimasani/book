@@ -4,9 +4,10 @@ import type { MarkRow } from "./gate";
 import type { TradeRow } from "./stats";
 
 const day = (n: number) => new Date(Date.UTC(2026, 4, 1 + n)).toISOString().slice(0, 10);
+// last TWO closes above the MA so the B2-confirmed gate reads ON (not just raw)
 const marks: MarkRow[] = Array.from({ length: 21 }, (_, i) => ({
   date: day(i),
-  qqq: i === 20 ? 110 : 100,
+  qqq: i >= 19 ? 110 : 100,
   vixy: 20 - i * 0.1,
 }));
 
