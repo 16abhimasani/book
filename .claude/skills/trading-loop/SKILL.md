@@ -19,7 +19,8 @@ heartbeat.
    (command-not-found, bun unavailable, network) is an INFRA problem, not
    bad data — resolve it (route to host) or treat as `TOOLS-DOWN`; do NOT
    journal DATA-INVALID or halt on it.
-1. **Read** `robinhood-agentic/POLICY.md` (fully), last 5 entries of
+1. **Read** `robinhood-agentic/POLICY.md` (fully), `robinhood-agentic/LESSONS.md`
+   (the distilled, always-read knowledge — apply it this run), last 5 entries of
    `robinhood-agentic/JOURNAL.md`, newest `robinhood-agentic/docs/HANDOFF-*.md`
    if present. POLICY status `HALT` → journal and stop.
 2. **Verify tools**: `get_accounts` → trade ONLY the account with
@@ -41,6 +42,11 @@ heartbeat.
      enter/exit per §3.7 (LIMIT-only, liquidity guard).
    - **EOD reconcile (~16:15 run)**: also append the `data/marks.csv` row.
    - **weekend / outside 7:00–20:00**: research/journal only, never trade.
+     Run the **retro** at least once per weekend: read `data/trades.csv`
+     (R outcomes per lane), `data/shadow.csv` (were our skips right?),
+     `data/events.log` (watcher signal quality), and `bun run stats` —
+     then update `LESSONS.md` with what changed and propose any POLICY
+     diffs for the owner. This is how the system gets smarter, not just older.
 5. **Enforce POLICY §2 before any order** (risk budget 2.5%/position &
    8% book, slot caps, beta-adjusted ≤150%, theme ≤65%, settled-funds
    rule, daily halt, drawdown checkpoint). **Compute, never estimate:**
@@ -71,9 +77,13 @@ heartbeat.
    is refreshed, run `bun run snapshot` to rewrite the README portfolio
    mirror (it's committed with the journal, so the README always shows the
    latest book).
-7. **Journal** per POLICY §6 (even NO-TRADE), commit
-   (`journal: <UTC ts> <run-type>`), push. If the runtime pushes to a
-   `claude/*` branch, open a PR immediately so main never lags.
+7. **Journal** per POLICY §6 (even NO-TRADE). **If this run learned
+   something durable** — a closed trade's outcome vs its thesis, a stop-out,
+   a missed mover, a surprise — add or sharpen ONE line in `LESSONS.md`
+   (curate, dedupe, prune; keep it under ~20). Most runs learn nothing new;
+   that's fine, leave it. Then commit (`journal: <UTC ts> <run-type>`), push.
+   If the runtime pushes to a `claude/*` branch, open a PR immediately so
+   main never lags.
 8. **Output**: account value, positions P&L, actions, next watch items.
 
 ## Hard rules

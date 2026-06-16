@@ -16,9 +16,12 @@ The design is three files and a habit:
 - **`robinhood-agentic/POLICY.md`** is the contract. Position limits, the
   exit ladder, which lanes are live, when it may trade. The agent obeys it;
   only the owner edits it.
-- **`robinhood-agentic/JOURNAL.md`** is the memory. Each run reads the last
-  few entries and appends its own, so context compounds in git instead of in
-  a chat window.
+- **`robinhood-agentic/JOURNAL.md`** is the episodic memory — each run reads
+  the last few entries and appends its own. **`LESSONS.md`** is the distilled
+  memory: the durable, non-obvious lessons (read every run), so a hard-won
+  insight from 20 runs ago still shapes today's decision instead of scrolling
+  out of the journal's window. The system is meant to get smarter each run, not
+  just older.
 - **The scheduled loop is the heartbeat.** A cron task runs the same
   `/trading-loop` skill every cycle, pre-market through after-hours.
 - **The rule that earns its keep:** the LLM never does arithmetic in its
