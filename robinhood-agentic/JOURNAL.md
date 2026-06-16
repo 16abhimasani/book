@@ -1509,3 +1509,35 @@ session and the heartbeat interleave — timestamps are authoritative.)
   $257.68 proceeds settle 06-16 (T+1) → adds settled BP tomorrow. Extended
   session closes 20:00 ET; next run: a final after-hours tick before 20:00 ET or
   pre-market extended (~7:00 ET Tue).
+
+## 2026-06-16 00:12 UTC · run: infra (AI/space basket + reactivity build, owner live session — NO-TRADE)
+
+- Owner directive: get into SpaceX + the AI basket; be aggressive but reactive
+  and protect gains; use X/Grok effectively. NO TRADE placed — correct call:
+  SPCX +22% after-hours on a 4-day IPO, 6/6... 4/4 slots then, after-hours
+  (limit-only, no resting stop) = chasing the candle is the mistake. Built
+  readiness instead.
+- Grok X-search (cited) → AI/space zeitgeist basket. Added to RH "AI Watch"
+  (e4352f87) + docs/WATCHLIST.md: SPCX, NVDA, SNDK, PLTR, RKLB, ASTS, LUNR,
+  TSM, AVGO, DELL (+ held MU/AMD, SMCI/VRT). Affordability flagged (SNDK
+  $2,100/sh > cash). Cost note: basket query = 13 searches / $1.24;
+  ~$6.5 of $10 credits left — keep queries tight.
+- POLICY edits (owner-ratified, live session):
+  - v0.3.2: heartbeat cadence hourly → every 30 min (5,35 6-19 CDT) for
+    reactivity. Cron updated (app-side; restart Cowork to load).
+  - v0.3.3: max concurrent positions 4 → 6 (room for the basket); new §3.8
+    rotation & laggard-exit rule (recycle a slot from the weakest holding when
+    a clearly better Lane-1 setup appears; bank the gain; one rotation/run; all
+    §2 limits still bind). risk.ts MAX_POSITIONS=6; drift test green.
+- Event watcher BUILT (observer mode): src/trading/watcher.ts + data/watch.json
+  + launchd plist (robinhood-agentic/ops/). bun run watch polls Yahoo for held +
+  watchlist names, logs ±5% moves / ≤3% stop-adjacent to data/events.log
+  (gitignored). NO order authority, does NOT wake the loop — week-1 measures the
+  false-positive rate. Live dry-run fired 8 sane triggers (SPCX +19.6%, MU/AMD
+  movers, DAL stop-adjacent). Owner runs one launchctl load to start it.
+- Honest reactivity truth (journaled for the record): even 30-min loops can't
+  catch a 5-min spike; the watcher is the real fix, and even it only WAKES the
+  loop, which re-verifies before any order. No magic; staged + safe.
+- 92 tests green; typecheck clean. Book unchanged (4 positions, $0 risk to
+  stops, all gains locked). Next watch: MU time stop 06-18, earnings 06-24;
+  first basket entry needs a slot + 2-source <48h catalyst + confirming tape.
