@@ -43,3 +43,7 @@ DerivedData/
 
 # event watcher local log (observer mode)
 robinhood-agentic/data/events.log
+
+# watcher observer state (local, high-churn)
+robinhood-agentic/data/events.log
+robinhood-agentic/data/events-state.json

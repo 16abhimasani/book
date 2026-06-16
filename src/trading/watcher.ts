@@ -11,11 +11,12 @@
 // When this graduates to waking the loop, the loop re-pulls real-time broker
 // quotes before acting, so feed latency here doesn't reach an order.
 
-import { readFileSync, appendFileSync } from "node:fs";
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from "node:fs";
 import { fetchQuote, type Quote } from "./yahoo";
 
 const DATA = new URL("../../robinhood-agentic/data/", import.meta.url).pathname;
 const LOG = DATA + "events.log";
+const STATE = DATA + "events-state.json";
 
 export interface WatchConfig {
   symbols: string[]; // watchlist names to scan
@@ -28,9 +29,15 @@ export interface HeldPosition {
   stop: number | null;
 }
 
-/** Pure: given quotes, fired trigger strings. No I/O — tested directly. */
-export function detectTriggers(held: HeldPosition[], cfg: WatchConfig, quotes: Map<string, Quote>): string[] {
-  const out: string[] = [];
+export interface Trigger {
+  key: string; // stable id (symbol + kind) for dedupe across scans
+  price: number;
+  text: string;
+}
+
+/** Pure: given quotes, the fired triggers. No I/O — tested directly. */
+export function detectTriggers(held: HeldPosition[], cfg: WatchConfig, quotes: Map<string, Quote>): Trigger[] {
+  const out: Trigger[] = [];
   const pct = (q: Quote) => (q.prevClose > 0 ? (q.price / q.prevClose - 1) * 100 : 0);
 
   for (const sym of cfg.symbols) {
@@ -38,7 +45,7 @@ export function detectTriggers(held: HeldPosition[], cfg: WatchConfig, quotes: M
     if (!q) continue;
     const move = pct(q);
     if (Math.abs(move) >= cfg.moveAlertPct) {
-      out.push(`MOVE ${sym} ${move >= 0 ? "+" : ""}${move.toFixed(1)}% (${q.price.toFixed(2)}) — watchlist mover`);
+      out.push({ key: `MOVE:${sym}`, price: q.price, text: `MOVE ${sym} ${move >= 0 ? "+" : ""}${move.toFixed(1)}% (${q.price.toFixed(2)}) — watchlist mover` });
     }
   }
   for (const p of held) {
@@ -46,16 +53,32 @@ export function detectTriggers(held: HeldPosition[], cfg: WatchConfig, quotes: M
     if (!q) continue;
     const move = pct(q);
     if (Math.abs(move) >= cfg.moveAlertPct) {
-      out.push(`MOVE-HELD ${p.symbol} ${move >= 0 ? "+" : ""}${move.toFixed(1)}% (${q.price.toFixed(2)})`);
+      out.push({ key: `MOVE-HELD:${p.symbol}`, price: q.price, text: `MOVE-HELD ${p.symbol} ${move >= 0 ? "+" : ""}${move.toFixed(1)}% (${q.price.toFixed(2)})` });
     }
     if (p.stop != null && q.price > 0) {
       const distPct = ((q.price - p.stop) / q.price) * 100;
       if (distPct <= cfg.stopProximityPct && distPct >= -50) {
-        out.push(`STOP-ADJACENT ${p.symbol} ${q.price.toFixed(2)} vs stop ${p.stop.toFixed(2)} (${distPct.toFixed(1)}% away)`);
+        out.push({ key: `STOP-ADJ:${p.symbol}`, price: q.price, text: `STOP-ADJACENT ${p.symbol} ${q.price.toFixed(2)} vs stop ${p.stop.toFixed(2)} (${distPct.toFixed(1)}% away)` });
       }
     }
   }
   return out;
+}
+
+/**
+ * Pure dedupe: keep only triggers that are NEW or whose price moved ≥ 1.5%
+ * since the last time that key was logged. Kills the every-2-minutes repeat of
+ * the same trigger (especially off-hours when prices are static). Returns the
+ * triggers to log and the next state map to persist.
+ */
+export function dedupe(triggers: Trigger[], lastState: Record<string, number>): { toLog: Trigger[]; nextState: Record<string, number> } {
+  const nextState = { ...lastState };
+  const toLog = triggers.filter((t) => {
+    const last = lastState[t.key];
+    return last == null || Math.abs(t.price / last - 1) >= 0.015;
+  });
+  for (const t of toLog) nextState[t.key] = t.price;
+  return { toLog, nextState };
 }
 
 if (import.meta.main) {
@@ -77,10 +100,13 @@ if (import.meta.main) {
   );
 
   const fired = detectTriggers(held, cfg, quotes);
+  const lastState: Record<string, number> = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : {};
+  const { toLog, nextState } = dedupe(fired, lastState);
   const ts = new Date().toISOString();
-  if (fired.length && !dry) {
-    appendFileSync(LOG, fired.map((f) => `${ts} ${f}`).join("\n") + "\n");
+  if (!dry) {
+    if (toLog.length) appendFileSync(LOG, toLog.map((t) => `${ts} ${t.text}`).join("\n") + "\n");
+    writeFileSync(STATE, JSON.stringify(nextState));
   }
-  console.log(`[watch ${ts}] scanned ${quotes.size}/${symbols.length} · ${fired.length} trigger(s)${dry ? " (dry)" : fired.length ? " → events.log" : ""}`);
-  for (const f of fired) console.log("  " + f);
+  console.log(`[watch ${ts}] scanned ${quotes.size}/${symbols.length} · ${fired.length} firing · ${toLog.length} new${dry ? " (dry)" : toLog.length ? " → events.log" : ""}`);
+  for (const t of toLog) console.log("  " + t.text);
 }
