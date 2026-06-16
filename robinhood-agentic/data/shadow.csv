@@ -6,3 +6,4 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-06-16-RKLB,RKLB,2026-06-16,filtered,,,,"no verified <48h named catalyst + two-source; watcher mover only, not a trigger",,,,"premkt 111.07 vs close 109.25 (+1.7%); AI/space basket; hold for catalyst+confirming tape"
 2026-06-16-ASTS,ASTS,2026-06-16,filtered,,,,"no verified <48h named catalyst + two-source; watcher mover only",,,,"premkt 88.89 vs close 87.57 (+1.5%); AI/space basket"
 2026-06-16-SNDK,SNDK,2026-06-16,filtered,,,,"unaffordable (2157/sh > cash 1334.15) + no verified catalyst",,,,"premkt 2157.50 vs close 2107.86 (+2.4%); watcher mover"
+2026-06-16-PLTR,PLTR,2026-06-16,filtered,,,,"no verified <48h named catalyst + two-source; tape not confirming (premkt -0.6% below prior close)",,,,"premkt 133.95 vs close 134.71; AI/space basket; watcher flagged +5.3% overnight then faded by the open"
