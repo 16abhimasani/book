@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 19:41Z regular session (Cowork, ~15:41 ET). Ground truth reconciles to broker (get_portfolio total_value 4780.265 / equity 1422.985 / settled-BP cash 1334.15; total cash 3357.28 incl unsettled INTC $488.04 + MU $1020.15 + AMD ~$514.94 proceeds, all settle T+1 06-17; get_equity_positions 1 long DAL intraday_qty 0; get_equity_orders: DAL 6a301b7f stop state=confirmed resting, cum 0, shares_held_for_sells 17 = full size). EXIT AMD — BE stop 514.99 (6a301b6c) filled 1 @ 514.96 at 19:11:33Z in the semis risk-off pullback (scratch -$0.03/~0.00R, no capital lost); freed a slot. HOLD DAL +1.2% (no new high -> no ratchet; BE stop -> $0 book risk). NO entries: gate confirmed OFF -> no Lane-2; whole watchlist red, no verified <48h named catalyst + two-source + confirming tape (SPCX +9% parabolic 4-day IPO = don't-chase) -> no Lane-1; VIXY quiet 21.83 + single-session pullback -> no Lane-3. 5 free slots (1/6). Registry: DAL 82.67/6a301b7f. prices below = broker regular last ~19:41Z. cash 1334.15 = settled BP.",
-  "asOf": "2026-06-16T19:41:00Z",
-  "accountValue": 4780.27,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 20:40Z EOD-reconcile / after-hours (Cowork, ~16:40 ET). Ground truth reconciles to broker (get_portfolio total_value 4768.28 / equity 1411 / settled-BP cash 1334.15; total cash 3357.28 incl unsettled INTC 488.04 + MU 1020.15 + AMD 514.94 proceeds, all settle T+1 06-17; get_equity_positions 1 long DAL shares_held_for_sells 17 = full size; DAL stop 6a301b7f-7b33-42c2-ac24-7d4554f4603d state=confirmed stop_price 82.67 cum 0 resting). DAL lone hold ~+0.4% above BE (regular close 83.14, AH last 83.00); no ratchet (well below +5% rung 86.80), BE stop -> $0 book risk. NO entries: gate raw OFF today (vol leg VIXY 21.77 > prior 21.72 = up; MA leg QQQ 729.78 > MA20 pass) -> confirmed gate stays OFF, prior raw-ON-pending reset, no Lane-2; risk-off tape all day (QQQ -1.9%), whole watchlist red, no verified <48h named catalyst + two-source + confirming tape (SPCX parabolic 4-day IPO = don't-chase) -> no Lane-1; VIXY quiet, single-session pullback -> no Lane-3. 5 free slots (1/6). Registry: DAL 82.67/6a301b7f. price below = broker AH last ~20:40Z. cash 1334.15 = settled BP.",
+  "asOf": "2026-06-16T20:40:00Z",
+  "accountValue": 4768.28,
   "cash": 1334.15,
   "contributions": 4585,
   "positions": [
@@ -10,7 +10,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 83.70,
+      "price": 83.00,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     }
