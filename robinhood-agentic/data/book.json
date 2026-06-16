@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 13:42Z regular session (Cowork, ~09:42 ET, first regular run of the day). Ground truth reconciles to broker (get_portfolio total_value 4941.64 / cash 1334.15; get_equity_positions 4 long; get_equity_orders state=confirmed): 4 positions, all 4 stops broker-confirmed resting, cumulative_quantity 0 on all, shares_held_for_sells=full size, intraday_quantity 0 = no overnight/open fills. ACTION this run: ratcheted MU trail UP 1009.67 -> 1020.50 (cancelled 6a305638, placed 6a315388, confirmed) off the TRUE regular-session high 1109.24 (5-min 13:35Z bar) x0.92 — NOT the thin premkt 1123.10 print (LESSONS). New registry: MU 1020.50/6a315388 (peak 1109.24), INTC 122.00/6a301bea (peak 132.61), DAL 82.67/6a301b7f, AMD 514.99/6a301b6c. No exits (no stop hit; MU time stop 06-18 Thu, earnings 06-24 AMC). INTC last 127.13 < peak 132.61 (no ratchet); AMD 541.95 < +10% arm 566.49 (no arm); DAL +3.1% < +5% rung (stop stays BE). 2 free slots (cap 6) but NO entry: confirmed gate OFF (raw ON pending 2nd close) -> no Lane-2; tape risk-ON so no Lane-3; SPCX parabolic +9.8% (LESSONS don't-chase, no clean stop); no verified <48h named catalyst + two-source + confirming tape. prices below = broker regular last ~13:42Z. cash 1334.15 = settled BP.",
-  "asOf": "2026-06-16T13:42:00Z",
-  "accountValue": 4941.64,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 14:42Z regular session (Cowork, ~10:42 ET). Ground truth reconciles to broker (get_portfolio total_value 4857.12 / equity 3034.93 / cash settled-BP 1334.15, total cash 1822.19 incl unsettled INTC proceeds; get_equity_positions 3 long; get_equity_orders state=confirmed): 3 positions, all 3 stops broker-confirmed resting, cumulative_quantity 0, shares_held_for_sells=full size, intraday_quantity 0. EXIT this run (automatic): INTC stopped out — trailing stop 6a301bea (stop 122.00) FILLED 4 @ 122.01 at 14:29:54Z as INTC reversed -5.4% off peak 132.61. Banked +$31.44 / +0.86R (tranche 2 of orig 6; b1 was +1.61R at +12% on 06-15). INTC slot freed -> 3/6 used, 3 free. Registry now: MU 1020.50/6a315388 (peak 1109.24), DAL 82.67/6a301b7f, AMD 514.99/6a301b6c. No ratchets met (MU 1074.67 < peak 1109.24; AMD 529.60 < +5% rung 540.74; DAL +1.8% < +5% rung). NO new entry: confirmed gate OFF (raw ON pending 2nd close) -> no Lane-2; tape risk-OFF (QQQ -0.6%, semis red) -> no Lane-3 quality-largecap setup; no verified <48h named catalyst + two-source + confirming tape; SPCX parabolic (LESSONS don't-chase); settled BP 1334.15 (INTC proceeds T+1). prices below = broker regular last ~14:42Z. cash 1334.15 = settled BP.",
+  "asOf": "2026-06-16T14:42:00Z",
+  "accountValue": 4857.12,
   "cash": 1334.15,
   "contributions": 4585,
   "positions": [
@@ -10,16 +10,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 1020.5,
-      "price": 1106.69,
-      "levMultiplier": 1,
-      "theme": "ai-capex"
-    },
-    {
-      "symbol": "INTC",
-      "qty": 4,
-      "entry": 114.15,
-      "stop": 122.0,
-      "price": 127.13,
+      "price": 1074.67,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -28,7 +19,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 85.22,
+      "price": 84.14,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -37,7 +28,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 541.95,
+      "price": 529.595,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }
