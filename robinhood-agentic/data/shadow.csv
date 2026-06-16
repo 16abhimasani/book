@@ -2,3 +2,7 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-06-12-RH,RH,2026-06-12,filtered,,,,own invalidation fired pre-open (AH pop reversed; opened below prior-day high),,,,PREMARKET candidate; fell -6.6% on entry day — filter validated
 2026-06-12-MMM,MMM,2026-06-12,filtered,,,,catalyst failed verification (price datum did not reconcile; no named catalyst),,,,PREMARKET candidate; flat tape on the day
 2026-06-12-SPCX,SPCX,2026-06-12,triggered_shadow,172.69,158.87,2,entry hygiene: day-1 IPO has no prior-day structure for confirm/stop,,,,evaluated 17:28Z at +28% from $135 IPO price; would have been a discretionary momentum buy absent the hygiene rule
+2026-06-16-SPCX,SPCX,2026-06-16,filtered,,,,"parabolic/extended (+6.5% premkt on +19.6% prior day); no stop structure, LESSONS don't-chase",,,,"watcher MOVE overnight; non-reg 204.99 vs close 192.50; recurring skip (see 2026-06-12-SPCX)"
+2026-06-16-RKLB,RKLB,2026-06-16,filtered,,,,"no verified <48h named catalyst + two-source; watcher mover only, not a trigger",,,,"premkt 111.07 vs close 109.25 (+1.7%); AI/space basket; hold for catalyst+confirming tape"
+2026-06-16-ASTS,ASTS,2026-06-16,filtered,,,,"no verified <48h named catalyst + two-source; watcher mover only",,,,"premkt 88.89 vs close 87.57 (+1.5%); AI/space basket"
+2026-06-16-SNDK,SNDK,2026-06-16,filtered,,,,"unaffordable (2157/sh > cash 1334.15) + no verified catalyst",,,,"premkt 2157.50 vs close 2107.86 (+2.4%); watcher mover"

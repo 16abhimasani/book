@@ -1,8 +1,8 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 00:42Z outside-hours (Cowork, ~20:42 ET, ext session closed 20:00 ET): research/journal-only — NO TRADE (SKILL §4 outside 7:00-20:00). Ground truth reconciles to last journal: 4 positions, all 4 regular-hours GTC stops broker-confirmed resting (MU 1009.67/6a305638, INTC 122.00/6a301bea, DAL 82.67/6a301b7f, AMD 514.99/6a301b6c), cum qty 0, no missing stops, no fills since 23:42Z. No ratchets (mkt closed, no new RTH session; 06-15 RTH closes MU 1087.99/INTC 127.86/AMD 547.26/DAL 84.07 all < registry peaks MU 1097.47/INTC 132.61 & < +10% arms AMD 566.49/DAL 90.94). No exits (no stop hit; MU time stop 06-18). Cap now 6 (v0.3.3) → 2 free slots but outside hours = no entries possible. Not an EOD run (2026-06-15 marks.csv row already present) → no marks row. prices below = broker post-close non-reg last ~00:42Z. cash = settled buying power $1,076.47; total cash $1,334.15 incl $257.68 INTC proceeds settling T+1 today 2026-06-16.",
-  "asOf": "2026-06-16T00:42:00Z",
-  "accountValue": 4884.63,
-  "cash": 1076.47,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 11:43Z pre-market extended (Cowork, ~07:43 ET, within 7:00-9:30 ET pre-market window): MANAGE-ONLY / NO-TRADE. Extended hours = LIMIT-only, so no stop can be placed/ratcheted now; the 4 regular-hours GTC stops rest for the 9:30 open. Ground truth reconciles to last journal + broker: 4 positions, all 4 stops broker-confirmed resting (MU 1009.67/6a305638, INTC 122.00/6a301bea, DAL 82.67/6a301b7f, AMD 514.99/6a301b6c), cum qty 0, shares_held_for_sells=full size, no missing stops, no fills overnight. No ratchets executable pre-market (limit-only); MU printed a new pre-market high 1123.10 > registry peak 1097.47 -> ratchet MU trail off the TRUE session high at the regular open. No exits (no stop hit; MU time stop 06-18 Thu, earnings 06-24 AMC). 2 free slots (cap 6) but NO entry: basket movers (SPCX/RKLB/ASTS/SNDK) are watcher HEADS-UP only, no verified <48h named catalyst + two-source + confirming tape; SPCX parabolic (LESSONS: don't chase); SNDK 2157/sh > cash. Confirmed gate OFF (raw ON pending 2nd close) -> no Lane-2. prices below = broker pre-market non-reg last ~11:43Z. cash 1334.15 = settled BP (INTC T+1 proceeds settled today 06-16).",
+  "asOf": "2026-06-16T11:43:00Z",
+  "accountValue": 4956.44,
+  "cash": 1334.15,
   "contributions": 4585,
   "positions": [
     {
@@ -10,7 +10,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 1009.67,
-      "price": 1075.49,
+      "price": 1123.10,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -19,7 +19,7 @@
       "qty": 4,
       "entry": 114.15,
       "stop": 122.0,
-      "price": 125.74,
+      "price": 127.00,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -28,7 +28,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 84.10,
+      "price": 84.70,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -37,7 +37,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 543.74,
+      "price": 550.41,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }
