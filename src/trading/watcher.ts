@@ -11,7 +11,7 @@
 // When this graduates to waking the loop, the loop re-pulls real-time broker
 // quotes before acting, so feed latency here doesn't reach an order.
 
-import { readFileSync, writeFileSync, appendFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, appendFileSync, existsSync, statSync } from "node:fs";
 import { fetchQuote, type Quote } from "./yahoo";
 
 const DATA = new URL("../../robinhood-agentic/data/", import.meta.url).pathname;
@@ -81,8 +81,45 @@ export function dedupe(triggers: Trigger[], lastState: Record<string, number>): 
   return { toLog, nextState };
 }
 
+/** Only scan when the market is actually open-ish: Mon–Fri, 7:00–20:00 ET
+ * (pre-market through after-hours). Off-hours the prices are frozen, so polling
+ * is wasted computation. Pure + testable. */
+export function isMarketWindow(now: Date): boolean {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short", hour: "2-digit", hour12: false }).formatToParts(now);
+  const wd = parts.find((p) => p.type === "weekday")?.value ?? "";
+  const hr = Number(parts.find((p) => p.type === "hour")?.value ?? "-1");
+  return !["Sat", "Sun"].includes(wd) && hr >= 7 && hr < 20;
+}
+
+/** One-line human summary of watcher health + recent activity. Pure. */
+export function summarizeWatcher(lastScan: Date | null, events: string[], now: Date): string {
+  if (!lastScan) return "Watcher: no data yet (not started, or never an in-hours scan).";
+  const ageMin = Math.round((now.getTime() - lastScan.getTime()) / 60000);
+  const dayAgo = new Date(now.getTime() - 24 * 3600 * 1000).toISOString();
+  const last24 = events.filter((l) => l.slice(0, 24) >= dayAgo);
+  const recent = last24.slice(-3).map((l) => l.replace(/^\S+\s/, "")).join(" · ");
+  const health = ageMin <= 6 ? "running" : isMarketWindow(now) ? `STALE — last scan ${ageMin}m ago, may be down` : `idle (off-hours), last scan ${ageMin}m ago`;
+  return `Watcher: ${health} · ${last24.length} alert(s)/24h${recent ? ` · recent: ${recent}` : ""}`;
+}
+
+export function readWatcherState(): { lastScan: Date | null; events: string[] } {
+  const lastScan = existsSync(STATE) ? new Date(statSync(STATE).mtimeMs) : null;
+  const events = existsSync(LOG) ? readFileSync(LOG, "utf8").split("\n").filter(Boolean) : [];
+  return { lastScan, events };
+}
+
 if (import.meta.main) {
+  const now = new Date();
+  if (process.argv.includes("--status")) {
+    const { lastScan, events } = readWatcherState();
+    console.log(summarizeWatcher(lastScan, events, now));
+    process.exit(0);
+  }
   const dry = process.argv.includes("--dry");
+  if (!dry && !isMarketWindow(now)) {
+    console.log(`[watch ${now.toISOString()}] market closed (ET) — skipping scan`);
+    process.exit(0);
+  }
   const cfg = JSON.parse(readFileSync(DATA + "watch.json", "utf8")) as WatchConfig;
   const book = JSON.parse(readFileSync(DATA + "book.json", "utf8")) as { positions: HeldPosition[] };
   const held = book.positions.map((p) => ({ symbol: p.symbol, stop: p.stop }));

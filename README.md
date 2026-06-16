@@ -46,7 +46,15 @@ flowchart TD
     order --> journal["Journal + trades.csv + book.json"]
     hold --> journal
     journal --> snap["bun run snapshot → README<br/>commit + push"]
+    watcher["Watcher · launchd, every 2m<br/>Yahoo quotes, market hours only"] --> elog[("data/events.log")]
+    elog -. "heads-up source<br/>(read, never a trigger)" .-> truth
 ```
+
+The watcher is a separate always-on process (launchd, every 2 minutes during
+market hours). It can't place orders. It logs fast moves to `events.log`; the
+scheduled loop reads that log as a heads-up on its next run. `bun run watch -- --status`
+shows whether it's alive and what it has flagged, and the README snapshot above
+carries the same line.
 
 ## Portfolio snapshot
 
@@ -74,6 +82,8 @@ Closed trades:
 **Measurement gate (POLICY §6a):** 2 closed / 4 open · expectancy 0.96R · capital-add not eligible (needs ≥10 closed / >+0.25R / 0 breaches / ≥4wk). Per lane: L1 1.61R (1 closed) · L2 0.31R (1 closed).
 
 **Lane-2 regime gate:** OFF (confirmed 2-day; QQQ 743.84 vs 20d MA 723.25, as of 2026-06-15) — raw ON pending one more close.
+
+**Watcher: running · 32 alert(s)/24h · recent: MOVE-HELD MU +10.8% (1087.99) · STOP-ADJACENT DAL 84.07 vs stop 82.67 (1.7% away) · MOVE-HELD AMD +7.0% (547.26)**
 <!-- SNAPSHOT:END -->
 
 ## The engine (`src/trading/`)
@@ -90,6 +100,7 @@ them; you can run any of them yourself.
 | `bun run grok "<q>"` | Live X + Web catalyst search via xAI Grok, with citations and cost |
 | `bun run verify` | Schema-check every CSV/JSON file before the loop trusts it |
 | `bun run shadow` | Score the trades we skipped — is the selection adding value? |
+| `bun run watch -- --status` | Is the event watcher alive, and what has it flagged moving? |
 | `bun run snapshot` | Rewrite the snapshot block above from the committed book |
 | `bun run backtest` | 3-year regime-gate validation (see `docs/BACKTEST-REGIME-GATE.md`) |
 | `bun test src/trading` | The whole engine test suite |

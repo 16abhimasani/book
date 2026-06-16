@@ -31,7 +31,12 @@ heartbeat.
    parked lane first).
 3. **Ground truth**: `get_portfolio`, `get_equity_positions`, open
    `get_equity_orders`. Reconcile against the stop registry in the last
-   journal entry; replace any missing stop immediately.
+   journal entry; replace any missing stop immediately. Also skim the tail
+   of `robinhood-agentic/data/events.log` (`bun run watch -- --status`) —
+   what the observer watcher flagged moving fast since the last run. Treat
+   it as a HEADS-UP source (a held name near its stop, a watchlist name
+   spiking), never as a trigger: the §3 two-source rule + confirming tape
+   still gate any entry, and stops still gate any exit.
 4. **Run-type** from ET clock (POLICY §4, v0.3 — extended hours enabled):
    - **pre-market extended (~7:00–9:30)**: manage + MAY enter/exit per
      POLICY §3.7 — LIMIT orders only, liquidity guard, place the

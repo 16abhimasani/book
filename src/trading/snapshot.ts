@@ -10,6 +10,7 @@ import { validateBook } from "./validate";
 import { loadTrades, computeStats, computeLaneStats } from "./stats";
 import { loadMarks, confirmedGate } from "./gate";
 import { MAX_POSITIONS } from "./risk";
+import { readWatcherState, summarizeWatcher } from "./watcher";
 
 const ROOT = new URL("../../", import.meta.url).pathname;
 const DATA = ROOT + "robinhood-agentic/data/";
@@ -75,6 +76,11 @@ function buildSnapshot(asOfDate: string): string {
   } catch {
     // marks unreadable → omit gate line
   }
+
+  // watcher health (the launchd observer) — so its activity is visible here
+  const w = readWatcherState();
+  L(`\n**${summarizeWatcher(w.lastScan, w.events, new Date())}**`);
+
   return lines.join("\n");
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { detectTriggers, dedupe, type WatchConfig, type HeldPosition } from "./watcher";
+import { detectTriggers, dedupe, isMarketWindow, summarizeWatcher, type WatchConfig, type HeldPosition } from "./watcher";
 import type { Quote } from "./yahoo";
 
 const cfg: WatchConfig = { symbols: ["SPCX", "NVDA"], moveAlertPct: 5, stopProximityPct: 3 };
@@ -53,5 +53,33 @@ describe("dedupe", () => {
     const state = { "MOVE:SPCX": 197 };
     expect(dedupe([trig("MOVE:SPCX", 200)], state).toLog.length).toBe(1); // +1.5% → re-logs
     expect(dedupe([trig("MOVE:SPCX", 198)], state).toLog.length).toBe(0); // +0.5% → still quiet
+  });
+});
+
+describe("isMarketWindow", () => {
+  test("a weekday mid-session ET time is in window", () => {
+    expect(isMarketWindow(new Date("2026-06-15T18:00:00Z"))).toBe(true); // 2pm ET Mon
+    expect(isMarketWindow(new Date("2026-06-15T12:00:00Z"))).toBe(true); // 8am ET Mon (pre-market)
+  });
+  test("overnight and weekends are out of window", () => {
+    expect(isMarketWindow(new Date("2026-06-16T05:00:00Z"))).toBe(false); // 1am ET Tue
+    expect(isMarketWindow(new Date("2026-06-13T18:00:00Z"))).toBe(false); // 2pm ET Saturday
+  });
+});
+
+describe("summarizeWatcher", () => {
+  const now = new Date("2026-06-15T18:00:00Z");
+  test("no data → not-started message", () => {
+    expect(summarizeWatcher(null, [], now)).toContain("no data");
+  });
+  test("fresh scan during hours → running, counts last-24h alerts", () => {
+    const events = [`2026-06-15T17:59:00.000Z MOVE SPCX +20%`, `2026-06-10T00:00:00.000Z OLD`];
+    const s = summarizeWatcher(new Date("2026-06-15T17:58:00Z"), events, now);
+    expect(s).toContain("running");
+    expect(s).toContain("1 alert(s)/24h"); // the old one is >24h, excluded
+    expect(s).toContain("MOVE SPCX");
+  });
+  test("stale scan during market hours → flagged as maybe-down", () => {
+    expect(summarizeWatcher(new Date("2026-06-15T16:00:00Z"), [], now)).toContain("STALE");
   });
 });
