@@ -1,7 +1,7 @@
 {
-  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-15 23:42Z after-hours extended (Cowork, ~19:42 ET): MANAGE / NO-TRADE — 4/4 slots full → no entries (gate ON but moot); no ratchets (RTH closed, today's RTH highs final & < registry peaks; ext-hours non-reg MU 1079.95 < peak 1097.47; INTC 125.64 < peak 132.61; AMD 545.00 < +10% arm 566.49; DAL 84.07 < +10% arm 90.94 → all trails/BE hold, ratchet-up-only); no exits (no stop hit, cum qty 0; MU time stop 06-18). All 4 regular-hours GTC stops broker-confirmed resting for the 9:30 open (cannot trigger in ext hours, §3.7 posture C). Not an EOD run (EOD reconcile ran 20:47Z; 2026-06-15 marks.csv row already present) → no marks row appended. prices below = broker extended-hours last (non-reg) ~23:42Z. cash = settled buying power $1,076.47; total cash $1,334.15 incl $257.68 INTC bank proceeds settling T+1 on 2026-06-16 (settled-funds rule).",
-  "asOf": "2026-06-15T23:42:00Z",
-  "accountValue": 4891.03,
+  "_note": "Live book snapshot for `bun run risk -- robinhood-agentic/data/book.json` and `bun run book`. Refresh accountValue/cash/price from get_portfolio + get_equity_quotes at run time (and bump asOf); stops from the journal stop registry. 2026-06-16 00:42Z outside-hours (Cowork, ~20:42 ET, ext session closed 20:00 ET): research/journal-only — NO TRADE (SKILL §4 outside 7:00-20:00). Ground truth reconciles to last journal: 4 positions, all 4 regular-hours GTC stops broker-confirmed resting (MU 1009.67/6a305638, INTC 122.00/6a301bea, DAL 82.67/6a301b7f, AMD 514.99/6a301b6c), cum qty 0, no missing stops, no fills since 23:42Z. No ratchets (mkt closed, no new RTH session; 06-15 RTH closes MU 1087.99/INTC 127.86/AMD 547.26/DAL 84.07 all < registry peaks MU 1097.47/INTC 132.61 & < +10% arms AMD 566.49/DAL 90.94). No exits (no stop hit; MU time stop 06-18). Cap now 6 (v0.3.3) → 2 free slots but outside hours = no entries possible. Not an EOD run (2026-06-15 marks.csv row already present) → no marks row. prices below = broker post-close non-reg last ~00:42Z. cash = settled buying power $1,076.47; total cash $1,334.15 incl $257.68 INTC proceeds settling T+1 today 2026-06-16.",
+  "asOf": "2026-06-16T00:42:00Z",
+  "accountValue": 4884.63,
   "cash": 1076.47,
   "contributions": 4585,
   "positions": [
@@ -10,7 +10,7 @@
       "qty": 1,
       "entry": 941.5,
       "stop": 1009.67,
-      "price": 1079.945,
+      "price": 1075.49,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -19,7 +19,7 @@
       "qty": 4,
       "entry": 114.15,
       "stop": 122.0,
-      "price": 125.64,
+      "price": 125.74,
       "levMultiplier": 1,
       "theme": "ai-capex"
     },
@@ -28,7 +28,7 @@
       "qty": 17,
       "entry": 82.6699,
       "stop": 82.67,
-      "price": 84.07,
+      "price": 84.10,
       "levMultiplier": 1,
       "theme": "oil-collapse-beneficiary"
     },
@@ -37,7 +37,7 @@
       "qty": 1,
       "entry": 514.99,
       "stop": 514.99,
-      "price": 545.0,
+      "price": 543.74,
       "levMultiplier": 1,
       "theme": "ai-capex"
     }

@@ -1541,3 +1541,77 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - 92 tests green; typecheck clean. Book unchanged (4 positions, $0 risk to
   stops, all gains locked). Next watch: MU time stop 06-18, earnings 06-24;
   first basket entry needs a slot + 2-source <48h catalyst + confirming tape.
+
+## 2026-06-16 00:42 UTC · run: outside-hours (research/journal only — NO-TRADE, ext session closed 20:00 ET)
+
+- Account: $4,884.63 (+3.3% day vs Fri 06-12 close basis $4,727.48; +6.5% vs
+  $4,585 contributed) · settled cash/BP $1,076.47 (22.0%); total cash $1,334.15
+  incl $257.68 INTC bank proceeds settling T+1 today 06-16. 4/6 slots (cap
+  raised 4→6 in the 00:12Z owner session, v0.3.3). Unrealized ≈ +$233 (MU +134,
+  INTC +46, DAL +24, AMD +29 at post-close non-reg marks); realized to date
+  +$70.52. Equity value $3,550.48 (broker non-reg marks ~00:42Z). NB 06-15
+  settled higher at the official RTH close (~$4,910); the ~$25 lower print here
+  is post-close non-reg drift, not a position change.
+- Positions (post-close non-reg vs avg): MU 1 @ 941.50 (+14.2%, 1075.49) [L1,
+  TRAIL 1009.67 / 6a305638, peak 1097.47] · INTC 4 @ 114.15 (+10.2%, 125.74)
+  [L1, TRAIL 122.00 / 6a301bea, peak 132.61] · DAL 17 @ 82.67 (+1.7%, 84.10)
+  [L1, BE 82.67 / 6a301b7f] · AMD 1 @ 514.99 (+5.6%, 543.74) [L1, BE 514.99 /
+  6a301b6c].
+- Actions: NO-TRADE / research-journal only — clock is 20:42 ET, past the 20:00
+  ET extended-session close, so outside the 7:00-20:00 trading window (SKILL §4
+  → never trade). (1) No entries: even with 2 free slots under the new cap 6,
+  no order is placeable outside hours; gate ON but moot. (2) No ratchets: market
+  closed, no new RTH session since 23:42Z; 06-15 RTH closes (MU 1087.99, INTC
+  127.86, AMD 547.26, DAL 84.07) all below registry peaks (MU 1097.47, INTC
+  132.61) and below the +10% arms (AMD 566.49, DAL 90.94); post-close non-reg
+  prints lower still. Ratchet-up-only → nothing to raise; thin non-reg prints
+  don't set trails. (3) No exits: no stop hit (cum qty 0 all four), no time stop
+  due (MU time stop 06-18 Thu). Not an EOD run (2026-06-15 marks.csv row already
+  present) → no marks row. No candidates evaluated against entry (outside hours)
+  → no shadow.csv rows. book.json refreshed to 00:42Z non-reg marks; README
+  mirror refreshed (bun run snapshot, exit 0).
+- STOP REGISTRY (authoritative, all four broker-verified `confirmed` /
+  regular_hours this run via get_equity_orders — none missing, cum qty 0, each
+  shares_held_for_sells = full position size): MU 1009.67 (6a305638, peak
+  1097.47) · INTC 122.00 (6a301bea, peak 132.61) · DAL 82.67 (6a301b7f) · AMD
+  514.99 (6a301b6c). Unchanged from 23:42Z. Closest to its stop = INTC at +3.0%
+  above 122.00; all others +5.6% to +6.5% clear. (Regular-hours GTC stops rest
+  for the 9:30 ET open — cannot trigger overnight, accepted per §3.7 posture C.)
+- Catalysts considered: held names only (outside hours → no entry, no grok
+  second-source call per step-5 entry-only rule). AI/space basket added in the
+  00:12Z session (SPCX, NVDA, SNDK, PLTR, RKLB, ASTS, LUNR, TSM, AVGO, DELL)
+  stands ready — first entry needs a slot (have 2) + 2-source <48h catalyst +
+  confirming tape at the next in-hours run; not auto-fired. USO 121.20 (≈flat vs
+  prior close 121.21; was −3.3% intraday) — bearish-oil backdrop supports DAL
+  airline cost-tailwind thesis; no >+3% reversal tell.
+- Tools check: get_accounts OK; agentic_allowed=true = 786675686 (••••5686);
+  other 3 accounts false. Equity + watchlist + historicals tools only on this
+  MCP surface — options/crypto are watchlist-read tools only, no crypto/options/
+  event-contract ORDER tools → parked lanes L4/L5 stay parked; no NEW-TOOLS.
+- Limits check: ALL PASS (bun run verify exit 0 — book/trades/marks/shadow/
+  earnings all valid; bun run risk exit 0 on host, sandbox lacks bun → osascript
+  to host). book risk to stops $0 (0.0%) ≤ 8% — book fully locked
+  breakeven-or-better; 4/6 slots; risk/position within $122.12 budget; lev-ETF
+  0%; beta-gross $3,551.89 (72.7%) ≤ 150%; theme ai-capex 43.4% +
+  oil-collapse-beneficiary 29.3% ≤ 65%; max single DAL 29.3% ≤ 40%; cash 22.0%
+  ≥ 2.5%. Daily-loss halt (−15%) + drawdown checkpoint ($2k) clear (acct +3.3%
+  day, $4,885). (bun run book exit 4 = 4 known informational flags: 3 intentional
+  profit-locked trailing stops MU/INTC/DAL + MU earnings 06-24 reminder — not a
+  data error; verify is the DATA-INVALID gate and it passed.)
+- Run-type: outside-hours (20:42 ET, ext session closed 20:00 ET) →
+  research/journal only, no orders placed or possible.
+- §6a (bun run book / stats): 2 closed / 4 open, hit 100%, expectancy 0.96R/
+  trade (L1 1.61R, L2 0.31R). Capital-add gate NOT ELIGIBLE (2 closed < 10;
+  0.7 wk < 4) — sample building, expected. 0 limit breaches.
+- Gate: ON (as of 2026-06-15 close — QQQ 744.00 > 20d MA 723.25 AND VIXY 21.70
+  quiet). Moot outside hours; with 2 free slots a future in-hours run may enter
+  L1 catalyst OR (fresh gate re-check) L2 lev-ETF — never auto-fire; §3 hygiene
+  + two-source rule still bind.
+- Next watch: MU time stop 06-18 (Thu) + earnings 06-24 AMC → plan exit BEFORE
+  the print, never hold into it. MU trail 1009.67 / INTC trail 122.00 vs new
+  peaks (ratchet up only at the next RTH session); AMD +10% arm 566.49 (06-15
+  RTH high 558.37 — arm if it prints); DAL BE 82.67, tell = USO reversal >+3%
+  (intact, oil soft). 2 free slots (cap 6) → next in-hours run may take an
+  AI/space-basket L1 entry or a fresh-gate L2, on a <48h catalyst + confirming
+  tape only. INTC $257.68 proceeds settle T+1 today 06-16 → adds settled BP.
+  Next run: pre-market extended (~7:05 ET Tue 06-16) or the first regular hourly.
