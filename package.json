@@ -19,7 +19,8 @@
     "verify": "bun src/trading/verify.ts",
     "grok": "bun src/trading/grok.ts",
     "snapshot": "bun src/trading/snapshot.ts",
-    "watch": "bun src/trading/watcher.ts"
+    "watch": "bun src/trading/watcher.ts",
+    "trail": "bun src/trading/trail.ts"
   },
   "dependencies": {
     "@mysten/sui": "^2.16.0"

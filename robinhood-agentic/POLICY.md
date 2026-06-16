@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.3.4 (2026-06-16) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.3.5 (2026-06-16) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -15,7 +15,10 @@
   rule (owner directive 2026-06-15 — room for the AI/space basket, recycle
   capital from weak holdings);
   v0.3.4: Lane-2 gate flips on 2-close confirmation (B2 — owner ratified
-  2026-06-16; cuts single-close whipsaw ~3x at equal return/drawdown).
+  2026-06-16; cuts single-close whipsaw ~3x at equal return/drawdown);
+  v0.3.5: tiered Lane-1 trail (owner ratified 2026-06-16) — +8% locks +3%
+  (closes the dead zone) and the trail tightens −8%/−6%/−5%/−4% as a winner
+  extends; computed by `bun run trail`.
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -70,11 +73,14 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
   not stale charts.
 - Entry: named catalyst < 48h old + confirming tape (price above prior-day
   high or reclaiming VWAP-equivalent). Position 25–40%.
-- Exit ladder: hard stop −8% from entry, placed with the fill. At **+5%**
-  unrealized → raise stop to breakeven. At **+10%** → trail at
-  max(breakeven, −8% from peak). At **+12%** → sell 1/3 to bank ≥ 1R,
-  trail the rest. Stops ratchet up only. Time stop: thesis hasn't started
-  working in 5 sessions → exit.
+- Exit ladder (v0.3.5 — tiered trail; compute the exact stop with
+  `bun run trail -- <entry> <peak>`, peak = TRUE session high via
+  `get_equity_historicals`, never by hand): hard stop −8% from entry, placed
+  with the fill. **+5%** → breakeven. **+8%** → lock **+3%** (a mid-size gain
+  never round-trips to flat). **+10%** → trail **−8%** from the high; **+15%**
+  → tighten to **−6%**; **+20%** → **−5%**; **+25%** → **−4%** (lock hard once
+  extended). **+12%** → sell 1/3 to bank ≥ 1R, trail the rest. Stops ratchet up
+  only. Time stop: thesis hasn't started working in 5 sessions → exit.
 
 ### Lane 2 — Leveraged ETF rotation (secondary, regime-gated)
 - Universe: TQQQ / SOXL / SPXL-class long-leverage ETFs.

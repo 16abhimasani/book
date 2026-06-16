@@ -43,6 +43,14 @@ falls out of context — it lives here instead, and compounds.
 - **Trail off the TRUE session high, not the last hourly observation.** MU's
   real high was ~9 points above the last-observed at the prior run, so the -8%
   trail had been set ~8 points too low. Pull intraday highs at manage time.
+- **Lock harder as a winner gets extended (tiered trail).** 2026-06-16: a
+  broad semis risk-off faded MU from a +19% peak; the flat -8% trail kept only
+  +8.4%, and AMD round-tripped +8%→breakeven (the old +5%→+10% dead zone). Now
+  (POLICY §3, v0.3.5): +8% locks +3%, and the trail tightens -8%/-6%/-5%/-4% as
+  the peak gain grows. Always `bun run trail -- <entry> <peak>` for the exact
+  stop — never compute it by hand. Tighter isn't free (MU bounced after its
+  stop); the point is to lock more only once a name is extended, not to whipsaw
+  normal winners.
 - **Extended hours can't rest a stop (limit-only).** A position held overnight
   has no active stop until 9:30 ET; size for the gap, never assume protection.
 
