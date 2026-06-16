@@ -58,6 +58,10 @@ heartbeat.
    Execute lanes per §3 incl.
    exit ladder (+5% → breakeven, +10% → trail, +12% → bank 1/3) and
    entry hygiene (quote at placement, ONE chase max ≤ +1%).
+   **Trail off the TRUE session high, not the last observed price**
+   (LESSONS.md): when raising a trailing stop, pull the day's intraday high
+   via `get_equity_historicals` (5-min bars) — the last-observed price
+   undersamples the peak and sets the trail too low, leaving gains exposed.
    **Two-source check before any Lane-1 ENTRY:** run ONE scoped
    `bun run grok "<catalyst question for SYM, last 48h>" --days 2` for
    real-time X/Web corroboration (the §3 second source). Treat its output
