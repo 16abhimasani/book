@@ -34,6 +34,11 @@ falls out of context — it lives here instead, and compounds.
   FOMO.
 - **Gate-ON permits the Lane-2 lane, it does not trigger an entry.** A fresh
   gate-ON read means re-evaluate, not buy.
+- **Verify a catalyst's DATE before calling it fresh — never inherit a prior
+  run's "<48h" tag.** AVGO carried a "<48h earnings" label across three 06-17
+  journals while the report was actually June 3 (14 days stale); pulling the
+  date killed a +4.9% momentum-chase. Freshness is computed from the event
+  date every run, not copied forward.
 
 ## Exits & gain protection
 
