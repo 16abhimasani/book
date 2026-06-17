@@ -59,6 +59,20 @@ falls out of context — it lives here instead, and compounds.
 - **Extended hours can't rest a stop (limit-only).** A position held overnight
   has no active stop until 9:30 ET; size for the gap, never assume protection.
 
+## Venue rules (what's actually allowed)
+
+- **Cash account = unlimited day trades with SETTLED funds; only GFV gates
+  (verified 2026-06-17 via broker + research).** The agentic account
+  (••••5686) is a CASH account. There is NO pattern-day-trader limit — PDT is
+  margin-only, and it was eliminated for margin in 2026 anyway. You can buy and
+  sell as often as you like *as long as you use settled cash*. The ONE gate is
+  the Good Faith Violation: never sell a position bought with UNSETTLED proceeds
+  before those proceeds settle (T+1); 5 GFVs in 12 months → 90-day closing-only
+  restriction. POLICY §3.7 settled-funds rule already enforces this. So
+  disciplined re-entry on a pullback IS allowed (settled cash). Short-term tax
+  is the owner's concern, not the bot's optimization target. On-chain (future):
+  none of this applies — no settlement, no GFV, no PDT.
+
 ## Regime gate
 
 - **The gate churns near its moving average — so we confirm flips (B2, live).**
