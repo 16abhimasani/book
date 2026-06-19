@@ -67,7 +67,12 @@ heartbeat.
    price undersamples the peak), then `bun run trail -- <entry> <peak>` gives
    the exact stop per POLICY §3 (+8% locks +3%; trail −8%/−6%/−5%/−4% as the
    peak gain grows). Raise the stop to that level if it's higher than the
-   current one (ratchet up only); also bank 1/3 at +12% (multi-share lots).
+   current one (ratchet up only). **Scale out into strength** from the same
+   true peak: `bun run scaleout -- <entry> <peak> <originalQty> [alreadySold]`
+   returns `sellNow` — bank that many shares as a LIMIT profit-take (+15% banks
+   1/3, +25% banks the second 1/3, final 1/3 trails). It returns 0 for 1–2
+   share lots (can't split thirds) and is idempotent, so re-running never
+   double-sells.
    **Two-source check before any Lane-1 ENTRY:** run ONE scoped
    `bun run grok "<catalyst question for SYM, last 48h>" --days 2` for
    real-time X/Web corroboration (the §3 second source). Treat its output
