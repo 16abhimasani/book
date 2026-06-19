@@ -89,11 +89,13 @@ loop's own judgments and MUST come from broker-verifiable price action (tape) + 
 two-source rule (thesis) — never from a single grok/news assertion. The function is
 pure (can't be injected); the rule is named where the ingested text actually lands.
 
-**Shadow ledger** `data/shadow-reentry.csv` (mirrors `shadow.csv`): each run that sees
-a banked-{scaleout,trail} winner pull back appends a row — date, symbol, exitReason,
-sessionsSinceExit, pullbackPct, thesisIntact, tapeConfirms, eligible, triggered,
-reasons, hypothetical entry/recentHigh. A later resolver (extend `shadow.ts`) scores
-would-be outcomes. **No order is ever placed.**
+**Shadow ledger — REUSE `data/shadow.csv`** (DRY; not a parallel file). A re-entry
+shadow is a tracked non-trade, exactly what `shadow.csv` already holds, and its
+statuses map cleanly: a TRIGGERED re-entry → `triggered_shadow` (entry=price,
+stop=price×0.92, risk-sized qty) which the existing `bun run shadow` resolver scores
+like any trade; an ineligible/not-triggered one → `filtered` with the blocking
+reasons. Marked by candidate_id `<date>-<SYM>-reentry`. No new file, loader, verify
+check, or resolver. **No order is ever placed.**
 
 **Loop wiring:** trading-loop SKILL manage step — for a banked winner whose thesis is
 live, run `bun run reentry -- …` and append the shadow row. Explicitly: SHADOW ONLY,

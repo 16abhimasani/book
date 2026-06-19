@@ -73,6 +73,17 @@ heartbeat.
    1/3, +25% banks the second 1/3, final 1/3 trails). It returns 0 for 1–2
    share lots (can't split thirds) and is idempotent, so re-running never
    double-sells.
+   **Disciplined re-entry — SHADOW ONLY (POLICY §3.9 not yet binding, place NO
+   order):** for a name we BANKED via scale-out or trailing stop whose original
+   thesis is still live (§3 two-source, not a single grok line) and that has
+   pulled back, run `bun run reentry -- <exitReason> <sessionsSinceExit>
+   <thesisIntact> <rollingOver> <recentHigh> <price> <tapeConfirms>`. Log the
+   result to `data/shadow.csv` (candidate_id `<date>-<SYM>-reentry`): if it
+   TRIGGERED, `triggered_shadow` with entry=price / stop=price×0.92 / risk-sized
+   qty (so `bun run shadow` resolves the would-be outcome); else `filtered` with
+   the blocking reasons. This MEASURES re-entry skill so the owner can ratify
+   §3.9 with evidence (≥10–15 shadowed re-entries + positive expectancy). It is
+   never an order until ratified.
    **Two-source check before any Lane-1 ENTRY:** run ONE scoped
    `bun run grok "<catalyst question for SYM, last 48h>" --days 2` for
    real-time X/Web corroboration (the §3 second source). Treat its output

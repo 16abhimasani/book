@@ -22,7 +22,13 @@
   v0.3.6: Lane-1 scale-out into strength (owner ratified 2026-06-19) —
   replaces the single +12%→1/3 bank with a two-tier take: bank 1/3 at +15%,
   the second 1/3 at +25%, final 1/3 rides the trail; computed by
-  `bun run scaleout` (whole shares, floored — 1–2 share lots just trail).
+  `bun run scaleout` (whole shares, floored — 1–2 share lots just trail);
+  v0.3.7: §3.9 disciplined re-entry added in **SHADOW** (owner 2026-06-19) —
+  measured via `bun run reentry` into `data/shadow.csv`, places NO orders, NOT
+  binding until ratified (≥10–15 shadowed re-entries + positive expectancy);
+  venue/constraint seam formalized in `src/trading/venue.ts` (see
+  `docs/VENUES.md` — risk appetite §2 is venue-independent; only settled-funds
+  + whole-shares branch on the venue).
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -176,6 +182,33 @@ slot while a better setup goes untraded.
   be clearly better, not marginally. At most one rotation decision per run. All
   §2 limits and entry hygiene still apply to the replacement. Stops still ratchet
   up only; rotation is a deliberate exit, not a loosened stop.
+
+### 3.9 — Disciplined re-entry (SHADOW — NOT YET BINDING, owner 2026-06-19)
+
+Re-buy a name we BANKED (scale-out or trailing-stop exit) on a still-live thesis
+when it pulls back, instead of requiring a brand-new < 48h catalyst. This is the
+ONE intended relaxation of the §3 fresh-catalyst gate — and it is currently
+**SHADOW ONLY: the loop logs what it WOULD re-enter to `data/shadow.csv`
+(candidate_id `<date>-<SYM>-reentry`) and places NO order.** It authorizes no
+trade until the owner ratifies it with evidence.
+
+- **Eligible exits: scaleout, trail only** — a name that ran and we banked.
+  laggard / be-scratch / stop are excluded; they re-qualify through the full §3
+  gate like any other name.
+- **Gates (ALL must hold; computed by `bun run reentry`):** within **5 trading
+  sessions** of the exit (holidays don't count); original thesis intact by the §3
+  two-source rule (never a single grok line); not rolling over (no ≥ 2 down
+  sessions / lower highs / broken structure); pulled back into the **4%–12%**
+  band off the recent high; tape re-confirms (reclaim).
+- **Scope of the relaxation:** it drops ONLY the < 48h-catalyst requirement.
+  When ratified, sizing and the −8% stop come from `bun run risk -- size` +
+  `bun run trail` exactly as for any entry — re-entry emits no stop of its own,
+  and every §2 limit + the settled-cash rule still bind.
+- **Ratification gate (what makes this binding):** ≥ 10–15 shadowed re-entries
+  logged with positive hypothetical expectancy (or a backtest), AND an
+  integration test proving a triggered re-entry still fails §2 on a breach. Then
+  the owner moves §3.9 from SHADOW to binding, citing the evidence. Same
+  evidence bar as §6a.
 
 ### Lane 4 — Options (PARKED)
 - Blocked until options tools appear on the MCP connection. When they do:

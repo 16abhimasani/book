@@ -11,6 +11,7 @@
 //   defaults to 1; theme groups the §2 concentration check.
 
 import { readFileSync } from "node:fs";
+import { CASH_EQUITY, type Venue } from "./venue";
 
 export const RISK_PCT = 0.025; // max risk per position at entry
 export const BOOK_RISK_PCT = 0.08; // max total open risk to stops
@@ -45,12 +46,14 @@ export interface Sizing {
   notional: number; // qty * entry
 }
 
-/** POLICY §2: qty = floor(account × 2.5% ÷ (entry − stop)). */
-export function sizeFromRisk(accountValue: number, entry: number, stop: number): Sizing {
+/** POLICY §2: qty = floor(account × 2.5% ÷ (entry − stop)). Whole shares unless
+ * the venue trades fractional units (the descriptor's one sizing seam). */
+export function sizeFromRisk(accountValue: number, entry: number, stop: number, venue: Venue = CASH_EQUITY): Sizing {
   if (!(accountValue > 0) || !(entry > 0) || !(stop > 0)) throw new Error("inputs must be > 0");
   if (stop >= entry) throw new Error(`stop (${stop}) must be below entry (${entry}) for a long`);
   const riskPerShare = entry - stop;
-  const qty = Math.floor((accountValue * RISK_PCT) / riskPerShare);
+  const rawQty = (accountValue * RISK_PCT) / riskPerShare;
+  const qty = venue.fractionalUnits ? rawQty : Math.floor(rawQty);
   return {
     qty,
     riskPerShare: round2(riskPerShare),
@@ -92,7 +95,7 @@ const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
  * they predate the cap — the morning agent needs to see them; the journal
  * records which are grandfathered.
  */
-export function checkLimits(book: BookInput): LimitsReport {
+export function checkLimits(book: BookInput, venue: Venue = CASH_EQUITY): LimitsReport {
   const acct = book.accountValue;
   if (!(acct > 0)) throw new Error("accountValue must be > 0");
   const candidates = book.candidates ?? [];
@@ -186,7 +189,7 @@ export function checkLimits(book: BookInput): LimitsReport {
   // 8. settled funds + min cash buffer after candidate entries
   const candidateCost = candidates.reduce((s, p) => s + entryNotional(p), 0);
   const cashAfter = book.cash - candidateCost;
-  if (candidates.length > 0) {
+  if (candidates.length > 0 && venue.settledFundsRequired) {
     checks.push({
       limit: "settled funds only",
       actual: `cost $${round2(candidateCost)} vs settled cash $${round2(book.cash)}`,

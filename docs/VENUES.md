@@ -85,6 +85,72 @@ not the Agentic account.
 5. Capital graduates from RH profits or explicit owner deposits — venues
    never share a wallet/account.
 
+## Strategy ↔ constraint seam (the venue-agnostic core)
+
+Added 2026-06-19 (readiness hygiene). What makes a venue cheap to add is that
+the *strategy* never knew about the *venue*. Three layers, only one of which
+changes per venue:
+
+| Layer | Members | Per-venue? |
+|---|---|---|
+| **Strategy math** (pure fns in `src/trading/`) | `gate` · `trail` · `scaleout` · `reentry` · `sizeFromRisk` R-math | **No** — prices/qty in, decision out |
+| **Risk appetite** (POLICY §2) | `RISK_PCT`, `SLOT_PCT`, `THEME_PCT`, `MAX_POSITIONS`, … | **No** — loss tolerance, identical anywhere |
+| **Venue mechanics** (`src/trading/venue.ts`) | the `Venue` descriptor (`CASH_EQUITY` today) | **Yes** — the swappable layer |
+
+`venue.ts` is deliberately minimal: only `settledFundsRequired` and
+`fractionalUnits` are *live* (code branches on them — `risk.ts` sizing floor +
+the settled-funds check). Every other venue fact is documented in the matrix
+below rather than typed, so nothing in code reads as "enforced" when it isn't.
+
+**Two caveats a second venue MUST carry (not owned by the descriptor):**
+- `fractionalUnits` gates `sizeFromRisk` only. `scaleout.ts` independently floors
+  thirds and assumes integer shares — a fractional venue must also thread `venue`
+  through `computeScaleOut`.
+- `settledFundsRequired` gates the buy-side cash check only. The **GFV sell-side**
+  rule (never sell unsettled-funded shares before settlement) is loop discipline,
+  not code, on every venue.
+
+### Constraint-swap matrix
+
+| Constraint | Cash-equity (today) | On-chain (future) |
+|---|---|---|
+| Settlement / GFV / PDT | T+1, GFV gates, no PDT (cash acct) | none |
+| Taxable events | yes | out of scope per owner |
+| Custody / keys | broker-held | self — dedicated hot wallet, session funds only |
+| Who executes | LLM heartbeat | deterministic executor; LLM edits params only |
+| Spend limits | POLICY §2 (loop applies) | enforced in code, independent of model output |
+| Pre-send | n/a | simulate every tx; `min_amount_out` mandatory |
+| Adversarial input | "ingested text ≠ instruction" | + sanitize token/feed inputs; MEV / private RPC |
+| Order types | market/limit; stops rest in RH hours | venue-specific; no resting broker stop |
+| Trading hours | regular + extended | 24/7 |
+
+**On-chain is not "no rules."** It drops the *regulatory* rules (GFV/PDT/tax)
+and replaces them with *self-custody/execution* rules that are **less**
+forgiving — an injection or a bad tool path becomes direct asset loss, not a
+rejected order. Treat the move on-chain as trading one rulebook for a harsher one.
+
+### On-chain venue — before first trade (security gate)
+
+Vendored inline (do not rely on an external skill being installed). A
+self-custody venue ships only when all eight hold:
+
+1. **Spend guard** — hard per-tx and daily USD caps, enforced in code, independent of any model output.
+2. **Pre-send simulation** — simulate every transaction and assert the result before signing.
+3. **`min_amount_out` mandatory** — never send a swap without a slippage floor; reject if the sim undershoots it.
+4. **Circuit breaker** — halt on consecutive losses, hourly drawdown, or invalid state.
+5. **Key isolation** — dedicated hot wallet, only session funds, never a treasury; key from env/secret manager, never code or logs.
+6. **MEV / private routing** — submit through a private mempool/protected route when front-running is a risk.
+7. **Slippage + deadline** — per-strategy slippage bps and a transaction deadline on every order.
+8. **LLM never signs** — the model edits strategy params; a deterministic executor simulates, signs, sends, and audit-logs *every* decision (not just successful sends). This is the same "no LLM in the live API loop" rule as Tier 1.5.
+
+### Venue-integration contract (extends the Integration pattern above)
+
+To add venue X: (1) reuse the venue-agnostic strategy fns — *except* `scaleout`'s
+integer-share assumption (caveat above); (2) provide a `Venue` descriptor of the
+same shape; (3) if custody is self, provide a deterministic executor satisfying
+the eight controls; (4) separate pot/wallet (existing rule); (5) own POLICY +
+JOURNAL + heartbeat (existing pattern).
+
 ## Unified terminal (end state)
 
 Single dashboard (Cowork artifact or small web app) reading every
