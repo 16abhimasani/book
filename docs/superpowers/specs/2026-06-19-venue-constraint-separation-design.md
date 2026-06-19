@@ -1,181 +1,154 @@
-# Design — Venue/Constraint Separation + Disciplined Re-entry
+# Design — Venue/Constraint Separation + Disciplined Re-entry (shadow-first)
 
-- **Date:** 2026-06-19
-- **Owner:** Ash (binding decisions); design by the trading-loop agent
-- **Status:** approved in brainstorming; pending `/autoplan` review + owner spec sign-off
-- **Scope choice (owner):** *readiness hygiene* — formalize the seam, build the
-  re-entry strategy, document the on-chain swap. **Park** the actual on-chain
-  adapter until order tools exist (same posture as the parked crypto lane).
+- **Date:** 2026-06-19 · **Owner:** Ash (binding decisions) · design by the trading-loop agent
+- **Status:** approved (brainstorming + `/autoplan` dual-voice review). Re-entry ships
+  **shadow-only**; POLICY §3.9 is **NOT binding** until shadow evidence earns it.
+- **Scope (owner):** readiness hygiene. Formalize the seam, build re-entry as a
+  measured (logged, no-order) strategy, document the on-chain swap. On-chain adapter
+  parked until order tools exist.
 
-## 1. Problem & goal
+## 0. Why shadow-first (review outcome)
 
-The system conflates two things that change independently:
+Two independent adversarial reviews converged: §3.9 as originally drafted was a
+*brake-removal with zero empirical basis*, guarded by a self-graded `thesisIntact`
+flag, that degrades into "buy the 9% dip on a parabola" in a scenario already in
+today's journal (SNDK). Every other POLICY diff in this repo cited a backtest or a
+journaled outcome; §3.9 cited none. **Decision:** build the machinery, run it in
+shadow (log what it *would* re-enter to `data/shadow-reentry.csv`, place nothing),
+and ratify §3.9 into binding POLICY only after ~10–15 shadowed re-entries (or a
+backtest) show positive expectancy — the same discipline as the §6a measurement gate
+and the existing `shadow.csv`.
 
-- **Strategy** — when to enter, scale out, trail, exit, re-enter. An LLM-breadth
-  edge expressed as tested pure functions (`gate`, `trail`, `scaleout`, …).
-- **Venue constraints** — settled funds, GFV, whole shares, order types,
-  custody, who-runs-the-loop. Mechanics of *where* the trade clears.
-
-Goal: make that seam explicit so (a) the strategy is provably venue-agnostic and
-(b) adding an on-chain venue later is "fill a descriptor + provide an executor,"
-not "re-derive the strategy." This is **on-chain readiness**, not an on-chain
-build. No on-chain order tools are connected; building the adapter now would be
-speculative (YAGNI).
-
-Non-goal: a `Venue` method-interface, an on-chain executor, or any on-chain
-security *code*. Those land when a real second venue does.
-
-## 2. The seam
+## 1. The seam
 
 | Layer | Members | Venue-dependent? |
 |---|---|---|
-| **Strategy math** (pure fns) | `gate` · `trail` · `scaleout` · `reentry` (new) · `sizeFromRisk` R-math | **No** — prices/qty in, decision out |
-| **Risk appetite** (POLICY §2) | `RISK_PCT`, `SLOT_PCT`, `THEME_PCT`, `MAX_POSITIONS`, … | **No** — loss tolerance, identical on any venue |
-| **Venue mechanics** (`venue.ts`, new) | settled-funds, fractional units, GFV, order types, hours, custody, executor, leverage, taxable events | **Yes** — the swappable layer |
+| **Strategy math** (pure fns) | `gate` · `trail` · `scaleout` · `reentry` (new) · `sizeFromRisk` R-math | **No** |
+| **Risk appetite** (POLICY §2) | `RISK_PCT`, `SLOT_PCT`, `THEME_PCT`, `MAX_POSITIONS`, … | **No** — loss tolerance |
+| **Venue mechanics** (`venue.ts`, new) | settled-funds, fractional units (live); the rest are doc facts | **Yes** |
 
-Key correction discovered while reading `risk.ts`: the §2 constants are *risk
-appetite*, not venue constraints — they do **not** move into the descriptor.
-Only two spots in `risk.ts` branch on a venue fact (§3 below).
+## 2. Component A — `src/trading/venue.ts` (trimmed descriptor)
 
-## 3. Component A — `src/trading/venue.ts` (descriptor)
-
-A typed `Venue` and one real constant `CASH_EQUITY`. `risk.ts` consumes it at
-its **two** genuine seams via a backward-compatible default param, so all 119
-existing tests stay green.
+The review caught two things: the §2 constants are risk-appetite (correct, stays out),
+**but** seven "facts" fields were typed dead weight that *look* enforced and aren't.
+So the runtime type carries **only what code branches on**; every other venue fact
+lives in the VENUES.md matrix (Component C) as documentation.
 
 ```ts
 export interface Venue {
   id: string;
-  settledFundsRequired: boolean;   // gates risk.ts checkLimits #8
-  fractionalUnits: boolean;        // false → sizeFromRisk floors to whole shares
-  gfvApplies: boolean;             // doc/loop discipline — NO code branch yet
-  restingStopsRegularHoursOnly: boolean;
-  tradingHours: "regular+extended" | "24/7";
-  custody: "broker" | "self";      // self → requires the security layer (§5)
-  executor: "llm-heartbeat" | "deterministic"; // self-custody ⇒ deterministic
-  maxLeverage: number;
-  taxableEvents: boolean;
+  settledFundsRequired: boolean; // gates checkLimits #8 (buy-side cash check)
+  fractionalUnits: boolean;      // false → sizeFromRisk floors to whole shares
 }
-
-export const CASH_EQUITY: Venue = {
-  id: "cash-equity",
-  settledFundsRequired: true,
-  fractionalUnits: false,
-  gfvApplies: true,
-  restingStopsRegularHoursOnly: true,
-  tradingHours: "regular+extended",
-  custody: "broker",
-  executor: "llm-heartbeat",
-  maxLeverage: 1,
-  taxableEvents: true,
-};
+export const CASH_EQUITY: Venue = { id: "cash-equity", settledFundsRequired: true, fractionalUnits: false };
 ```
 
-**Wiring (surgical — the only two behaviors that branch):**
+**Wiring (the only two seams):**
+1. `sizeFromRisk(account, entry, stop, venue = CASH_EQUITY)` → `qty = venue.fractionalUnits ? raw : Math.floor(raw)`.
+2. `checkLimits(book, venue = CASH_EQUITY)` → the "settled funds only" check (#8) runs only when `venue.settledFundsRequired`.
 
-1. `sizeFromRisk(account, entry, stop, venue = CASH_EQUITY)` — the final `qty`
-   is `venue.fractionalUnits ? raw : Math.floor(raw)`. Default ≡ today.
-2. `checkLimits(book, venue = CASH_EQUITY)` — the "settled funds only" check
-   (#8) runs only when `venue.settledFundsRequired`. Default ≡ today.
+**Honest caveats (must be in the `venue.ts` doc comment AND the VENUES.md contract):**
+- `fractionalUnits` gates `sizeFromRisk` **only**. [scaleout.ts](../../src/trading/scaleout.ts)
+  independently floors thirds (`Math.floor(num*qty/den)`) and assumes integer shares —
+  a fractional venue MUST also thread `venue` through `computeScaleOut`. Not delivered here; a documented blocker on the contract.
+- `settledFundsRequired` gates the **buy-side** cash check only. The GFV **sell-side**
+  rule (POLICY §2, the rule with a real 3-GFV loss history) is **not** in `risk.ts` —
+  it stays loop discipline on every venue. The descriptor does not own GFV.
 
-**Honest scope:** only `settledFundsRequired` + `fractionalUnits` drive code
-today. The other fields are typed *facts* for the readiness contract and a
-future venue; we do not invent behavior for venues that don't exist.
+**Success criterion:** 119 existing tests green (CASH_EQUITY ≡ today) + 2 consumption
+tests: a `{fractionalUnits:true}` fixture yields un-floored qty; a `{settledFundsRequired:false}`
+fixture makes check #8 **absent** from `report.checks` (assert absence, not `pass:true`).
 
-**Success criterion:** 119 existing tests green (proves `CASH_EQUITY` ≡ today)
-**+** 2 new tests where a fixture `{ fractionalUnits:true,
-settledFundsRequired:false }` venue yields fractional sizing and skips check #8 —
-proving `risk.ts` genuinely *routes through* the descriptor, not merely imports
-it.
+## 3. Component B — `src/trading/reentry.ts` (SHADOW-ONLY)
 
-## 4. Component B — `src/trading/reentry.ts` (disciplined re-entry)
-
-A pure function enforcing the *computable* discipline; tape-reading stays the
-loop's discretionary call (exactly how Lane-1 treats "confirming tape").
+Pure function. **Returns a decision, not an order** — no stop, no size — so it is
+structurally impossible to mistake for a placeable, gate-skipping order.
 
 ```
-eligible  = bankedWinner(exitReason ∈ {scaleout, trail, laggard})  // a name that WORKED and we banked a gain
-            && sessionsSinceExit ≤ WINDOW            // default 10; stale ⇒ require a fresh Lane-1 catalyst
-            && thesisIntact                          // loop's grok/news judgment, passed in as a flag
-inBand    = pullbackPct ∈ [MIN, MAX]                 // default 4%–12% off recentHigh: a real dip, structure intact
-triggered = eligible && inBand && tapeConfirms       // tapeConfirms = loop's discretionary reclaim, passed in
-→ { eligible, triggered, reasons[], suggestedStop = round2(price × 0.92) }
+type ExitReason = "scaleout" | "trail" | "laggard" | "stop" | "be-scratch";
+
+eligible  = exitReason ∈ {scaleout, trail}          // banked because it RAN (laggard/be-scratch/stop excluded)
+            && sessionsSinceExit ≤ WINDOW            // default 5 trading sessions (holidays don't count); matches §3 time-stop
+            && thesisIntact                          // §3 two-source bar, NOT a single grok line (see provenance rule)
+            && !rollingOver                          // directional disqualifier: down ≥2 sessions OR lower-highs OR broke prior structural low
+inBand    = pullbackPct ∈ [MIN, MAX] (±1e-9)         // MIN=0.04, MAX=0.12; pullbackPct = (recentHigh − price)/recentHigh
+triggered = eligible && inBand && tapeConfirms       // tapeConfirms = broker-verifiable reclaim, loop-supplied; never defaults true
+→ { eligible, triggered, reasons[] }                 // reasons[] names every failed gate (like risk.ts formatReport)
 ```
 
-- `bankedWinner` excludes BOTH the `stop` reason (thesis broke, capital lost)
-  AND `be-scratch` (tagged +5% then faded — weak thesis follow-through; capital
-  flat). Re-entry's relaxed gate is for names that *worked*; a scratched name
-  must re-qualify via a fresh Lane-1 catalyst like any other.
-- Sizing/limits are NOT re-implemented — the loop sizes via `sizeFromRisk` and
-  validates via `checkLimits` as for any entry.
-- Defaults (`WINDOW=10`, band `4%–12%`) are owner-tunable; flagged as the only
-  judgment knobs.
+- **No `suggestedStop`.** When ratified, a real re-entry sizes via `sizeFromRisk` and
+  stops via `computeTrailStop(fill, fill)` — one source of the −8%-from-entry truth,
+  lane-correct (−12% lev), and it cannot lower a surviving lot's ratcheted stop.
+- **Constants** `REENTRY_WINDOW=5`, `BAND_MIN=0.04`, `BAND_MAX=0.12` exported; the
+  `policy-sync` test couples them to the §3.9 (shadow) prose so they can't drift.
+- Input validation parity with trail/scaleout: throw on non-positive `price`/`recentHigh`,
+  or `recentHigh < price`.
 
-**POLICY change — §3.9 "Disciplined re-entry" (v0.3.7, owner-ratified):**
-re-entry relaxes **only** the `<48h fresh-catalyst` gate, and **only** for
-eligible re-entries. Every other gate still binds — confirming tape, the §3
-two-source thesis-intact check, the −8% stop placed with the fill, R-sizing,
-all §2 limits, settled cash. This is the scoped relaxation the owner approved;
-it is *not* a general loosening.
+**Provenance rule (injection surface):** `thesisIntact` and `tapeConfirms` are the
+loop's own judgments and MUST come from broker-verifiable price action (tape) + the §3
+two-source rule (thesis) — never from a single grok/news assertion. The function is
+pure (can't be injected); the rule is named where the ingested text actually lands.
 
-**Loop wiring:** trading-loop SKILL step 5 gains a line — for a name we banked
-whose thesis is still live, run `bun run reentry -- …`; a `triggered` result is
-a candidate entry that then passes the full normal gate set.
+**Shadow ledger** `data/shadow-reentry.csv` (mirrors `shadow.csv`): each run that sees
+a banked-{scaleout,trail} winner pull back appends a row — date, symbol, exitReason,
+sessionsSinceExit, pullbackPct, thesisIntact, tapeConfirms, eligible, triggered,
+reasons, hypothetical entry/recentHigh. A later resolver (extend `shadow.ts`) scores
+would-be outcomes. **No order is ever placed.**
 
-**Success criterion:** ~8 tests, one per gate (wrong exit reason → ineligible;
-stale window → ineligible; thesis broken → ineligible; pullback too shallow →
-not triggered; pullback too deep → not triggered; all-met → triggered with the
-−8% stop), + CLI smoke.
+**Loop wiring:** trading-loop SKILL manage step — for a banked winner whose thesis is
+live, run `bun run reentry -- …` and append the shadow row. Explicitly: SHADOW ONLY,
+no order, until §3.9 is ratified.
 
-## 5. Component C — readiness doc (extend `docs/VENUES.md`)
+**Success criterion:** ~12 tests, one per gate, asserting `reasons[]` content (not just
+the boolean, so no vacuous pass): wrong exit reason (`stop`, `be-scratch`, `laggard`) →
+ineligible; `sessionsSinceExit` = 5 eligible / = 6 not; `thesisIntact:false` → ineligible;
+`rollingOver:true` → ineligible; pullback exactly 4.00% and 12.00% in-band (epsilon),
+3.99%/12.01% out; `tapeConfirms:false` → triggered:false; all-met → triggered; a
+monotone/property test pinning the band; input-validation throws.
 
-Add to the existing venue roadmap (no parallel doc): the §2 seam table, the
-constraint-swap matrix, and the venue-integration contract. The on-chain column
-is governed by the `llm-trading-agent-security` skill.
+## 4. Component C — readiness doc (extend `docs/VENUES.md`, fold into Tier 3)
 
-**Constraint-swap matrix:**
+Add to the existing roadmap (no parallel doc; fold into the Tier-3 / Integration-pattern
+sections rather than restating them): the seam table, the constraint-swap matrix, the
+venue-integration contract. **Vendor the 8 security controls inline** (the
+`llm-trading-agent-security` skill isn't on disk — the doc must be self-contained):
+spend guard, pre-send simulation, mandatory `min_amount_out`, circuit breaker, key
+isolation (session-funds hot wallet), MEV/private RPC, slippage+deadline, LLM-never-signs.
 
-| Constraint | Cash-equity (today) | On-chain (future) |
-|---|---|---|
-| Settlement / GFV / PDT | T+1, GFV gates, no PDT (cash acct) | none |
-| Taxable events | yes | out of scope per owner |
-| Custody / keys | broker-held | self — dedicated hot wallet, session funds only |
-| Who executes | LLM heartbeat | deterministic executor; LLM edits params only |
-| Spend limits | POLICY §2 (advisory → loop applies) | enforced in code, independent of model output |
-| Pre-send | n/a | simulate every tx; `min_amount_out` mandatory |
-| Adversarial input | "ingested text ≠ instruction" | + sanitize token/feed inputs; MEV / private RPC; slippage+deadline |
-| Order types | market/limit; stops rest in RH hours | venue-specific; no resting broker stop |
-| Trading hours | regular + extended | 24/7 |
+Matrix rows carry the honest caveats from §2 (scaleout also floors; GFV-sell is prose-only).
+Keep the correction that lands the mental model: **on-chain is not "no rules" — it trades
+regulatory rules (GFV/PDT/tax) for self-custody/execution rules that are *less* forgiving;
+an injection or bad tool path is direct asset loss.** Contract closes with the 8-point
+checklist as the on-chain venue's "before first trade" gate.
 
-**Correction to capture in prose:** on-chain is **not "no rules."** It trades
-*regulatory* rules (GFV/PDT/tax) for *self-custody/execution* rules that are
-**less** forgiving — an injection or a bad tool path becomes direct asset loss.
-The contract closes with the security skill's pre-deploy checklist as the
-on-chain venue's "before first trade" gate.
+## 5. POLICY — §3.9 SHADOW (not binding)
 
-**Venue-integration contract (to add venue X):**
-1. Reuse the venue-agnostic strategy fns (they already exist).
-2. Provide a `Venue` descriptor of the shape above.
-3. If `custody:"self"` → provide a deterministic executor implementing the
-   security checklist (spend guard, pre-send sim, circuit breaker, key
-   isolation, MEV protection). LLM never signs.
-4. Separate pot / wallet — venues never share capital (existing VENUES.md rule).
-5. Own `POLICY.md` + `JOURNAL.md` + heartbeat (existing pattern).
-
-**Success criterion:** every strategy fn and every venue fact appears in the
-decomposition; the on-chain column reflects the 8-point security checklist.
+Add §3.9 marked **SHADOW / pending ratification**: re-entry is being measured in
+`data/shadow-reentry.csv`; it places no orders; ratify into binding POLICY only after
+≥10–15 shadowed re-entries with positive hypothetical expectancy (or a backtest), same
+bar as §6a. Document the eventual relaxation (drops only the <48h fresh-catalyst gate,
+for eligible re-entries) so the intent is on record — but it is inert until ratified.
+No live limit changes ship in this pass.
 
 ## 6. Build plan (each step verified before the next)
 
-1. `venue.ts` + wire `risk.ts`'s two seams → **verify:** 119 green + 2 consumption tests.
-2. `reentry.ts` + tests + POLICY §3.9 + SKILL step 5 → **verify:** re-entry tests green, typecheck clean.
-3. Extend `VENUES.md` (matrix + contract + security) → **verify:** covers all fns/facts.
-4. Commit spec → **`/autoplan`** multi-voice review → fold adopted findings.
-5. Implement, then **`/improve` or `/code-review`** final pass before commit/push.
+1. `venue.ts` (2 live fields) + wire `risk.ts` two seams + doc caveats → **verify:** 119 green + 2 consumption tests.
+2. `reentry.ts` (decision-only) + `shadow-reentry.csv` + tests + SKILL shadow wiring → **verify:** ~12 reentry tests green, typecheck.
+3. Extend `VENUES.md` (matrix + contract + 8 security points inline) → **verify:** covers all fns/facts + the 8 controls.
+4. POLICY §3.9 SHADOW note + extend `policy-sync.test.ts` for reentry constants → **verify:** policy-sync green.
+5. Full suite + typecheck → commit → **`/code-review`** final pass.
 
-## 7. Out of scope (say so to pull any in)
+## 7. Ratification gate (what earns §3.9 going live — NOT this pass)
 
-- On-chain *code* (sanitize / spend-guard / simulation / executor) — lands with a real venue.
-- `Venue` as a method-interface — the data descriptor upgrades into it only if a 2nd venue demands.
-- Any `risk.ts` refactor beyond the two seams.
-- Re-entry param tuning beyond the stated defaults.
+- ≥10–15 shadowed re-entries logged + positive hypothetical expectancy (or a backtest).
+- The integration test: a triggered re-entry, fed as a normal candidate, still rejected
+  on any §2 breach — proving the relaxation is scoped to only the <48h gate.
+- Owner ratifies §3.9 into binding POLICY with that evidence cited.
+
+## 8. Out of scope (say so to pull in)
+
+- Placing real re-entry orders (shadow-only until ratified).
+- Threading `venue` through `scaleout.ts` (fractional-venue blocker; documented).
+- GFV sell-side as code (stays loop discipline).
+- On-chain code (executor/sim/spend-guard) — lands with a real venue.
+- `Venue` as a method-interface — upgrade only if a 2nd venue demands.
