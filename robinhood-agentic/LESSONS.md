@@ -44,7 +44,13 @@ falls out of context — it lives here instead, and compounds.
 
 - **Stops protect entries, not profits — ratchet to breakeven early.** A winner
   still carrying its -8%-from-entry stop can round-trip a +5% gain into a -13%
-  loss. The +5% → breakeven rung exists for exactly this.
+  loss. The +5% → breakeven rung exists for exactly this. *Retro 06-18 (AMD + DAL,
+  both 0R BE scratches): the rung is NOT cutting winners short — each faded from its
+  peak, scratched at BE, then traded BELOW the exit and never re-took its prior high
+  (AMD 536 < 558, DAL 84 < 87); the later pop was macro beta, not single-name
+  follow-through. A 0R scratch on a faded thesis is the rung working, not a leak. The
+  one real gap — AMD tagging +8.4% then giving it back — is what v0.3.5's +8%→lock-+3%
+  already closes.*
 - **Trail off the TRUE session high, not the last hourly observation.** MU's
   real high was ~9 points above the last-observed at the prior run, so the -8%
   trail had been set ~8 points too low. Pull intraday highs at manage time.

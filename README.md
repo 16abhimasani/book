@@ -83,7 +83,7 @@ Closed trades:
 
 **Lane-2 regime gate:** OFF (confirmed 2-day; QQQ 739.68 vs 20d MA 726.82, as of 2026-06-18) — raw ON pending one more close.
 
-**Watcher: running · 28 alert(s)/24h · recent: MOVE SPCX -5.4% (181.50) — watchlist mover · MOVE ASTS -7.0% (79.42) — watchlist mover · MOVE ASTS -5.5% (80.73) — watchlist mover**
+**Watcher: idle (off-hours), last scan 46m ago · 28 alert(s)/24h · recent: MOVE SPCX -5.4% (181.50) — watchlist mover · MOVE ASTS -7.0% (79.42) — watchlist mover · MOVE ASTS -5.5% (80.73) — watchlist mover**
 <!-- SNAPSHOT:END -->
 
 ## The engine (`src/trading/`)
