@@ -90,6 +90,13 @@ falls out of context — it lives here instead, and compounds.
 - **Gate inputs matter to the cent.** A Lane-2 re-arm came down to 16 cents on
   the official close. Two agreeing close sources + sanity bounds are the only
   reason a bad print can't trigger an accidental leveraged entry.
+- **A gate flip can be stale the instant it confirms — re-check after a major
+  after-hours catalyst.** 2026-06-24: `bun run gate` confirmed risk-OFF on the
+  4pm close at the exact moment MU's blowout earnings (+14% AH) reversed the
+  whole semi complex risk-ON (SOXL +12% / QQQ +1.8% AH). The gate is a lagging
+  close-based signal; a binary AH catalyst can reprice the regime the gate just
+  stamped. Don't rush Lane-3 mean-reversion off a gate that flipped OFF as the
+  tape flipped back ON — let the next confirmed close settle it.
 
 ---
 
