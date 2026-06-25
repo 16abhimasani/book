@@ -31,7 +31,11 @@ falls out of context — it lives here instead, and compounds.
 - **Don't chase parabolic / extended moves.** SPCX up 22% after-hours on a
   4-day-old IPO had no place to put a stop. Chasing the candle is the mistake;
   being positioned for the next leg is the trade. Aggression is readiness, not
-  FOMO.
+  FOMO. *MU 2026-06-25: a +18% liquid-large-cap earnings gap declined across ~8
+  runs round-tripped intraday (1255 high → 1136, −9.5%, in 25 min) — a gap with
+  no buyers above it distributes. The rule: wait for a multi-session base that
+  builds a higher-low to rest a −8% stop under; an opening spike-and-fade is a
+  do-not-chase, not a setup.*
 - **Gate-ON permits the Lane-2 lane, it does not trigger an entry.** A fresh
   gate-ON read means re-evaluate, not buy.
 - **Verify a catalyst's DATE before calling it fresh — never inherit a prior
