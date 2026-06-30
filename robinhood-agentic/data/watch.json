@@ -1,6 +1,6 @@
 {
-  "_note": "Observer watcher config (bun run watch). symbols = watchlist names to scan for fast moves; held names come from book.json automatically. Thresholds are deliberately loose for week-1 false-positive measurement — tighten after reviewing events.log.",
-  "symbols": ["SPCX", "NVDA", "PLTR", "RKLB", "ASTS", "LUNR", "SNDK", "TSM", "AVGO", "DELL"],
+  "_note": "Observer watcher config (bun run watch). symbols = PRIORITY names for the fast-move alerter — a SEED, not the entry universe. Lane-1 candidates are sourced market-wide via `bun run discover` (POLICY §3.1a, v0.3.8); this list just gets a between-run heads-up. Held names come from book.json automatically. Thresholds loose for false-positive measurement.",
+  "symbols": ["SPCX", "NVDA", "PLTR", "RKLB", "ASTS", "LUNR", "SNDK", "TSM", "AVGO", "DELL", "GLW", "AMBA", "CRDO", "NBIS", "ALAB", "ANET", "VRT", "ONTO"],
   "moveAlertPct": 5,
   "stopProximityPct": 3
 }

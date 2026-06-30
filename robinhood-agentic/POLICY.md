@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.3.5 (2026-06-16) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.3.8 (2026-06-30) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -28,7 +28,14 @@
   binding until ratified (≥10–15 shadowed re-entries + positive expectancy);
   venue/constraint seam formalized in `src/trading/venue.ts` (see
   `docs/VENUES.md` — risk appetite §2 is venue-independent; only settled-funds
-  + whole-shares branch on the venue).
+  + whole-shares branch on the venue);
+  v0.3.8: market-wide candidate discovery (owner directive 2026-06-30, "fix it
+  now"). New §3.1a — Lane-1 candidates are sourced from market-wide scanners
+  (`bun run discover` over `run_scan` gainers) + the earnings calendar, NOT a
+  fixed 10-name watchlist (the blind spot that missed GLW +50% and the
+  AMBA/CRDO/NBIS +10–17% AI-infra movers). **Additive sourcing only — the §3
+  entry gate and every §2 limit are UNCHANGED; discovery widens what is
+  evaluated, it loosens nothing.**
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -81,6 +88,16 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
   heat, and sentiment faster and wider than a human. Trade fresh catalysts
   (earnings reactions, guidance, product/regulatory news, sector rotations),
   not stale charts.
+- **§3.1a Candidate sourcing — the universe is the WHOLE MARKET, not a fixed
+  watchlist (v0.3.8).** The breadth edge is wasted if the loop only looks at a
+  handful of names. Each entry-eligible run discovers candidates market-wide:
+  `run_scan` a quality gainers scan → `bun run discover` (ranks ≥ $1B mcap,
+  ≥ $10, real move, rel-vol-weighted) + `get_earnings_calendar` for fresh
+  earnings. The observer watchlist / `events.log` is a priority SEED for the
+  fast-move alerter, never the entry universe — a fresh catalyst on a name we
+  don't "watch" is a valid Lane-1 candidate (this is the blind spot that missed
+  GLW +50%). **Sourcing is additive and changes only what is EVALUATED; the
+  Entry gate below and every §2 limit are unchanged — discovery loosens nothing.**
 - Entry: named catalyst < 48h old + confirming tape (price above prior-day
   high or reclaiming VWAP-equivalent). Position 25–40%.
 - Exit ladder (v0.3.5 — tiered trail; compute the exact stop with

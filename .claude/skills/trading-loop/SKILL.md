@@ -37,6 +37,19 @@ heartbeat.
    it as a HEADS-UP source (a held name near its stop, a watchlist name
    spiking), never as a trigger: the §3 two-source rule + confirming tape
    still gate any entry, and stops still gate any exit.
+   **Discover candidates MARKET-WIDE — the universe is the whole market, not
+   the 10-name watchlist** (POLICY §3.1a). On any run that may enter, source
+   Lane-1 candidates from: (a) `run_scan` the saved `Daily Gainers — catalyst
+   discovery` scan (`get_scans` to find its id; it saves to a file when large),
+   then `bun run discover -- <saved-scan-file>` to rank the quality movers
+   (≥ $1B mcap, ≥ $10, real move, weighted by relative volume); (b)
+   `get_earnings_calendar` (`days: 2`, `filter: high_market_cap`) for fresh
+   earnings catalysts. THESE ranked names — not just the watchlist — are the
+   candidate set. The watchlist / events.log is a priority seed, never the
+   boundary. Every surfaced name still clears the full §3 gate (fresh < 48h
+   named catalyst, confirming tape, clean stop, two-source, not parabolic) +
+   §2 limits before any order — discovery widens what we SEE, it loosens
+   nothing.
 4. **Run-type** from ET clock (POLICY §4, v0.3 — extended hours enabled):
    - **pre-market extended (~7:00–9:30)**: manage + MAY enter/exit per
      POLICY §3.7 — LIMIT orders only, liquidity guard, place the
