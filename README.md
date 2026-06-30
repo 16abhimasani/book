@@ -83,7 +83,7 @@ Closed trades:
 
 **Lane-2 regime gate:** OFF (confirmed 2-day; QQQ 724.08 vs 20d MA 723.99, as of 2026-06-29) — raw ON pending one more close.
 
-**Watcher: running · 22 alert(s)/24h · recent: MOVE AMBA +31.7% (88.22) — watchlist mover · MOVE AMBA +24.7% (83.57) — watchlist mover · MOVE AMBA +27.7% (85.54) — watchlist mover**
+**Watcher: running · 26 alert(s)/24h · recent: MOVE CRDO +11.4% (273.57) — watchlist mover · MOVE ANET +5.0% (172.37) — watchlist mover · MOVE AMBA +30.5% (87.44) — watchlist mover**
 <!-- SNAPSHOT:END -->
 
 ## The engine (`src/trading/`)
