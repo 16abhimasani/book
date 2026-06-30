@@ -4,10 +4,11 @@
 // ~$0.07/search (a typical query ≈ $0.20–0.25). It is a SECOND source for the
 // POLICY §3 two-source rule and a discovery tool, not an every-heartbeat call.
 //
-// Needs XAI_API_KEY. Two sources, both work: ~/.zshenv (interactive shells)
-// AND a gitignored repo-root `.env` (Bun auto-loads it). The .env is what makes
-// the SCHEDULED Cowork loop work regardless of which shell it spawns — verified
-// by running this with the ambient var stripped. Loop must run from repo root.
+// Needs XAI_API_KEY (read from process.env). Three sources, all work: ~/.zshenv
+// (interactive shells), a gitignored repo-root `.env` (Bun auto-loads it; powers
+// the local Cowork loop), AND the cloud routine env (claude.ai/code/routines —
+// powers the laptop-off heartbeat, since `.env` is gitignored out of the cloud
+// checkout). Loop must run from repo root.
 // CLI: bun run grok "<query>" [--handles a,b,c] [--days N] [--model ID]
 //
 // ponytail: x_search + web_search both on by default (owner wants both);
@@ -27,7 +28,7 @@ export async function grokSearch(
   query: string,
   opts: { handles?: string[]; days?: number; model?: string } = {},
 ): Promise<GrokResult> {
-  if (!KEY) throw new Error("XAI_API_KEY not set (it lives in ~/.zshenv)");
+  if (!KEY) throw new Error("XAI_API_KEY not set (put it in ~/.zshenv, the repo .env, or the cloud routine env)");
   const xSearch: Record<string, unknown> = { type: "x_search" };
   if (opts.handles?.length) xSearch.allowed_x_handles = opts.handles.slice(0, 20);
   if (opts.days) xSearch.from_date = new Date(Date.now() - opts.days * 86400_000).toISOString().slice(0, 10);
