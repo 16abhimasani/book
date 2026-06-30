@@ -91,9 +91,15 @@ falls out of context — it lives here instead, and compounds.
   after the new state holds 2 consecutive closes (POLICY §3 Lane 2). Act on the
   CONFIRMED state from `bun run gate`; a one-day flip shows as "raw … pending"
   and changes nothing.
-- **Gate inputs matter to the cent.** A Lane-2 re-arm came down to 16 cents on
-  the official close. Two agreeing close sources + sanity bounds are the only
-  reason a bad print can't trigger an accidental leveraged entry.
+- **Gate inputs matter to the cent — reconcile the provisional EOD print to the
+  official SIP close before the next session scores the regime.** A Lane-2 re-arm
+  once came down to 16¢. 2026-06-30: the 06-29 EOD row carried the provisional
+  19:59:59Z print (QQQ 723.97) which scored the close risk-OFF by 1¢, but the
+  official SIP close (724.08, +11¢) was risk-ON — flipping the raw gate to
+  ON-pending and making 06-29 the **1st** risk-ON close (not the prospective one).
+  A stale provisional can misstate the re-arm clock by a whole session; two
+  agreeing close sources + sanity bounds keep a bad print from triggering an
+  accidental leveraged entry.
 - **A gate flip can be stale the instant it confirms — re-check after a major
   after-hours catalyst.** 2026-06-24: `bun run gate` confirmed risk-OFF on the
   4pm close at the exact moment MU's blowout earnings (+14% AH) reversed the
