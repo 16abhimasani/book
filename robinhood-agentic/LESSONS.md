@@ -25,6 +25,16 @@ falls out of context — it lives here instead, and compounds.
 
 ## Entries
 
+- **The universe is the WHOLE MARKET, not the watchlist — discover candidates
+  market-wide every run (POLICY §3.1a).** Two weeks flat in a ripping tape
+  because the loop only evaluated a 10-name watchlist: GLW ran +50% and
+  AMBA/CRDO/NBIS/HSAI/WOLF ran +10–17% in our exact AI-infra theme — never seen,
+  never filtered, just *invisible*. Source Lane-1 candidates from `bun run
+  discover` (over a `run_scan` gainers scan) + `get_earnings_calendar`; the
+  watchlist is a priority seed, not the boundary. Breadth is the stated edge; a
+  fixed watchlist throws it away. (Discovery only widens what we SEE — the §3
+  gate + §2 limits still decide every entry, so don't-chase-parabolic below
+  still applies to whatever it surfaces.)
 - **Place the marketable limit at decision time; one chase max (≤ +1%).**
   Re-quoting TQQQ three times cost +2.1% vs the original plan. The move you
   chase has usually already left.
