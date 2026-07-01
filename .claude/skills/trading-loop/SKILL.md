@@ -120,9 +120,13 @@ heartbeat.
    something durable** — a closed trade's outcome vs its thesis, a stop-out,
    a missed mover, a surprise — add or sharpen ONE line in `LESSONS.md`
    (curate, dedupe, prune; keep it under ~20). Most runs learn nothing new;
-   that's fine, leave it. Then commit (`journal: <UTC ts> <run-type>`), push.
-   If the runtime pushes to a `claude/*` branch, open a PR immediately so
-   main never lags.
+   that's fine, leave it. Then commit (`journal: <UTC ts> <run-type>`) and get
+   the entry onto main: try **`git push origin HEAD:main` FIRST** (main is
+   unprotected; the append-only ledgers union-merge per `.gitattributes`, so
+   parallel/branched runs never conflict). Only if the runtime forbids pushing
+   to main and that fails, push the session branch and open a PR — the
+   auto-merge workflow lands it. NEVER leave journal entries stranded on a
+   `claude/*` branch; main must always carry the latest run.
 8. **Output**: account value, positions P&L, actions, next watch items.
 
 ## Hard rules
