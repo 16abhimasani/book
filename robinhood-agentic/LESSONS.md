@@ -110,6 +110,16 @@ falls out of context — it lives here instead, and compounds.
   A stale provisional can misstate the re-arm clock by a whole session; two
   agreeing close sources + sanity bounds keep a bad print from triggering an
   accidental leveraged entry.
+- **marks.csv must be ONE row per date — dedupe before trusting the gate; an
+  official-close correction EDITS the date's row, it never appends a new one.**
+  2026-07-01: five separate regular-session runs each APPENDED a fresh "06-30
+  official-close correction" row; union-merge (`.gitattributes`) kept all six, so
+  the gate compared 06-30 (VIXY 21.29) against a *duplicate* 06-30 (21.29) → vol
+  leg "≥ prior → FAIL" and the duplicated 736.40 rows dragged the MA20 up to
+  725.17, spuriously flipping the CONFIRMED gate ON→OFF. `bun run verify` exit 0
+  did NOT catch it (it validates row shape, not duplicate dates). Rule: at step 3,
+  if `cut -d, -f1 marks.csv | sort | uniq -d` is non-empty, dedupe keeping the last
+  (most-corrected) row per date and re-run `bun run gate` before acting on it.
 - **On a fresh gate-ON, read the LIVE index + a lev-ETF before deploying — not
   the discover gainers list.** 2026-07-01: the gate was CONFIRMED ON from the
   06-30 close and the scan showed a screen of +10–19% gainers

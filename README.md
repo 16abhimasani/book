@@ -81,9 +81,9 @@ Closed trades:
 
 **Measurement gate (POLICY §6a):** 6 closed / 0 open · expectancy 0.64R · capital-add not eligible (needs ≥10 closed / >+0.25R / 0 breaches / ≥4wk). Per lane: L1 0.70R (5 closed) · L2 0.31R (1 closed).
 
-**Lane-2 regime gate:** OFF (confirmed 2-day; QQQ 736.40 vs 20d MA 725.17, as of 2026-06-30).
+**Lane-2 regime gate:** ON (confirmed 2-day; QQQ 736.40 vs 20d MA 723.67, as of 2026-06-30).
 
-**Watcher: running · 30 alert(s)/24h · recent: MOVE AMBA +7.0% (91.84) — watchlist mover · MOVE AMBA +5.4% (90.42) — watchlist mover · MOVE SPCX -6.8% (159.18) — watchlist mover**
+**Watcher: no data yet (not started, or never an in-hours scan).**
 <!-- SNAPSHOT:END -->
 
 ## The engine (`src/trading/`)
