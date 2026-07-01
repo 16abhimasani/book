@@ -76,7 +76,7 @@ function section39(): string {
   return POLICY.slice(start, end < 0 ? undefined : end).replace(/\s+/g, " ");
 }
 
-describe("POLICY §3.9 (SHADOW) ↔ reentry.ts constants", () => {
+describe("POLICY §3.9 (BINDING v0.4.0) ↔ reentry.ts constants", () => {
   test("window and pullback band match the §3.9 prose", () => {
     const s = section39();
     expect(s).toContain(`${REENTRY_WINDOW} trading session`); // "5 trading session(s)"
@@ -84,9 +84,13 @@ describe("POLICY §3.9 (SHADOW) ↔ reentry.ts constants", () => {
     expect(s).toContain(`${Math.round(BAND_MAX * 100)}%`); // "12%"
   });
 
-  test("§3.9 stays marked SHADOW / places no order (no accidental activation)", () => {
+  test("§3.9 is BINDING but re-entry still routes through §2 sizing + a stop", () => {
+    // v0.4.0 flipped this live (owner directive). The safety invariant that MUST
+    // survive go-live: a triggered re-entry is risk-sized and stopped, not free.
     const s = section39();
-    expect(s).toContain("SHADOW");
-    expect(s.toLowerCase()).toContain("places no order");
+    expect(s).toContain("BINDING");
+    expect(s).toContain("bun run risk -- size");
+    expect(s).toContain("bun run trail");
+    expect(s).toContain("every §2 limit");
   });
 });

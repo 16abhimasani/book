@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.3.8 (2026-06-30) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.4.0 (2026-07-01) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -36,6 +36,23 @@
   AMBA/CRDO/NBIS +10–17% AI-infra movers). **Additive sourcing only — the §3
   entry gate and every §2 limit are UNCHANGED; discovery widens what is
   evaluated, it loosens nothing.**
+  v0.4.0: **aggressive mode (owner ratified live session 2026-07-01 — "we
+  should be aggressive af… very aggressive").** Four loosenings, seatbelts
+  intact: (1) risk budget per position 2.5% → **5%** and whole-book open risk to
+  stops 8% → **20%** (§2) — bigger size on every clean setup; (2) Lane-1 entry
+  gains a second trigger, **momentum continuation** — a clean base breakout or
+  pullback to rising support in an established uptrend, with a placeable −8%
+  stop, is now a valid entry even without a fresh < 48h catalyst (§3.1), so more
+  real setups qualify; (3) time stop 5 → **3 sessions** — recycle capital out of
+  dead money faster (§3.1); (4) §3.9 disciplined re-entry **SHADOW → BINDING** —
+  a banked winner may be re-bought on a pullback, owner ratifying by directive
+  ahead of the 10–15-shadow evidence bar. UNCHANGED seatbelts: every position is
+  still risk-sized off a defined −8% stop that rests at the broker and ratchets
+  up only; **don't-chase-parabolic still overrides both entry triggers** (the
+  empirically-validated rule — MU/SPCX); daily-loss halt −15%, drawdown floor
+  $2,000, settled-funds/GFV, and the slot 40% / lev 50% / beta-gross 150% /
+  theme 65% / cash 2.5% caps all bind as before. Aggression = bigger size + more
+  setups + faster recycling on CLEAN entries, never chasing a vertical move.
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -72,13 +89,13 @@
 | Averaging down | max once per position |
 | Order hygiene | `review_equity_order` before every `place_equity_order`, no exceptions |
 | Order type default | limit orders; market orders only for exits in fast moves |
-| Max risk per position at entry ((entry−stop)×qty) | 2.5% of account |
-| Max total open risk to stops, whole book | 8% of account |
+| Max risk per position at entry ((entry−stop)×qty) | 5% of account |
+| Max total open risk to stops, whole book | 20% of account |
 | Beta-adjusted gross exposure (lev ETFs × multiplier) | ≤ 150% of account |
 | Single theme/catalyst concentration at entry | ≤ 65% of account (lev at notional) |
 | Settled funds (cash account) | buys with settled funds only; NEVER sell a position bought with unsettled proceeds before they settle (GFV); in doubt → skip the entry |
 
-**Size from risk first**: `qty = (account × 2.5%) ÷ (entry − stop)`.
+**Size from risk first**: `qty = (account × 5%) ÷ (entry − stop)` (v0.4.0).
 The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
 
 ## 3. Lanes
@@ -98,8 +115,17 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
   don't "watch" is a valid Lane-1 candidate (this is the blind spot that missed
   GLW +50%). **Sourcing is additive and changes only what is EVALUATED; the
   Entry gate below and every §2 limit are unchanged — discovery loosens nothing.**
-- Entry: named catalyst < 48h old + confirming tape (price above prior-day
-  high or reclaiming VWAP-equivalent). Position 25–40%.
+- Entry (v0.4.0 — TWO valid triggers, take whichever is present):
+  (a) **catalyst** — a named catalyst < 48h old + confirming tape (price above
+  prior-day high or reclaiming VWAP-equivalent); OR
+  (b) **momentum continuation** — a clean base breakout or a pullback to rising
+  support in an established uptrend, with a placeable −8% stop under a defined
+  higher-low, *even without a fresh catalyst*. For (b) the §3 two-source
+  "second source" is broker-verifiable price structure (the higher-low + volume
+  expansion), never a single grok line.
+  **Both triggers remain subordinate to don't-chase-parabolic**: no entry on an
+  extended/vertical move with no place to rest a stop (LESSONS — MU +18% gap,
+  SPCX +22% AH). Position 25–40%, sized from the §2 5% risk budget.
 - Exit ladder (v0.3.5 — tiered trail; compute the exact stop with
   `bun run trail -- <entry> <peak>`, peak = TRUE session high via
   `get_equity_historicals`, never by hand): hard stop −8% from entry, placed
@@ -112,7 +138,8 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
   final 1/3 rides the trail for the fat tail. Whole shares, floored — a 1–2
   share lot can't be split into thirds, so it just trails. A scale-out sell is
   an exit: it may run in extended hours as a LIMIT order (§3.7). Stops ratchet
-  up only. Time stop: thesis hasn't started working in 5 sessions → exit.
+  up only. Time stop: thesis hasn't started working in **3 sessions** → exit
+(v0.4.0: 5 → 3, recycle capital out of dead money faster).
 
 ### Lane 2 — Leveraged ETF rotation (secondary, regime-gated)
 - Universe: TQQQ / SOXL / SPXL-class long-leverage ETFs.
@@ -200,14 +227,15 @@ slot while a better setup goes untraded.
   §2 limits and entry hygiene still apply to the replacement. Stops still ratchet
   up only; rotation is a deliberate exit, not a loosened stop.
 
-### 3.9 — Disciplined re-entry (SHADOW — NOT YET BINDING, owner 2026-06-19)
+### 3.9 — Disciplined re-entry (BINDING v0.4.0, owner ratified 2026-07-01)
 
 Re-buy a name we BANKED (scale-out or trailing-stop exit) on a still-live thesis
 when it pulls back, instead of requiring a brand-new < 48h catalyst. This is the
-ONE intended relaxation of the §3 fresh-catalyst gate — and it is currently
-**SHADOW ONLY: the loop logs what it WOULD re-enter to `data/shadow.csv`
-(candidate_id `<date>-<SYM>-reentry`) and places NO order.** It authorizes no
-trade until the owner ratifies it with evidence.
+ONE intended relaxation of the §3 fresh-catalyst gate. As of v0.4.0 it is
+**BINDING: when every gate below holds, the loop MAY place the re-entry order**
+(sized from §2, stop from `bun run trail`) — no longer shadow-only. The loop
+still logs each evaluated re-entry to `data/shadow.csv` (candidate_id
+`<date>-<SYM>-reentry`) for the record, whether or not it fires.
 
 - **Eligible exits: scaleout, trail only** — a name that ran and we banked.
   laggard / be-scratch / stop are excluded; they re-qualify through the full §3
@@ -218,14 +246,16 @@ trade until the owner ratifies it with evidence.
   sessions / lower highs / broken structure); pulled back into the **4%–12%**
   band off the recent high; tape re-confirms (reclaim).
 - **Scope of the relaxation:** it drops ONLY the < 48h-catalyst requirement.
-  When ratified, sizing and the −8% stop come from `bun run risk -- size` +
-  `bun run trail` exactly as for any entry — re-entry emits no stop of its own,
-  and every §2 limit + the settled-cash rule still bind.
-- **Ratification gate (what makes this binding):** ≥ 10–15 shadowed re-entries
-  logged with positive hypothetical expectancy (or a backtest), AND an
-  integration test proving a triggered re-entry still fails §2 on a breach. Then
-  the owner moves §3.9 from SHADOW to binding, citing the evidence. Same
-  evidence bar as §6a.
+  Sizing and the −8% stop come from `bun run risk -- size` + `bun run trail`
+  exactly as for any entry — re-entry emits no stop of its own, and every §2
+  limit + the settled-cash rule still bind. don't-chase-parabolic still applies
+  to the re-entry tape.
+- **Ratification note:** the owner activated §3.9 by directive on 2026-07-01
+  (aggressive-mode ratification), ahead of the original ≥ 10–15-shadow evidence
+  bar — accepting that re-entry skill is not yet empirically proven. The
+  downside stays bounded: a triggered re-entry is still risk-sized off a defined
+  −8% stop and still clears every §2 limit, and the shadow log keeps accruing so
+  expectancy can be reviewed in a weekend retro.
 
 ### Lane 4 — Options (PARKED)
 - Blocked until options tools appear on the MCP connection. When they do:

@@ -2,18 +2,18 @@ import { describe, expect, test } from "bun:test";
 import { checkLimits, rMultiple, sizeFromRisk, type BookInput } from "./risk";
 
 describe("sizeFromRisk", () => {
-  test("floors qty against the 2.5% budget", () => {
-    // $3,103.50 account → $77.59 budget; $8 risk/share → 9 shares
+  test("floors qty against the 5% budget (v0.4.0)", () => {
+    // $3,103.50 account → $155.18 budget; $8 risk/share → 19 shares
     const s = sizeFromRisk(3103.5, 100, 92);
-    expect(s.qty).toBe(9);
-    expect(s.riskUsd).toBe(72);
-    expect(s.notional).toBe(900);
+    expect(s.qty).toBe(19);
+    expect(s.riskUsd).toBe(152);
+    expect(s.notional).toBe(1900);
   });
 
-  test("a $900 stock with an 8% stop is unsizable on this account", () => {
+  test("a $900 stock with an 8% stop sizes to just 2 shares (v0.4.0)", () => {
     const s = sizeFromRisk(3103.5, 900, 828);
-    expect(s.qty).toBe(1); // 77.59 / 72 → 1
-    // ...but 1 share = $900 notional; the binding limit is settled cash, which
+    expect(s.qty).toBe(2); // 155.18 / 72 → 2
+    // ...but 2 shares = $1,800 notional; the binding limit is settled cash, which
     // checkLimits catches — sizeFromRisk only enforces the risk budget.
   });
 
@@ -73,16 +73,16 @@ describe("known book — 2026-06-11 (regression anchors)", () => {
     expect(riskOf(CURRENT_BOOK) / 3087.27).toBeCloseTo(0.0525, 3);
   });
 
-  test("entry book: TQQQ risk (4.5%) and theme (84%) exceed v0.2 caps ratified after entry", () => {
+  test("entry book under v0.4.0 caps: TQQQ 4.5% now within 5% and book 8.8% within 20% — only theme still binds", () => {
     const report = checkLimits(ENTRY_BOOK);
     const byName = (s: string) => report.checks.find((c) => c.limit.includes(s))!;
-    expect(byName("risk/position").pass).toBe(false); // TQQQ $133.80 = 4.5% > 2.5%
-    expect(byName("risk/position").actual).toContain("TQQQ");
-    expect(byName("book risk").pass).toBe(false); // 8.8% > 8%
-    expect(byName("theme").pass).toBe(false); // ai-capex ~84%
+    expect(byName("risk/position").pass).toBe(true); // TQQQ $133.80 = 4.5% < 5% (v0.4.0)
+    expect(byName("risk/position").actual).toBe("all within budget");
+    expect(byName("book risk").pass).toBe(true); // 8.8% < 20% (v0.4.0)
+    expect(byName("theme").pass).toBe(false); // ai-capex ~84% > 65% (unchanged seatbelt)
   });
 
-  test("current book: book risk back inside 8%; theme cap still binds new ai-capex entries", () => {
+  test("current book: book risk inside 20%; theme cap still binds new ai-capex entries", () => {
     const report = checkLimits(CURRENT_BOOK);
     const byName = (s: string) => report.checks.find((c) => c.limit.includes(s))!;
     expect(byName("book risk").pass).toBe(true); // $161.94 = 5.2%
@@ -92,7 +92,7 @@ describe("known book — 2026-06-11 (regression anchors)", () => {
     expect(byName("beta-adjusted").pass).toBe(true); // ~143.6% < 150%
     expect(byName("beta-adjusted").actual).toContain("143.6%");
     expect(byName("theme").pass).toBe(false); // ai-capex 84.5% > 65% → no adds
-    expect(byName("risk/position").pass).toBe(false); // TQQQ 107.04 = 3.5% (grandfathered)
+    expect(byName("risk/position").pass).toBe(true); // TQQQ 107.04 = 3.5% < 5% (v0.4.0)
   });
 });
 

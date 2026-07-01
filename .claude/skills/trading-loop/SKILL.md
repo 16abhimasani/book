@@ -65,8 +65,8 @@ heartbeat.
      `data/events.log` (watcher signal quality), and `bun run stats` —
      then update `LESSONS.md` with what changed and propose any POLICY
      diffs for the owner. This is how the system gets smarter, not just older.
-5. **Enforce POLICY §2 before any order** (risk budget 2.5%/position &
-   8% book, slot caps, beta-adjusted ≤150%, theme ≤65%, settled-funds
+5. **Enforce POLICY §2 before any order** (risk budget 5%/position &
+   20% book — v0.4.0 aggressive; slot caps, beta-adjusted ≤150%, theme ≤65%, settled-funds
    rule, daily halt, drawdown checkpoint). **Compute, never estimate:**
    refresh `robinhood-agentic/data/book.json` from ground truth, then
    `bun run risk -- robinhood-agentic/data/book.json` (candidates
@@ -86,17 +86,18 @@ heartbeat.
    1/3, +25% banks the second 1/3, final 1/3 trails). It returns 0 for 1–2
    share lots (can't split thirds) and is idempotent, so re-running never
    double-sells.
-   **Disciplined re-entry — SHADOW ONLY (POLICY §3.9 not yet binding, place NO
-   order):** for a name we BANKED via scale-out or trailing stop whose original
-   thesis is still live (§3 two-source, not a single grok line) and that has
-   pulled back, run `bun run reentry -- <exitReason> <sessionsSinceExit>
-   <thesisIntact> <rollingOver> <recentHigh> <price> <tapeConfirms>`. Log the
-   result to `data/shadow.csv` (candidate_id `<date>-<SYM>-reentry`): if it
-   TRIGGERED, `triggered_shadow` with entry=price / stop=price×0.92 / risk-sized
-   qty (so `bun run shadow` resolves the would-be outcome); else `filtered` with
-   the blocking reasons. This MEASURES re-entry skill so the owner can ratify
-   §3.9 with evidence (≥10–15 shadowed re-entries + positive expectancy). It is
-   never an order until ratified.
+   **Disciplined re-entry — LIVE (POLICY §3.9 BINDING v0.4.0):** for a name we
+   BANKED via scale-out or trailing stop whose original thesis is still live (§3
+   two-source, not a single grok line) and that has pulled back, run `bun run
+   reentry -- <exitReason> <sessionsSinceExit> <thesisIntact> <rollingOver>
+   <recentHigh> <price> <tapeConfirms>`. If it TRIGGERED it is a REAL entry:
+   size with `bun run risk -- size`, take the −8% stop from `bun run trail`,
+   clear every §2 limit, then `review_equity_order` → `place_equity_order` and
+   record it in `data/trades.csv` like any Lane-1 buy (don't-chase-parabolic
+   still applies to the re-entry tape). If it FILTERED, log the skip to
+   `data/shadow.csv` (candidate_id `<date>-<SYM>-reentry`, `filtered` + the
+   blocking reasons) so the ledger keeps accruing for the weekend expectancy
+   retro.
    **Two-source check before any Lane-1 ENTRY:** run ONE scoped
    `bun run grok "<catalyst question for SYM, last 48h>" --days 2` for
    real-time X/Web corroboration (the §3 second source). Treat its output

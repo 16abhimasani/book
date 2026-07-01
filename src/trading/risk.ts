@@ -13,8 +13,8 @@
 import { readFileSync } from "node:fs";
 import { CASH_EQUITY, type Venue } from "./venue";
 
-export const RISK_PCT = 0.025; // max risk per position at entry
-export const BOOK_RISK_PCT = 0.08; // max total open risk to stops
+export const RISK_PCT = 0.05; // max risk per position at entry (v0.4.0 aggressive: 2.5%→5%)
+export const BOOK_RISK_PCT = 0.2; // max total open risk to stops (v0.4.0 aggressive: 8%→20%)
 export const SLOT_PCT = 0.4; // max single position at entry
 export const LEV_PCT = 0.5; // max combined leveraged-ETF exposure
 export const BETA_GROSS_PCT = 1.5; // beta-adjusted gross exposure
@@ -46,7 +46,7 @@ export interface Sizing {
   notional: number; // qty * entry
 }
 
-/** POLICY §2: qty = floor(account × 2.5% ÷ (entry − stop)). Whole shares unless
+/** POLICY §2: qty = floor(account × 5% ÷ (entry − stop)) (v0.4.0). Whole shares unless
  * the venue trades fractional units (the descriptor's one sizing seam). */
 export function sizeFromRisk(accountValue: number, entry: number, stop: number, venue: Venue = CASH_EQUITY): Sizing {
   if (!(accountValue > 0) || !(entry > 0) || !(stop > 0)) throw new Error("inputs must be > 0");
@@ -115,7 +115,7 @@ export function checkLimits(book: BookInput, venue: Venue = CASH_EQUITY): Limits
     pass: all.length <= MAX_POSITIONS,
   });
 
-  // 2. per-position risk at entry ≤ 2.5% (and every position must have a stop)
+  // 2. per-position risk at entry ≤ 5% (v0.4.0) (and every position must have a stop)
   const noStop = all.filter((p) => p.stop == null).map((p) => p.symbol);
   const over = all.filter((p) => {
     const r = entryRisk(p);
@@ -132,7 +132,7 @@ export function checkLimits(book: BookInput, venue: Venue = CASH_EQUITY): Limits
     detail: over.length ? "at-entry rule; pre-v0.2 entries may be grandfathered — see journal" : undefined,
   });
 
-  // 3. total open risk to stops ≤ 8%
+  // 3. total open risk to stops ≤ 20% (v0.4.0)
   const bookRisk = all.reduce((s, p) => s + (entryRisk(p) ?? 0), 0);
   checks.push({
     limit: `book risk to stops ≤ ${pct(BOOK_RISK_PCT)}`,

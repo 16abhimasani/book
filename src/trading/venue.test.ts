@@ -9,13 +9,13 @@ const FRACTIONAL: Venue = { id: "test-onchain", settledFundsRequired: false, fra
 
 describe("venue descriptor wiring", () => {
   test("CASH_EQUITY floors sizing to whole shares (≡ today)", () => {
-    // raw = 4585 × 0.025 / 8 = 14.328… → floored to 14
-    expect(sizeFromRisk(4585, 100, 92).qty).toBe(14); // default param
-    expect(sizeFromRisk(4585, 100, 92, CASH_EQUITY).qty).toBe(14);
+    // raw = 4585 × 0.05 / 8 = 28.656… → floored to 28 (v0.4.0: 5% risk budget)
+    expect(sizeFromRisk(4585, 100, 92).qty).toBe(28); // default param
+    expect(sizeFromRisk(4585, 100, 92, CASH_EQUITY).qty).toBe(28);
   });
 
   test("a fractionalUnits venue returns the un-floored qty (seam routes through descriptor)", () => {
-    const raw = (4585 * 0.025) / 8; // 14.328125
+    const raw = (4585 * 0.05) / 8; // 28.65625
     expect(sizeFromRisk(4585, 100, 92, FRACTIONAL).qty).toBeCloseTo(raw, 6);
   });
 
