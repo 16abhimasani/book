@@ -1,0 +1,5 @@
+# Append-only ledgers: union-merge so concurrent/branched routine runs never conflict.
+robinhood-agentic/JOURNAL.md merge=union
+robinhood-agentic/data/marks.csv merge=union
+robinhood-agentic/data/shadow.csv merge=union
+robinhood-agentic/data/trades.csv merge=union
