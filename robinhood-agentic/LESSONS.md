@@ -110,6 +110,14 @@ falls out of context — it lives here instead, and compounds.
   A stale provisional can misstate the re-arm clock by a whole session; two
   agreeing close sources + sanity bounds keep a bad print from triggering an
   accidental leveraged entry.
+- **On a fresh gate-ON, read the LIVE index + a lev-ETF before deploying — not
+  the discover gainers list.** 2026-07-01: the gate was CONFIRMED ON from the
+  06-30 close and the scan showed a screen of +10–19% gainers
+  (RDDT/META/DLO/FRHC/COIN/MSTR), which reads like a melt-up — but live QQQ was
+  −1.1% and SOXL −16% (a rotation OUT of semis into social/fintech/crypto). Green
+  single-names over a red index is a rotation, not risk-on confirmation; chasing
+  TQQQ/SOXL into it would have bought a −3%/−16% down-day. Gate-ON permits the
+  lane; the live index/lev tape decides whether it's a safe entry.
 - **A gate flip can be stale the instant it confirms — re-check after a major
   after-hours catalyst.** 2026-06-24: `bun run gate` confirmed risk-OFF on the
   4pm close at the exact moment MU's blowout earnings (+14% AH) reversed the
