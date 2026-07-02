@@ -45,7 +45,13 @@ falls out of context — it lives here instead, and compounds.
   runs round-tripped intraday (1255 high → 1136, −9.5%, in 25 min) — a gap with
   no buyers above it distributes. The rule: wait for a multi-session base that
   builds a higher-low to rest a −8% stop under; an opening spike-and-fade is a
-  do-not-chase, not a setup.*
+  do-not-chase, not a setup. RIVN 2026-07-02: a +13% Day-0 gap on a genuinely
+  strong catalyst (Q2 delivery BEAT + FY guidance RAISE) that was HOLDING near
+  highs (buyers above, not fading) STILL filtered — the binding test is stop
+  placement, not the fade: a −8% stop from 19.43 lands at 17.88, at the breakout
+  pivot with no higher-low above the gap, so a routine breakout-retest full-loses
+  it. Even the best holding gap waits for the base; enter the continuation
+  (trigger b) on the pullback-to-rising-support, not the Day-0 first leg.*
 - **Gate-ON permits the Lane-2 lane, it does not trigger an entry.** A fresh
   gate-ON read means re-evaluate, not buy.
 - **Verify a catalyst's DATE before calling it fresh — never inherit a prior
