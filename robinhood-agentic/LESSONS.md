@@ -52,6 +52,18 @@ falls out of context — it lives here instead, and compounds.
   pivot with no higher-low above the gap, so a routine breakout-retest full-loses
   it. Even the best holding gap waits for the base; enter the continuation
   (trigger b) on the pullback-to-rising-support, not the Day-0 first leg.*
+- **The daily-gainers scan only surfaces Day-0 gaps — trigger-(b) pullback
+  entries need a maintained post-gap watch.** ~2.5 weeks 100% cash (since the
+  06-17 DAL BE-stop) while discovery correctly filtered dozens of names (07-02
+  alone: GPC +13%, AVAV +14%, RIVN +13%, plus a screen of biotech/healthcare
+  pops) — nearly all Day-0 gaps with no placeable −8% stop under a higher-low.
+  Breadth finds the move on its gap day, but the *buyable* setup (trigger-b
+  continuation) is the pullback-to-rising-support 1–3 sessions LATER, which a
+  gainers scan won't resurface (a pulling-back name isn't a top gainer). So
+  carry the filtered-but-trending names on an explicit watch and re-quote them
+  each session for the pullback — otherwise the breadth edge only ever produces
+  correctly-filtered chases and zero fills. (Discovery working ≠ entering;
+  don't relax the stop-placement filter to force a fill.)
 - **Gate-ON permits the Lane-2 lane, it does not trigger an entry.** A fresh
   gate-ON read means re-evaluate, not buy.
 - **Verify a catalyst's DATE before calling it fresh — never inherit a prior
