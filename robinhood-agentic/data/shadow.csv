@@ -146,3 +146,9 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-07-RLAY,RLAY,2026-07-07,filtered,,,,day0-biotech-gap-+6%-no-higher-low-for-8pct-stop,,,,green over -2.3% red index = rotation not risk-on
 2026-07-07-VKTX,VKTX,2026-07-07,filtered,,,,day0-biotech-gap-+6%-no-higher-low-for-8pct-stop,,,,green over -2.3% red index = rotation not risk-on
 2026-07-07-GDDY,GDDY,2026-07-07,filtered,,,,day0-gap-+6%-0x-rvol-no-base-for-8pct-stop,,,,green over -2.3% red index = rotation not risk-on
+2026-07-07-ALMS,ALMS,2026-07-07,filtered,,,,day0-biotech-gap-+8%-no-higher-low-for-8pct-stop,,,,green over -1.5% red index = rotation not risk-on
+2026-07-07-BEAM,BEAM,2026-07-07,filtered,,,,day0-biotech-gap-+8%-1x-rvol-no-base-for-8pct-stop,,,,green over -1.5% red index = rotation not risk-on
+2026-07-07-ANAB,ANAB,2026-07-07,filtered,,,,day0-biotech-gap-+8%-no-higher-low-for-8pct-stop,,,,green over -1.5% red index = rotation not risk-on
+2026-07-07-AKTS,AKTS,2026-07-07,filtered,,,,day0-biotech-gap-+8%-0x-rvol-no-base-for-8pct-stop,,,,green over -1.5% red index = rotation not risk-on
+2026-07-07-EWTX,EWTX,2026-07-07,filtered,,,,day0-biotech-gap-+7%-no-higher-low-for-8pct-stop,,,,green over -1.5% red index = rotation not risk-on
+2026-07-07-NAVN,NAVN,2026-07-07,filtered,,,,day0-gap-+7%-no-higher-low-for-8pct-stop,,,,green over -1.5% red index = rotation not risk-on
