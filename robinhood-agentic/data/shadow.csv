@@ -160,3 +160,4 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-07-BCRX,BCRX,2026-07-07,filtered,,,,day0-biotech-gap-+8%-no-higher-low-for-8pct-stop,,,,green over -1.84% red index = rotation not risk-on
 2026-07-07-PTGX,PTGX,2026-07-07,filtered,,,,day0-biotech-gap-+8%-no-higher-low-for-8pct-stop,,,,green over -1.84% red index = rotation not risk-on
 2026-07-07-GLUE,GLUE,2026-07-07,filtered,,,,day0-biotech-gap-+8%-no-higher-low-for-8pct-stop,,,,green over -1.84% red index = rotation not risk-on
+2026-07-07-MEOH,MEOH,2026-07-07,filtered,,,,day0-gap-+9%-no-higher-low-for-8pct-stop (Methanex $43.78 close -> live $47.72; -8% stop 43.90 at/below prior close no base; 2x RVOL),,,,green over -2.0% red index = rotation not risk-on; after-hours §3.1a discovery ~17:38 ET
