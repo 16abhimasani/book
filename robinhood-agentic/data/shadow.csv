@@ -180,3 +180,5 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-08-GLUE,GLUE,2026-07-08,filtered,,,,biotech-day0-gap-+3%-no-higher-low-for-8pct-stop,,,,Monte Rosa; carryover from 07-07 biotech pop; day0 no base
 2026-07-08-EPAC,EPAC,2026-07-08,filtered,,,,smallcap-earnings-drift-+3%-no-placeable-stop,,,,Enerpac reported 07-07; small-cap not large-cap trigger-a; day0 no higher-low for stop
 2026-07-08-PLBL,PLBL,2026-07-08,filtered,,,,small-cap-day0-gap-+3%-sub-$11-thin-no-placeable-stop,,,,micro/illiquid ADR gap; no catalyst two-source; RVOL 1x
+2026-07-08-RKLB,RKLB,2026-07-08,filtered,,,,rolling-over-2-down-sessions-dead-cat-bounce-no-rising-support,,,,Rocket Lab: -17% 2-day breakdown (100.46->93.09->83.41); +3.5% premkt to 86.30 is a bounce not a trigger-b pullback; -8% stop 79.40 below 07-07 low 82.85 = falling knife
+2026-07-08-RUN,RUN,2026-07-08,filtered,,,,day0-gap-+8%-sub-$14-no-higher-low-for-8pct-stop,,,,Sunrun solar; day0 gap 12.20->13.14; -8% stop 12.09 at prior close no base; sector/policy rotation not single-name two-source catalyst
