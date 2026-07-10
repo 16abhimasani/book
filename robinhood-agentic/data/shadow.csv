@@ -299,3 +299,12 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-10-UUUU,UUUU,2026-07-10,filtered,,,,uranium beta +5% no fresh own <48h catalyst not a pullback,,,,
 2026-07-10-PKX,PKX,2026-07-10,filtered,,,,Day-0 POSCO ADR gap +5% no fresh own <48h catalyst no placeable stop,,,,
 2026-07-10-SEI,SEI,2026-07-10,filtered,,,,Day-0 Solaris energy-infra gap +5% no fresh own <48h catalyst no placeable stop,,,,
+2026-07-10-BVC,BVC,2026-07-10,filtered,,,,"Day-0 gap +15% 11.01 3x rvol; no fresh <48h own catalyst / two-source; small-cap, -8% stop mid-gap no higher-low",,,,gainers-scan sector-beta
+2026-07-10-BCC,BCC,2026-07-10,filtered,,,,"Day-0 gap +7% 77.43; Boise Cascade no fresh <48h own catalyst; gap not pullback-to-support, no placeable -8% stop under higher-low",,,,gainers-scan sector-beta
+2026-07-10-FUN,FUN,2026-07-10,filtered,,,,"Day-0 gap +6% 19.74; Six Flags no fresh <48h own catalyst / two-source; no placeable -8% stop",,,,gainers-scan sector-beta
+2026-07-10-UPBD,UPBD,2026-07-10,filtered,,,,"Day-0 gap +6% 21.49; Upbound no fresh <48h own catalyst; no placeable -8% stop under higher-low",,,,gainers-scan sector-beta
+2026-07-10-MGRT,MGRT,2026-07-10,filtered,,,,"Day-0 gap +6% 83.99; illiquid small-cap ADR no fresh <48h own catalyst / two-source",,,,gainers-scan sector-beta
+2026-07-10-VSAT,VSAT,2026-07-10,filtered,,,,"Day-0 gap +6% 74.37; ViaSat no fresh <48h own catalyst; gap not pullback, no placeable -8% stop",,,,gainers-scan sector-beta
+2026-07-10-CBRL,CBRL,2026-07-10,filtered,,,,"Day-0 gap +6% 52.25; Cracker Barrel no fresh <48h own catalyst / two-source; no placeable stop",,,,gainers-scan sector-beta
+2026-07-10-DFH,DFH,2026-07-10,filtered,,,,"Day-0 gap +6% 16.48; Dream Finders Homes no fresh <48h own catalyst; no placeable -8% stop",,,,gainers-scan sector-beta
+2026-07-10-BBAR,BBAR,2026-07-10,filtered,,,,"Day-0 gap +6% 20.48; BBVA Argentina ADR no fresh <48h own catalyst / two-source; macro/FX beta",,,,gainers-scan sector-beta
