@@ -310,3 +310,8 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-10-BBAR,BBAR,2026-07-10,filtered,,,,"Day-0 gap +6% 20.48; BBVA Argentina ADR no fresh <48h own catalyst / two-source; macro/FX beta",,,,gainers-scan sector-beta
 2026-07-10-CBRS,CBRS,2026-07-10,filtered,,,,"Day-0 gap +7.6% 213.55; Cerebras AI-infra thematic beta no fresh <48h own catalyst / two-source; vertical move, -8% stop 196 mid-gap no higher-low",,,,gainers-scan sector-beta
 2026-07-10-KMX,KMX,2026-07-10,filtered,,,,"Day-0 gap +5.8% 53.99; CarMax post-earnings pop no confirmed two-source; Day-0 gap not pullback-to-support, no placeable -8% stop under higher-low",,,,gainers-scan
+2026-07-10-WHR,WHR,2026-07-10,filtered,,,,"+9.1% Day-0 gap 41.31 vs 37.86 close; no verified fresh <48h own two-source catalyst (appliance/tariff sector beta); -8% stop ~38 near/below prior close no higher-low = stop-placement fail + don't-chase",,,,reg-session
+2026-07-10-WPP,WPP,2026-07-10,filtered,,,,"+6% ADR Day-0 gap 18.39; advertising, no fresh own <48h two-source catalyst; gap not pullback-to-support, no placeable -8% stop under a higher-low",,,,reg-session
+2026-07-10-REZI,REZI,2026-07-10,filtered,,,,"+7% Day-0 gap 33.37; Resideo, no verified fresh <48h own two-source catalyst; -8% stop below prior close no higher-low",,,,reg-session
+2026-07-10-GGAL,GGAL,2026-07-10,filtered,,,,"+7% Argentine-bank ADR Day-0 gap 52.63; sector/country beta, no fresh own <48h two-source catalyst; no placeable stop under a higher-low",,,,reg-session
+2026-07-10-NEXA,NEXA,2026-07-10,filtered,,,,"+6% Day-0 gap 14.25; Nexa Resources miner, no fresh own <48h two-source catalyst; gap not pullback, no placeable -8% stop",,,,reg-session
