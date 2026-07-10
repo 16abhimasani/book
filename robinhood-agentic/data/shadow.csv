@@ -308,3 +308,5 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-10-CBRL,CBRL,2026-07-10,filtered,,,,"Day-0 gap +6% 52.25; Cracker Barrel no fresh <48h own catalyst / two-source; no placeable stop",,,,gainers-scan sector-beta
 2026-07-10-DFH,DFH,2026-07-10,filtered,,,,"Day-0 gap +6% 16.48; Dream Finders Homes no fresh <48h own catalyst; no placeable -8% stop",,,,gainers-scan sector-beta
 2026-07-10-BBAR,BBAR,2026-07-10,filtered,,,,"Day-0 gap +6% 20.48; BBVA Argentina ADR no fresh <48h own catalyst / two-source; macro/FX beta",,,,gainers-scan sector-beta
+2026-07-10-CBRS,CBRS,2026-07-10,filtered,,,,"Day-0 gap +7.6% 213.55; Cerebras AI-infra thematic beta no fresh <48h own catalyst / two-source; vertical move, -8% stop 196 mid-gap no higher-low",,,,gainers-scan sector-beta
+2026-07-10-KMX,KMX,2026-07-10,filtered,,,,"Day-0 gap +5.8% 53.99; CarMax post-earnings pop no confirmed two-source; Day-0 gap not pullback-to-support, no placeable -8% stop under higher-low",,,,gainers-scan
