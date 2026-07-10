@@ -284,3 +284,18 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-10-VOD,VOD,2026-07-10,filtered,,,,day0-gap-no-two-source-no-placeable-stop,,,,"Vodafone +12.7% 14.75 Day-0 pre-market gap off 13.08; tight 0.14% spread but no verified fresh <48h named two-source own catalyst in hand, -8% stop ~13.57 mid-gap above the origin with no higher-low = stop-placement + two-source filter"
 2026-07-10-COIN,COIN,2026-07-10,filtered,,,,crypto-beta-day0-gap-+5%-no-own-catalyst-no-placeable-stop,,,,"Coinbase +5% 166.50 pre-market gap off 158.44 (crypto/BTC beta, no fresh <48h named own catalyst); tight 0.30% spread but the gap is not a pullback-to-rising-support, -8% stop ~153 below the prior close with no defined higher-low above the gap = trigger-(a) no-own-catalyst + trigger-(b) stop-placement filter"
 2026-07-10-MSTR,MSTR,2026-07-10,filtered,,,,crypto-beta-day0-gap-+5%-no-own-catalyst-no-placeable-stop,,,,"Strategy Inc +5% 98.92 pre-market gap off 93.89 (bitcoin-proxy beta, no fresh <48h named own catalyst); tight 0.16% spread but gap not a continuation-pullback, -8% stop ~91 below prior close no higher-low above the gap = trigger-(a) no-own-catalyst + trigger-(b) stop-placement filter"
+2026-07-10-EQPT,EQPT,2026-07-10,filtered,,,,Day-0 small-cap gap +14% no fresh own <48h two-source catalyst no placeable -8% stop under a higher-low,,,,
+2026-07-10-JXN,JXN,2026-07-10,filtered,,,,Day-0 financial gap +8% no fresh own <48h catalyst gap not a pullback no placeable stop,,,,
+2026-07-10-ALM,ALM,2026-07-10,filtered,,,,Day-0 small-cap gap +7% no fresh own <48h catalyst no placeable stop,,,,
+2026-07-10-KB,KB,2026-07-10,filtered,,,,Day-0 Korean-bank ADR gap +7% no fresh own <48h catalyst no placeable stop,,,,
+2026-07-10-TRAX,TRAX,2026-07-10,filtered,,,,Day-0 biotech binary pop +7% no placeable -8% stop no two-source,,,,
+2026-07-10-U,U,2026-07-10,filtered,,,,Day-0 Unity gap +6% no fresh own <48h two-source catalyst gap not a pullback,,,,
+2026-07-10-META,META,2026-07-10,filtered,,,,mega-cap beta +6% no fresh own <48h catalyst not a pullback-to-support,,,,
+2026-07-10-LIFE,LIFE,2026-07-10,filtered,,,,Day-0 small-cap gap +6% no fresh own <48h catalyst no placeable stop,,,,
+2026-07-10-SOFI,SOFI,2026-07-10,filtered,,,,fintech beta +5% no fresh own <48h catalyst not a pullback,,,,
+2026-07-10-KC,KC,2026-07-10,filtered,,,,Day-0 Kingsoft-Cloud ADR gap +5% no fresh own <48h catalyst no placeable stop,,,,
+2026-07-10-NTNX,NTNX,2026-07-10,filtered,,,,Day-0 Nutanix gap +5% no fresh own <48h two-source catalyst gap not a pullback,,,,
+2026-07-10-BMNR,BMNR,2026-07-10,filtered,,,,crypto-miner beta +5% no fresh own <48h catalyst no placeable stop,,,,
+2026-07-10-UUUU,UUUU,2026-07-10,filtered,,,,uranium beta +5% no fresh own <48h catalyst not a pullback,,,,
+2026-07-10-PKX,PKX,2026-07-10,filtered,,,,Day-0 POSCO ADR gap +5% no fresh own <48h catalyst no placeable stop,,,,
+2026-07-10-SEI,SEI,2026-07-10,filtered,,,,Day-0 Solaris energy-infra gap +5% no fresh own <48h catalyst no placeable stop,,,,
