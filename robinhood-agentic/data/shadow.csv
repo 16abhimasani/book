@@ -315,3 +315,4 @@ candidate_id,symbol,eval_date,status,entry,stop,qty,reason_skipped,exit_date,exi
 2026-07-10-REZI,REZI,2026-07-10,filtered,,,,"+7% Day-0 gap 33.37; Resideo, no verified fresh <48h own two-source catalyst; -8% stop below prior close no higher-low",,,,reg-session
 2026-07-10-GGAL,GGAL,2026-07-10,filtered,,,,"+7% Argentine-bank ADR Day-0 gap 52.63; sector/country beta, no fresh own <48h two-source catalyst; no placeable stop under a higher-low",,,,reg-session
 2026-07-10-NEXA,NEXA,2026-07-10,filtered,,,,"+6% Day-0 gap 14.25; Nexa Resources miner, no fresh own <48h two-source catalyst; gap not pullback, no placeable -8% stop",,,,reg-session
+2026-07-10-CAKE,CAKE,2026-07-10,filtered,,,,"+5.7% Day-0 gap 82.87 vs 78.42 close; no verified fresh <48h own two-source catalyst; -8% stop ~76.2 below prior close no higher-low = stop-placement fail + two-source",,,,reg-session
