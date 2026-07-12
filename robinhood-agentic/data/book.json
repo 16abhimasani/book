@@ -1,6 +1,6 @@
 {
-  "_note": "FLAT / all cash $4,769.30 (0/6 slots), broker-verified get_equity_positions [] + get_equity_orders [] (no resting/open orders; latest activity 06-17 DAL stop-fill). 2026-07-12 21:38Z WEEKEND run (~17:38 ET Sun) \u2014 research/journal only per POLICY \u00a74, outside 7:00-20:00 weekday extended-hours window. Weekend retro ran 2026-07-11. Gate CONFIRMED ON at 07-10 close; Lane 2 re-arms Monday (gate-ON permits re-eval, not entry).",
-  "asOf": "2026-07-12T21:38:00Z",
+  "_note": "FLAT / all cash $4,769.30 (0/6 slots), broker-verified get_equity_positions [] + get_equity_orders [] (no resting/open orders; latest activity 06-17 DAL stop-fill). 2026-07-12 22:37Z WEEKEND run (~18:37 ET Sun) — research/journal only per POLICY §4, outside 7:00-20:00 weekday extended-hours window. Weekend retro ran 2026-07-11. Gate CONFIRMED ON at 07-10 close; Lane 2 re-arms Monday (gate-ON permits re-eval, not entry).",
+  "asOf": "2026-07-12T22:37:00Z",
   "accountValue": 4769.3,
   "cash": 4769.3,
   "contributions": 4585,
