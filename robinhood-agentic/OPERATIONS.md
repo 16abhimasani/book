@@ -79,6 +79,22 @@ You are the trading loop for the Robinhood Agentic account.
 Never exceed POLICY limits. Only the owner edits POLICY.md.
 ```
 
+### Live trigger record (audited 2026-07-13)
+
+- **Name** `rh-trading-loop-cloud` (`trig_01MGG2kUUHB557dDAJvYTeRD`), created
+  2026-06-30, **enabled**, model `claude-opus-4-8`, connectors: Robinhood +
+  Claude-Code-Remote (+ Gmail/Calendar/Drive present but unused by the loop).
+- **Cron** `30 11-23 * * *` UTC = hourly at :30, 7:30–19:30 ET (EDT), **all 7
+  days**. The routines platform floor is hourly, so POLICY §4's 30-minute
+  cadence is not achievable with one trigger — accepted; weekend firings are
+  research/journal-only by design. Coverage vs §4: nothing after ~19:30 ET,
+  and the ~16:15 ET EOD reconcile lands on the 16:30 ET run — accepted.
+  ⚠️ Cron is UTC: when DST ends (Nov), 11:30 UTC becomes 6:30 ET — revisit.
+- Each firing opens a fresh cloud session that pushes `journal:` commits
+  directly to main; the `claude/*` branch + PR path is the fallback. There is
+  NO auto-merge workflow in the repo — a journal PR left open is stranded
+  state, merge it promptly.
+
 ### ⚠️ One heartbeat at a time
 
 The local Cowork scheduled task `rh-trading-loop-local` (created

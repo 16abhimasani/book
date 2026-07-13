@@ -23,6 +23,7 @@
     "trail": "bun src/trading/trail.ts",
     "scaleout": "bun src/trading/scaleout.ts",
     "reentry": "bun src/trading/reentry.ts",
+    "postgap": "bun src/trading/postgap.ts",
     "discover": "bun src/trading/discover.ts"
   },
   "dependencies": {
