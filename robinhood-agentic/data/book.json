@@ -1,6 +1,6 @@
 {
-  "_note": "FLAT / all cash $4,769.30 (0/6 slots), broker-verified get_equity_positions [] + get_equity_orders [] (no resting/open orders; latest activity 06-17 DAL stop-fill). 2026-07-12 23:38Z WEEKEND run (~19:38 ET Sun) — research/journal only per POLICY §4. Weekend retro ran 2026-07-11. Gate CONFIRMED ON at 07-10 close; Lane 2 re-arms Monday (gate-ON permits re-eval, not entry). Next trade-eligible window: Mon pre-market.",
-  "asOf": "2026-07-12T23:38:00Z",
+  "_note": "FLAT / all cash $4,769.30 (0/6 slots), broker-verified get_equity_positions [] + get_equity_orders [] (no resting/open orders; latest activity 06-17 DAL stop-fill). 2026-07-13 11:40Z PRE-MARKET run (~07:40 ET Mon). Hard risk-OFF semis sector shock pre-market (SK Hynix): QQQ -0.83% / VIXY +1% / SOXL -6.8% / TQQQ -2.5%. Gate CONFIRMED ON at 07-10 close (immaterial official-close correction applied 725.54->725.51). Lane 2 gate-ON but live tape risk-off = NO entry (buying a -6.8% SOXL knife is the LESSONS anti-pattern). Post-gap watch: all in-band semis NOT triggered (tape falling, not reclaiming). NO-TRADE.",
+  "asOf": "2026-07-13T11:40:00Z",
   "accountValue": 4769.3,
   "cash": 4769.3,
   "contributions": 4585,
