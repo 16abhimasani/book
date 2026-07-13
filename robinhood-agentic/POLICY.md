@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.4.1 (2026-07-13) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.5.0 (2026-07-13) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -63,6 +63,19 @@
   adds a TRACKED post-gap watch (`data/postgap-watch.csv` + `bun run postgap`)
   re-quoted every entry-eligible run. **Additive sourcing/tracking only — the
   §3 entry gate and every §2 limit are UNCHANGED; it loosens nothing.**
+  v0.5.0: **three ratifications, owner live session 2026-07-13 ("Ratify
+  everything"), same-day follow-on to the v0.4.1 diagnosis.** (1) **Vol leg →
+  direct VIX**: the MCP now exposes a real VIX index feed
+  (get_indexes/get_index_quotes, first read 16.26 on 07-13), so the Lane-2
+  gate's vol leg scores the PRIMARY "VIX < 25" spec from marks.csv `vix_close`
+  whenever the row carries one; dates without it fall back to the
+  VIXY-direction proxy. B2 2-close confirmation unchanged; VIXY's absolute
+  level still never compared to 25. (2) **Cadence restored to every 30 min
+  (§4 v0.3.2)** via a second interleaved cloud trigger at :00 weekdays beside
+  the :30 trigger — the PAIR is ONE heartbeat (OPERATIONS §B). (3) **Lane 4
+  options UNPARKED with a spec**: defined-risk long premium only, §2-derived
+  premium caps, mandatory ≥5-session paper-walk before the first real option
+  order (earliest 2026-07-20) — see Lane 4.
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -81,10 +94,12 @@
   Report return against contributed capital, never against the $3,000 seed
   alone (`bun run book` prints it). Owner deposits are always allowed and
   journaled when they land; they are NOT the agent capital-adds §6a gates.
-- Instruments: **long US equities and ETFs only** (leveraged ETFs allowed).
-  No options, crypto, futures, or event contracts until (a) the MCP exposes
-  the tools AND (b) the owner adds a lane here. Re-check available tools
-  each run.
+- Instruments: **long US equities and ETFs** (leveraged ETFs allowed), plus
+  **defined-risk long option premium per Lane 4** (v0.5.0 — both conditions
+  met: order tools exposed on the MCP + owner ratified the lane 2026-07-13;
+  the Lane-4 paper-walk gate applies before the first real option order).
+  No crypto, futures, or event contracts until (a) the MCP exposes the tools
+  AND (b) the owner adds a lane here. Re-check available tools each run.
 
 ## 2. Hard limits (checked before every order)
 
@@ -173,8 +188,12 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
 
 ### Lane 2 — Leveraged ETF rotation (secondary, regime-gated)
 - Universe: TQQQ / SOXL / SPXL-class long-leverage ETFs.
-- Regime gate ON (allowed): QQQ above its 20-day average AND VIX < 25
-  (estimate from quotes/news if no direct feed). Gate OFF → exit lane
+- Regime gate ON (allowed): QQQ above its 20-day average AND VIX < 25.
+  **v0.5.0: the VIX leg is scored from the DIRECT index feed** (EOD runs
+  record `vix_close` in marks.csv from get_index_quotes) **whenever the row
+  carries a value; rows without one (all history pre-07-13) fall back to the
+  VIXY-direction proxy** (VIXY close below prior close). VIXY's absolute
+  level is still never compared to 25 (decaying ETP). Gate OFF → exit lane
   entirely, no new entries.
 - **Gate flips on 2-close confirmation (B2, ratified 2026-06-15).** Act on
   the CONFIRMED state from `bun run gate`, not a single-close flip: the
@@ -287,9 +306,49 @@ still logs each evaluated re-entry to `data/shadow.csv` (candidate_id
   −8% stop and still clears every §2 limit, and the shadow log keeps accruing so
   expectancy can be reviewed in a weekend retro.
 
-### Lane 4 — Options (PARKED)
-- Blocked until options tools appear on the MCP connection. When they do:
-  journal the discovery, do NOT trade; owner will spec the lane first.
+### Lane 4 — Options (v0.5.0: SPEC'D + PAPER-WALK; owner ratified 2026-07-13)
+
+Defined-risk long premium EXPRESSING a Lane-1 thesis — options are an
+expression layer, not a separate signal engine. An option entry requires a §3
+Lane-1 trigger (catalyst or momentum-continuation, incl. §3.1b post-gap
+triggers) on the underlying that passes the FULL entry gate first.
+
+- **Structures: long calls / long puts / debit spreads ONLY.** Max loss =
+  premium paid, always. No naked writes, no credit structures, no
+  assignment-risk positions (account is option_level_2; we use less than it
+  allows).
+- **Risk sizing (from §2 — premium IS the risk):** total premium per position
+  ≤ the §2 5%-of-account risk budget: contracts = floor(account × 5% ÷
+  (premium × 100)). Combined OPEN option premium ≤ **10% of account**. Open
+  premium counts inside the §2 20% book-risk cap and the 65% theme cap (at
+  premium value, underlying's theme).
+- **Contract hygiene:** 14–60 DTE at entry (no 0DTE/weekly lottos); delta
+  0.35–0.60 (ATM-ish — no far-OTM); open interest ≥ 500 at the traded strike;
+  bid/ask spread ≤ 10% of mid; LIMIT orders at/below mid, ONE chase ≤ +2% of
+  mid; **regular session only**. `review_option_order` before every
+  `place_option_order`; surface `market_data_disclosure` verbatim; fresh UUID
+  `ref_id` per order.
+- **Exits:** −50% of premium = stop, checked EVERY run (option stops don't
+  rest at the broker — on breach, exit via limit at mid). +100% → sell half,
+  journal the trail plan for the rest. Underlying thesis breaks (§3) → exit
+  regardless of option P&L. Time stop: 3 sessions no thesis progress → exit
+  (same as Lane 1). Exit or roll by **5 DTE** — never hold into the gamma/
+  decay cliff.
+- **Earnings guard:** no NEW long-premium entry within 48h BEFORE the
+  underlying's report (IV-crush trap); holding an existing position through
+  a report requires the +100%-bank rung already taken.
+- **Settled funds / GFV:** premium buys with settled cash only (cash
+  account); never close a position opened with unsettled proceeds before
+  settlement.
+- **PAPER-WALK GATE (binding):** the first REAL option order may only follow
+  **≥ 5 consecutive trading sessions** of journaled paper-walk entries —
+  shadow.csv candidate_id `<date>-<SYM>-opt`, logging structure/strike/DTE/
+  premium (from `get_option_chains` + `get_option_quotes`), marked to market
+  each run with exits per the rules above — executed with ZERO mechanical or
+  discipline errors (sizing, hygiene, exit rules). **Earliest go-live
+  2026-07-20.** Any §2-equivalent breach during the paper-walk resets the
+  5-session clock. A `bun run` sizing helper for premium must exist before
+  go-live (compute, never estimate).
 
 ### Lane 5 — Crypto (PARKED, pre-spec'd for instant enable)
 - Blocked until crypto order tools appear on the Agentic MCP (read/
@@ -308,7 +367,9 @@ still logs each evaluated re-entry to `data/shadow.csv` (candidate_id
 
 Schedule (v0.3.2): the heartbeat runs **every 30 minutes, ~7:05 ET →
 8:35 ET, across pre-market, regular session, and after-hours**, weekdays
-(owner bumped hourly → 30-min 2026-06-15 for reactivity). Run-types by
+(owner bumped hourly → 30-min 2026-06-15 for reactivity; v0.5.0 restored
+30-min on the cloud via two interleaved hourly triggers, :30 + :00 weekday
+— the pair is ONE heartbeat, see OPERATIONS §B). Run-types by
 ET clock:
 
 - **Pre-market extended (~7:00–9:30 ET):** scan catalysts, manage
@@ -320,9 +381,12 @@ ET clock:
   MAY enter/exit per §3.7 (LIMIT-only, liquidity guard).
 - **EOD reconcile (~16:15 ET run):** reconcile fills, P&L, journal
   lessons; append one row to `data/marks.csv` (date, QQQ close, VIXY
-  close, account value). Regime gate inputs come from this file:
-  QQQ > 20-session MA AND vol leg = VIXY below prior close. Never use
-  VIXY's absolute level as the VIX<25 leg — decaying ETP, direction only.
+  close, account value, note, **VIX close — v0.5.0, from the direct
+  `get_index_quotes` feed**). Regime gate inputs come from this file:
+  QQQ > 20-session MA AND vol leg = **direct VIX close < 25 when the row
+  has `vix_close`; VIXY below prior close as the fallback** for rows
+  without one. Never use VIXY's absolute level as the VIX<25 leg —
+  decaying ETP, direction only.
 - **Weekend run:** research + propose policy diffs (NO trades, ever).
 - True 24/7 cadence (crypto/event contracts) still activates only when
   those instruments ship on the MCP and the owner adds lanes; equities

@@ -36,12 +36,26 @@ describe("validateNumber", () => {
 });
 
 describe("validateMarkRow", () => {
-  test("good row", () => {
+  test("good row (pre-v0.5.0 — no vix_close → null, gate falls back to VIXY)", () => {
     expect(validateMarkRow({ date: "2026-06-11", qqq_close: "717.12", vixy_close: "24.41" }, "ctx")).toEqual({
       date: "2026-06-11",
       qqq: 717.12,
       vixy: 24.41,
+      vix: null,
     });
+  });
+  test("good row with vix_close (v0.5.0 direct feed)", () => {
+    expect(validateMarkRow({ date: "2026-07-13", qqq_close: "718.45", vixy_close: "20.56", vix_close: "16.26" }, "ctx")).toEqual({
+      date: "2026-07-13",
+      qqq: 718.45,
+      vixy: 20.56,
+      vix: 16.26,
+    });
+  });
+  test("non-numeric vix_close throws (never a silent fallback on a bad print)", () => {
+    expect(() => validateMarkRow({ date: "2026-07-13", qqq_close: "718.45", vixy_close: "20.56", vix_close: "n/a" }, "ctx")).toThrow(
+      /vix_close/,
+    );
   });
   test("blank qqq_close throws (the silent-zero bug)", () => {
     expect(() => validateMarkRow({ date: "2026-06-11", qqq_close: "", vixy_close: "24.41" }, "ctx")).toThrow(

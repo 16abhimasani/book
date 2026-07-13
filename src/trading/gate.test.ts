@@ -168,3 +168,82 @@ describe("marks.csv (real file)", () => {
     expect(g.status).toBe("ok");
   });
 });
+
+// --- v0.5.0: direct-VIX vol leg (owner ratified 2026-07-13) ---
+import { VIX_MAX } from "./gate";
+import { readFileSync } from "node:fs";
+
+function seriesVix(qqq: number[], vixy: number[], vix: (number | null)[]): MarkRow[] {
+  return qqq.map((q, i) => ({ date: day(i), qqq: q, vixy: vixy[i]!, vix: vix[i] ?? null }));
+}
+
+describe("vol leg: direct VIX (v0.5.0)", () => {
+  const qqq = [...Array(20).fill(100), 110]; // MA leg passes
+
+  test("VIX < 25 passes even when VIXY rose (direct feed beats the proxy)", () => {
+    const vixy = [...Array(20).fill(20), 21]; // proxy would FAIL
+    const vix = [...Array(20).fill(null), 16.2];
+    const g = computeGate(seriesVix(qqq, vixy, vix));
+    if (g.status !== "ok") throw new Error("expected ok");
+    expect(g.volLegSource).toBe("vix-level");
+    expect(g.volLegPass).toBe(true);
+    expect(g.gate).toBe("ON");
+  });
+
+  test("VIX ≥ 25 fails even when VIXY fell", () => {
+    const vixy = [...Array(20).fill(20), 19]; // proxy would pass
+    const vix = [...Array(20).fill(null), 25.0]; // not < 25 (strict)
+    const g = computeGate(seriesVix(qqq, vixy, vix));
+    if (g.status !== "ok") throw new Error("expected ok");
+    expect(g.volLegSource).toBe("vix-level");
+    expect(g.volLegPass).toBe(false);
+    expect(g.gate).toBe("OFF");
+  });
+
+  test("mixed history: rows without vix_close score on the VIXY fallback", () => {
+    const vixy = [...Array(20).fill(20), 19];
+    const vix = [...Array(21).fill(null)];
+    const g = computeGate(seriesVix(qqq, vixy, vix));
+    if (g.status !== "ok") throw new Error("expected ok");
+    expect(g.volLegSource).toBe("vixy-direction");
+    expect(g.volLegPass).toBe(true);
+  });
+
+  test("forced volLeg 'vixy-direction' ignores a present vix (research mode)", () => {
+    const vixy = [...Array(20).fill(20), 21];
+    const vix = [...Array(20).fill(null), 16.2];
+    const g = computeGate(seriesVix(qqq, vixy, vix), undefined, { volLeg: "vixy-direction" });
+    if (g.status !== "ok") throw new Error("expected ok");
+    expect(g.volLegSource).toBe("vixy-direction");
+    expect(g.volLegPass).toBe(false);
+  });
+
+  test("forced volLeg 'vix-level' on a row without vix_close fails loudly", () => {
+    const vixy = [...Array(20).fill(20), 19];
+    const vix = [...Array(21).fill(null)];
+    expect(() => computeGate(seriesVix(qqq, vixy, vix), undefined, { volLeg: "vix-level" })).toThrow();
+  });
+
+  test("B2 confirmation works across the cutover boundary", () => {
+    // 22 rows: first 21 proxy-scored, last row VIX-scored; series stays computable.
+    const q = [...Array(20).fill(100), 110, 111];
+    const vy = [...Array(20).fill(20), 19, 21];
+    const vx = [...Array(21).fill(null), 16.2];
+    const pts = computeGateSeries(seriesVix(q, vy, vx), { confirmDays: 2 });
+    expect(pts.length).toBeGreaterThan(0);
+    expect(pts.at(-1)!.raw).toBe("ON"); // VIX 16.2 < 25 + MA pass
+  });
+});
+
+describe("POLICY ↔ gate.ts v0.5.0 coupling", () => {
+  const POLICY = readFileSync(new URL("../../robinhood-agentic/POLICY.md", import.meta.url).pathname, "utf8").replace(/\s+/g, " ");
+
+  test("VIX_MAX matches the Lane-2 'VIX < 25' prose", () => {
+    expect(POLICY).toContain(`VIX < ${VIX_MAX}`);
+  });
+
+  test("§4 records vix_close and names the fallback", () => {
+    expect(POLICY).toContain("vix_close");
+    expect(POLICY.toLowerCase()).toContain("fallback");
+  });
+});

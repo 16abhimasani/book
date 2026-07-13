@@ -1,8 +1,12 @@
 // Lane-2 regime gate, computed from robinhood-agentic/data/marks.csv.
-// POLICY §3 Lane 2 + §4: gate ON ⟺ QQQ close > 20-session MA AND the vol
-// leg is quiet (VIXY close strictly below prior session close — POLICY says
-// "below", so a flat VIXY day reads OFF). VIXY is direction-only here; its
-// absolute level is never compared to 25 (decaying ETP, POLICY §4).
+// POLICY §3 Lane 2 + §4 (v0.5.0, owner ratified 2026-07-13): gate ON ⟺ QQQ
+// close > 20-session MA AND the vol leg is quiet. The vol leg scores the
+// PRIMARY spec — direct VIX close < 25 (marks.csv `vix_close`, from the MCP
+// index feed) — whenever the row carries a VIX value; dates without one fall
+// back to the VIXY-direction proxy (VIXY close strictly below prior session
+// close — POLICY says "below", so a flat VIXY day reads OFF). VIXY is
+// direction-only in the fallback; its absolute level is never compared to 25
+// (decaying ETP, POLICY §4).
 //
 // CLI: bun run gate [YYYY-MM-DD]
 // With no date, uses the latest row in marks.csv — which is the correct
@@ -13,15 +17,21 @@ import { readFileSync } from "node:fs";
 import { parseCsvObjects } from "./csv";
 import { validateMarkRow } from "./validate";
 
+// POLICY Lane 2 "VIX < 25" — gate.test.ts couples this to the prose.
+export const VIX_MAX = 25;
+
 export interface MarkRow {
   date: string;
   qqq: number;
   vixy: number;
+  vix?: number | null; // direct VIX close (v0.5.0); null/absent = pre-feed row → VIXY fallback
 }
 
 export interface GateOptions {
   maLen?: number; // default 20
-  volLeg?: "vixy-direction" | "vixy-5d-avg" | "none"; // default vixy-direction (POLICY)
+  // default "auto" (POLICY v0.5.0): direct VIX < 25 when the row has vix_close,
+  // else VIXY-direction. Explicit modes force one leg (research/backtests).
+  volLeg?: "auto" | "vix-level" | "vixy-direction" | "vixy-5d-avg" | "none";
   // research-only until ratified (PROPOSAL B2): raw state must persist this
   // many consecutive closes before the effective gate flips. 1 = POLICY today.
   confirmDays?: number;
@@ -42,7 +52,9 @@ export type GateResult =
       maLeg: boolean; // QQQ close > MA
       vixyClose: number;
       vixyPrior: number;
-      volLegPass: boolean; // VIXY < prior close (or true when volLeg: "none")
+      vixClose: number | null; // direct VIX close when the row has one
+      volLegSource: "vix-level" | "vixy-direction" | "vixy-5d-avg" | "none";
+      volLegPass: boolean;
     }
   | { status: "insufficient-data"; asOf: string | null; have: number; need: number };
 
@@ -60,7 +72,7 @@ export function computeGate(
   opts: GateOptions = {},
 ): GateResult {
   const maLen = opts.maLen ?? 20;
-  const volLeg = opts.volLeg ?? "vixy-direction";
+  const volLeg = opts.volLeg ?? "auto";
   // latest session at or before asOfDate (rows are sorted ascending)
   let i = rows.length - 1;
   if (asOfDate !== undefined) {
@@ -78,16 +90,27 @@ export function computeGate(
   const maLeg = qqqClose > ma;
   const vixyClose = rows[i]!.vixy;
   const vixyPrior = rows[i - 1]!.vixy;
+  const vixClose = rows[i]!.vix ?? null;
   let volLegPass: boolean;
+  let volLegSource: "vix-level" | "vixy-direction" | "vixy-5d-avg" | "none";
   if (volLeg === "none") {
     volLegPass = true;
+    volLegSource = "none";
   } else if (volLeg === "vixy-5d-avg") {
     const n = Math.min(5, i + 1);
     let vSum = 0;
     for (let k = i - n + 1; k <= i; k++) vSum += rows[k]!.vixy;
     volLegPass = vixyClose < vSum / n;
+    volLegSource = "vixy-5d-avg";
+  } else if (volLeg === "vix-level" || (volLeg === "auto" && vixClose != null)) {
+    // POLICY v0.5.0 primary spec: direct VIX close < 25. Forced "vix-level"
+    // on a row without vix_close fails loudly rather than silently proxying.
+    if (vixClose == null) throw new Error(`marks.csv ${rows[i]!.date}: volLeg "vix-level" forced but row has no vix_close`);
+    volLegPass = vixClose < VIX_MAX;
+    volLegSource = "vix-level";
   } else {
-    volLegPass = vixyClose < vixyPrior; // POLICY: "below prior close", strict
+    volLegPass = vixyClose < vixyPrior; // fallback proxy: "below prior close", strict
+    volLegSource = "vixy-direction";
   }
   return {
     status: "ok",
@@ -99,6 +122,8 @@ export function computeGate(
     maLeg,
     vixyClose,
     vixyPrior,
+    vixClose,
+    volLegSource,
     volLegPass,
   };
 }
@@ -190,6 +215,10 @@ if (import.meta.main) {
   console.log(`Regime gate (confirmed, 2-day · POLICY §3 B2): ${cg.confirmed}  (at ${g.asOf} close${asOf ? `, queried ${asOf}` : ""})`);
   if (cg.pending) console.log(`  NOTE: raw gate just flipped to ${cg.raw} — UNCONFIRMED, needs one more close. Act on the confirmed state.`);
   console.log(`  MA leg : QQQ ${g.qqqClose.toFixed(2)} ${g.maLeg ? ">" : "≤"} ${g.maLen}d MA ${g.ma.toFixed(2)}  → ${g.maLeg ? "pass" : "FAIL"}`);
-  console.log(`  Vol leg: VIXY ${g.vixyClose.toFixed(2)} ${g.volLegPass ? "<" : "≥"} prior ${g.vixyPrior.toFixed(2)}  → ${g.volLegPass ? "quiet (pass)" : "rising (FAIL)"}`);
+  if (g.volLegSource === "vix-level") {
+    console.log(`  Vol leg: VIX ${g.vixClose!.toFixed(2)} ${g.volLegPass ? "<" : "≥"} ${VIX_MAX} (direct feed, v0.5.0)  → ${g.volLegPass ? "quiet (pass)" : "elevated (FAIL)"}`);
+  } else {
+    console.log(`  Vol leg: VIXY ${g.vixyClose.toFixed(2)} ${g.volLegPass ? "<" : "≥"} prior ${g.vixyPrior.toFixed(2)} (proxy fallback — no vix_close on this row)  → ${g.volLegPass ? "quiet (pass)" : "rising (FAIL)"}`);
+  }
   if (cg.confirmed === "OFF") console.log("  Lane 2: exit entirely, no new entries (POLICY §3).");
 }

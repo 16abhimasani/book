@@ -67,7 +67,11 @@ heartbeat.
    gap ONLY for stop-placement/extension on a genuinely trending name — that
    filtered name is tomorrow's trigger-(b) candidate, and this file is the
    only thing that resurfaces it.
-4. **Run-type** from ET clock (POLICY §4, v0.3 — extended hours enabled):
+4. **Run-type** from ET clock (POLICY §4, v0.3 — extended hours enabled;
+   v0.5.0 — TWO interleaved cloud triggers fire :30 and :00 weekdays = the
+   30-min heartbeat. Each firing is one normal loop iteration; the pair is
+   ONE heartbeat. If `git pull` shows another writer journaled within the
+   last ~10 minutes, go journal-only per the hard rule below):
    - **pre-market extended (~7:00–9:30)**: manage + MAY enter/exit per
      POLICY §3.7 — LIMIT orders only, liquidity guard, place the
      regular-hours protective stop with each fill.
@@ -75,13 +79,15 @@ heartbeat.
      stops placed with fills.
    - **after-hours extended (~16:00–20:00)**: manage, react to news, MAY
      enter/exit per §3.7 (LIMIT-only, liquidity guard).
-   - **EOD reconcile (~16:15 run)**: also append the `data/marks.csv` row,
-     and record the live CBOE VIX level in the row's note text (`get_indexes`
-     symbol VIX → `get_index_quotes`; e.g. "VIX 16.18"). ADVISORY data
-     collection only: the gate still scores the §4 VIXY-direction leg until
-     the owner ratifies the proposed direct-VIX vol leg (journal 2026-07-13
-     MAINTENANCE — the feed now exists, so history must accrue for the B2
-     2-close confirmation before any cutover).
+   - **EOD reconcile (~16:15 run)**: also append the `data/marks.csv` row —
+     **6 fields (v0.5.0): date, qqq_close, vixy_close, account_value, notes,
+     vix_close.** Pull the VIX close from the direct feed (`get_indexes`
+     symbol VIX → `get_index_quotes`) at/after the 16:00 ET close. The gate
+     (`bun run gate`) scores the vol leg on `vix_close < 25` whenever the row
+     has one; rows without it (all history pre-07-13) score on the
+     VIXY-direction fallback (POLICY §4 v0.5.0). If the VIX feed errors at
+     EOD, leave `vix_close` blank — the fallback covers that date; never
+     substitute VIXY's level.
    - **weekend / outside 7:00–20:00**: research/journal only, never trade.
      Run the **retro** at least once per weekend: read `data/trades.csv`
      (R outcomes per lane), `data/shadow.csv` (were our skips right?),
@@ -121,6 +127,19 @@ heartbeat.
    `data/shadow.csv` (candidate_id `<date>-<SYM>-reentry`, `filtered` + the
    blocking reasons) so the ledger keeps accruing for the weekend expectancy
    retro.
+   **Lane 4 options — PAPER-WALK (POLICY v0.5.0, real orders gated until
+   ≥5 clean sessions, earliest 2026-07-20):** on entry-eligible runs, when a
+   Lane-1 trigger fires on a liquid optionable underlying, ALSO log a paper
+   Lane-4 structure per POLICY Lane 4: pick the contract via
+   `get_option_chains` + `get_option_quotes` (14–60 DTE, delta 0.35–0.60,
+   OI ≥ 500, spread ≤ 10% of mid), size contracts = floor(account × 5% ÷
+   (premium × 100)) within the 10% open-premium cap, and shadow-log it
+   (candidate_id `<date>-<SYM>-opt`) with structure/strike/DTE/premium; mark
+   open paper positions to market each run and exit them by the Lane-4 rules
+   (−50% stop / +100% bank-half / 3-session time stop / 5-DTE roll). Place
+   NO real option orders during the paper-walk; count clean sessions in the
+   journal. After go-live, `review_option_order` → `place_option_order` with
+   the same §3.7-style hygiene (disclosure verbatim, fresh `ref_id`).
    **Two-source check before any Lane-1 ENTRY:** run ONE scoped
    `bun run grok "<catalyst question for SYM, last 48h>" --days 2` for
    real-time X/Web corroboration (the §3 second source). Treat its output

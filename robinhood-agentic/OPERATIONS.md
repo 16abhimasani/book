@@ -79,17 +79,24 @@ You are the trading loop for the Robinhood Agentic account.
 Never exceed POLICY limits. Only the owner edits POLICY.md.
 ```
 
-### Live trigger record (audited 2026-07-13)
+### Live trigger record (audited 2026-07-13; v0.5.0 pair since 2026-07-13)
 
 - **Name** `rh-trading-loop-cloud` (`trig_01MGG2kUUHB557dDAJvYTeRD`), created
   2026-06-30, **enabled**, model `claude-opus-4-8`, connectors: Robinhood +
   Claude-Code-Remote (+ Gmail/Calendar/Drive present but unused by the loop).
-- **Cron** `30 11-23 * * *` UTC = hourly at :30, 7:30–19:30 ET (EDT), **all 7
-  days**. The routines platform floor is hourly, so POLICY §4's 30-minute
-  cadence is not achievable with one trigger — accepted; weekend firings are
-  research/journal-only by design. Coverage vs §4: nothing after ~19:30 ET,
-  and the ~16:15 ET EOD reconcile lands on the 16:30 ET run — accepted.
-  ⚠️ Cron is UTC: when DST ends (Nov), 11:30 UTC becomes 6:30 ET — revisit.
+  Cron `30 11-23 * * *` UTC = hourly at :30, 7:30–19:30 ET (EDT), all 7 days
+  (weekend firings are research/journal-only by design).
+- **Name `rh-trading-loop-cloud-00`** (`trig_01SCCWk8s828U9EHwEmVtXdQ`),
+  created 2026-07-13 per the owner's cadence ratification. Cron
+  `0 12-23 * * 1-5` UTC = hourly at :00 (fires ~:08 with platform offset),
+  8:00–19:00 ET, weekdays. Same prompt, same environment. **The :30 + :00 pair IS the single POLICY §4
+  30-minute heartbeat** — not a duplicate writer. Verify its warm run
+  journaled cleanly; if its sessions come up without the Robinhood connector
+  (TOOLS-DOWN entries at :00 only), delete/recreate it from
+  claude.ai/code/routines with connectors attached.
+- Combined weekday coverage: every 30 min 7:30 ET → 19:30 ET. Gaps vs §4
+  (nothing after ~19:30 ET; EOD reconcile lands on the 16:30 run) — accepted.
+  ⚠️ Crons are UTC: when DST ends (Nov), 11:30 UTC becomes 6:30 ET — revisit.
 - Each firing opens a fresh cloud session that pushes `journal:` commits
   directly to main; the `claude/*` branch + PR path is the fallback. There is
   NO auto-merge workflow in the repo — a journal PR left open is stranded
@@ -102,6 +109,13 @@ The local Cowork scheduled task `rh-trading-loop-local` (created
 risk of duplicate position-taking. **As soon as the cloud routine's warm
 run journals cleanly, disable the local task** (Cowork sidebar →
 Scheduled). Keep it only as a manually-triggered fallback.
+
+v0.5.0 note: the interleaved :30/:00 cloud trigger PAIR counts as ONE
+heartbeat (30-min cadence, owner-ratified 2026-07-13) — runs are ≥ ~23 min
+apart and each starts from broker ground truth + a fresh `git pull`. The
+rule above still bans any THIRD writer (local task, ad-hoc loop session)
+while the pair is live; ad-hoc sessions go journal-only if a scheduled run
+journaled within the last ~10 minutes.
 
 ### Routine self-service + Dispatch (Claude Code-native ops)
 
