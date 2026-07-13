@@ -1,4 +1,4 @@
-date,qqq_close,vixy_close,account_value,notes
+date,qqq_close,vixy_close,account_value,notes,vix_close
 2026-04-09,610.19,29.40,,"backfill 2026-06-12 (yahoo raw close; pre-launch, no account)"
 2026-04-10,611.07,29.75,,"backfill 2026-06-12 (yahoo raw close; pre-launch, no account)"
 2026-04-13,617.39,28.62,,"backfill 2026-06-12 (yahoo raw close; pre-launch, no account)"

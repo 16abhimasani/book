@@ -51,6 +51,8 @@ export function validateMarkRow(r: Record<string, string>, ctx: string): MarkRow
     date: requireField(r.date, "date", ctx),
     qqq: requireNumber(r.qqq_close ?? "", "qqq_close", ctx, { gt: 0 }),
     vixy: requireNumber(r.vixy_close ?? "", "vixy_close", ctx, { gt: 0 }),
+    // v0.5.0: direct VIX close; blank on pre-feed rows → gate falls back to VIXY-direction
+    vix: validateNumber(r.vix_close ?? "", "vix_close", ctx, { allowBlank: true, gt: 0 }),
   };
 }
 
