@@ -1,12 +1,12 @@
 symbol,added,gap_date,gap_day_high,filter_reason,status,notes
-WDC,2026-07-13,2026-07-09,,Day-0/Day-1 semi-complex bounce leader — no placeable −8% under a higher-low at scan time,watching,seeded v0.4.1 from the journal's informal carry (semi/photonics leaders 07-09/07-10); fill gap_day_high from get_equity_historicals at first re-quote
-AMBA,2026-07-13,2026-07-09,,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1 (edge-AI basket; prior +30% AH 06-30 chase correctly filtered)
-ALAB,2026-07-13,2026-07-09,,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1 (AI-infra connectivity)
-CRDO,2026-07-13,2026-07-09,,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1 (AI-infra optics)
-AMD,2026-07-13,2026-07-09,,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1 (prior +0.00R BE scratch 06-16; re-qualifies via §3 like any name)
-ARM,2026-07-13,2026-07-09,,+9–10% bounce day 07-09 — no placeable stop at scan time,watching,seeded v0.4.1
-LITE,2026-07-13,2026-07-09,,+11% bounce day 07-09 — no placeable stop at scan time,watching,seeded v0.4.1 (photonics)
-SNDK,2026-07-13,2026-07-09,,Recurring parabolic/unsizable since +21% 06-25 — watch for a real base,watching,seeded v0.4.1; older than the semi bounce — prune fast if no higher-low forms
-LASR,2026-07-13,2026-07-09,,+27% Day-0 gap 07-09 — no placeable stop,watching,seeded v0.4.1 (photonics)
-WDFC,2026-07-13,2026-07-10,,Day-0 earnings gap +14% AH 07-09 (beat 272.14 print vs 246.59 close) — no post-gap base yet,watching,seeded v0.4.1; genuine fresh earnings catalyst — two-source already strong
-CBRS,2026-07-13,2026-07-10,,Day-0 gainer 07-10 — no placeable stop at scan time,watching,seeded v0.4.1
+WDC,2026-07-13,2026-07-09,601.50,Day-0/Day-1 semi-complex bounce leader — no placeable −8% under a higher-low at scan time,watching,seeded v0.4.1; post-gap high 601.50 (07-09 session high; 07-10 high 585.20) from get_equity_historicals 07-13 10:22Z; higher-low 526.00 (07-08)
+AMBA,2026-07-13,2026-07-09,80.13,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1; post-gap high 80.13 (07-09); higher-low 71.45 (07-08)
+ALAB,2026-07-13,2026-07-09,436.47,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1; post-gap high 436.47 (07-09); higher-low 374.52 (07-08)
+CRDO,2026-07-13,2026-07-09,279.20,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1; post-gap high 279.20 (07-09); higher-low 240.50 (07-08)
+AMD,2026-07-13,2026-07-09,560.25,Day-0/Day-1 bounce leader — no placeable stop at scan time,watching,seeded v0.4.1; post-gap high 560.25 (07-10); band entry < 537.8; prior BE scratch 06-16 — re-qualifies via §3 like any name
+ARM,2026-07-13,2026-07-09,339.44,+9–10% bounce day 07-09 — no placeable stop at scan time,watching,seeded v0.4.1; post-gap high 339.44 (07-09); higher-low 311.15 (07-09)
+LITE,2026-07-13,2026-07-09,806.56,+11% bounce day 07-09 — no placeable stop at scan time,watching,seeded v0.4.1; post-gap high 806.56 (07-10); higher-low 761.62 (07-10) — strongest structure on the watch
+SNDK,2026-07-13,2026-07-09,1952.59,Recurring parabolic/unsizable since +21% 06-25 — watch for a real base,watching,seeded v0.4.1; post-gap high 1952.59 (07-09); 07-13 SKIP-TODAY — SK Hynix sector-shock epicenter (PREMARKET-2026-07-13); prune fast if no higher-low
+LASR,2026-07-13,2026-07-09,76.43,+27% Day-0 gap 07-09 — no placeable stop,watching,seeded v0.4.1; post-gap high 76.43 (07-09); higher-low 69.66 (07-10) — thin, 1% spread guard applies pre-market
+WDFC,2026-07-13,2026-07-10,298.90,Day-0 earnings gap +14% AH 07-09 (beat 272.14 print vs 246.59 close) — no post-gap base yet,watching,seeded v0.4.1; post-gap high 298.90 (07-10) faded to 264.91 close — needs a multi-session higher-low before any entry (PREMARKET-2026-07-13)
+CBRS,2026-07-13,2026-07-10,216.46,Day-0 gainer 07-10 — no placeable stop at scan time,watching,seeded v0.4.1; post-gap high 216.46 (07-10); closed AT highs Fri (+8.4%) — strongest trend; higher-low 191.22 (07-10) sits ≈ at a −8% stop from ~208, demand a clean intraday HL
