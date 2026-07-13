@@ -86,16 +86,21 @@ Never exceed POLICY limits. Only the owner edits POLICY.md.
   Claude-Code-Remote (+ Gmail/Calendar/Drive present but unused by the loop).
   Cron `30 11-23 * * *` UTC = hourly at :30, 7:30–19:30 ET (EDT), all 7 days
   (weekend firings are research/journal-only by design).
-- **Name `rh-trading-loop-cloud-00`** (`trig_01SCCWk8s828U9EHwEmVtXdQ`),
-  created 2026-07-13 per the owner's cadence ratification. Cron
-  `0 12-23 * * 1-5` UTC = hourly at :00 (fires ~:08 with platform offset),
-  8:00–19:00 ET, weekdays. Same prompt, same environment. **The :30 + :00 pair IS the single POLICY §4
-  30-minute heartbeat** — not a duplicate writer. Verify its warm run
-  journaled cleanly; if its sessions come up without the Robinhood connector
-  (TOOLS-DOWN entries at :00 only), delete/recreate it from
-  claude.ai/code/routines with connectors attached.
-- Combined weekday coverage: every 30 min 7:30 ET → 19:30 ET. Gaps vs §4
-  (nothing after ~19:30 ET; EOD reconcile lands on the 16:30 run) — accepted.
+- **`rh-trading-loop-cloud-00` — DELETED 2026-07-13 12:25Z; owner must
+  recreate it from the routines UI to restore the ratified 30-min cadence.**
+  The v0.5.0 :00 companion trigger (`trig_01SCCWk8s828U9EHwEmVtXdQ`, cron
+  `0 12-23 * * 1-5`) was created via the meta-MCP `create_trigger` tool,
+  whose fired sessions evidently don't get MCP connectors/session config
+  attached: both its 10:42Z manual warm-fire and its 12:08Z first scheduled
+  fire produced NO journal commit, branch, or PR (dead sessions). Deleted
+  rather than left half-broken. **Recreate at claude.ai/code/routines —
+  repo `book`, connector Robinhood Trading, cron `0 12-23 * * 1-5`, the §B
+  prompt template verbatim — the same way `rh-trading-loop-cloud` was
+  made.** Until then the :30 trigger alone carries the loop (hourly), the
+  pre-v0.5.0 status quo.
+- Combined weekday coverage once the pair is live: every 30 min 7:30 ET →
+  19:30 ET. Gaps vs §4 (nothing after ~19:30 ET; EOD reconcile lands on the
+  16:30 run) — accepted.
   ⚠️ Crons are UTC: when DST ends (Nov), 11:30 UTC becomes 6:30 ET — revisit.
 - Each firing opens a fresh cloud session that pushes `journal:` commits
   directly to main; the `claude/*` branch + PR path is the fallback. There is
