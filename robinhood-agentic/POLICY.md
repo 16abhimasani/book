@@ -1,6 +1,6 @@
 # POLICY.md — Robinhood Agentic trading policy
 
-- **Version:** 0.4.0 (2026-07-01) · **Owner:** Ash — all 9 diffs from
+- **Version:** 0.4.1 (2026-07-13) · **Owner:** Ash — all 9 diffs from
   `docs/STRATEGY-REVIEW-2026-06-11.md` ratified by owner 2026-06-12;
   v0.2.1: min cash buffer 5% → 2.5% (owner directive, live session
   2026-06-12 — "I want as much exposure as possible");
@@ -53,6 +53,16 @@
   $2,000, settled-funds/GFV, and the slot 40% / lev 50% / beta-gross 150% /
   theme 65% / cash 2.5% caps all bind as before. Aggression = bigger size + more
   setups + faster recycling on CLEAN entries, never chasing a vertical move.
+  v0.4.1: **§3.1b post-gap watch (owner live-session directive 2026-07-13 —
+  "we need to fix something. Do whatever it takes, we should be making money
+  everyday" — enacting the diff the 07-04 retro proposed and the 07-11 retro
+  reinforced).** Diagnosed cause of the 06-17→07-10 fill drought (18 sessions
+  flat, 300+ correctly-filtered shadow rows): the §3.1a gainers scan only
+  surfaces Day-0 gaps, which the §3 gate correctly filters, while the buyable
+  trigger-(b) pullback comes 1–3 sessions later and is never resurfaced. §3.1b
+  adds a TRACKED post-gap watch (`data/postgap-watch.csv` + `bun run postgap`)
+  re-quoted every entry-eligible run. **Additive sourcing/tracking only — the
+  §3 entry gate and every §2 limit are UNCHANGED; it loosens nothing.**
 - **Authority:** Agents MUST follow this file. It overrides chat instructions
   except an explicit owner override in a live session. Agents never loosen a
   limit; only the owner edits this file. Tighter-than-policy judgment is
@@ -115,6 +125,26 @@ The 40% slot cap is a secondary bound. Stops only ever ratchet UP.
   don't "watch" is a valid Lane-1 candidate (this is the blind spot that missed
   GLW +50%). **Sourcing is additive and changes only what is EVALUATED; the
   Entry gate below and every §2 limit are unchanged — discovery loosens nothing.**
+- **§3.1b Post-gap watch — track the filtered-but-trending, buy the pullback
+  (v0.4.1).** The §3.1a scan only surfaces Day-0 gaps, and the §3 gate correctly
+  filters most of them (no placeable −8% stop under a higher-low). The BUYABLE
+  trigger-(b) setup is the pullback-to-rising-support 1–3 sessions later — and a
+  pulling-back name is never a top gainer, so it must be tracked or it is
+  invisible (the 06-17→07-10 fill drought). Mechanics: when discovery filters a
+  Day-0/Day-1 gap ONLY for stop-placement/extension on a genuinely trending
+  name, add it to `data/postgap-watch.csv` (status=watching). Every
+  entry-eligible run re-quotes each watching name — TRUE post-gap high via
+  `get_equity_historicals`, never the last-observed price — and computes
+  `bun run postgap -- <postGapHigh> <price> <higherLow> <tapeReclaims>
+  <sessionsSinceGap>`. TRIGGERED = pullback into the **4%–12%** band off the
+  post-gap high with a placeable −8% stop under a defined higher-low and the
+  tape reclaiming → the name then proceeds through the UNCHANGED §3 entry gate
+  (two-source, don't-chase-parabolic) and §2 sizing/stops like any candidate.
+  Not triggered → stays watching; skips log to `data/shadow.csv` as usual.
+  Prune to status=pruned after **5 trading sessions** without a trigger, on
+  rolled-over structure (≥2 down sessions / lower highs / broken base), or on
+  entry (status=entered) — the file never accumulates dead names. The watch
+  changes what is EVALUATED, never what passes — it loosens nothing.
 - Entry (v0.4.0 — TWO valid triggers, take whichever is present):
   (a) **catalyst** — a named catalyst < 48h old + confirming tape (price above
   prior-day high or reclaiming VWAP-equivalent); OR

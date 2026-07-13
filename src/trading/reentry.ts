@@ -1,21 +1,24 @@
-// Disciplined re-entry — SHADOW ONLY (owner-approved 2026-06-19, POLICY §3.9 is
-// NOT yet binding). Re-buy a name we BANKED on a still-live thesis when it pulls
-// back, instead of needing a brand-new <48h catalyst. This function only DECIDES;
-// it returns no stop and no size, so it can never be mistaken for a placeable,
-// gate-skipping order — sizing/stops/§2 limits stay with risk.ts + trail.ts when
-// (if) §3.9 is ratified. Until then the loop logs would-be re-entries to
-// data/shadow.csv and places nothing.
+// Disciplined re-entry — BINDING (POLICY §3.9, v0.4.0 owner-ratified 2026-07-01;
+// shadow-only 2026-06-19 → 07-01). Re-buy a name we BANKED on a still-live thesis
+// when it pulls back, instead of needing a brand-new <48h catalyst. This function
+// only DECIDES; it returns no stop and no size, so it can never be mistaken for a
+// placeable, gate-skipping order — a TRIGGERED re-entry is sized by risk.ts,
+// stopped by trail.ts, and still clears every §2 limit + don't-chase-parabolic.
+// Every evaluated re-entry (triggered or filtered) still logs to data/shadow.csv
+// so expectancy stays measurable for the weekend retro.
 //
-// Why shadow-first: §3.9 relaxes a gate (drops the <48h fresh-catalyst rule for
-// re-entries). Every other POLICY diff cited a backtest or journaled outcome; this
-// one has none yet. So we measure before we authorize — same bar as §6a / shadow.csv.
+// Why it was shadow-first (history): §3.9 relaxes a gate (drops the <48h
+// fresh-catalyst rule for re-entries) and had no backtest or journaled outcome
+// yet, so we measured before authorizing. The owner ratified BINDING ahead of
+// the full ≥10–15-shadow evidence bar on 2026-07-01 (v0.4.0), accepting the
+// bounded downside: risk-sized off a defined −8% stop, every §2 limit intact.
 //
 // CLI: bun run reentry -- <exitReason> <sessionsSinceExit> <thesisIntact> <rollingOver> <recentHigh> <price> <tapeConfirms>
 
 export type ExitReason = "scaleout" | "trail" | "laggard" | "stop" | "be-scratch";
 
-// Constants mirror POLICY §3.9 (SHADOW); policy-sync.test.ts couples them so prose
-// and code can't drift.
+// Constants mirror POLICY §3.9 (BINDING v0.4.0); policy-sync.test.ts couples them
+// so prose and code can't drift.
 export const REENTRY_WINDOW = 5; // max trading sessions since exit (holidays don't count)
 export const BAND_MIN = 0.04; // min pullback off the recent high
 export const BAND_MAX = 0.12; // max pullback off the recent high
@@ -83,9 +86,10 @@ if (import.meta.main) {
     tapeConfirms: bool(a[6]!),
   });
   console.log(
-    `SHADOW re-entry: ${r.triggered ? "TRIGGERED" : r.eligible ? "eligible, not triggered" : "ineligible"}` +
+    `re-entry (§3.9 BINDING v0.4.0): ${r.triggered ? "TRIGGERED — a real entry" : r.eligible ? "eligible, not triggered" : "ineligible"}` +
       ` (pullback ${(r.pullbackPct * 100).toFixed(1)}%)` +
       (r.reasons.length ? `\n  blocked by: ${r.reasons.join("; ")}` : "") +
-      `\n  NOTE: shadow only — places no order; logs to data/shadow.csv. POLICY §3.9 not yet binding.`,
+      `\n  NOTE: decision only — a TRIGGERED re-entry is sized via bun run risk -- size, stopped via bun run trail,` +
+      `\n  and still clears every §2 limit + don't-chase-parabolic; log to data/shadow.csv either way.`,
   );
 }

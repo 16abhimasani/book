@@ -28,7 +28,10 @@ heartbeat.
    journal entry, commit/push, STOP (never trade from memory). Check for
    newly-exposed tool categories (crypto/options/event-contract order
    tools) → journal `NEW-TOOLS`, do NOT trade them (owner ratifies the
-   parked lane first).
+   parked lane first). Read-side additions audited & journaled 2026-07-13
+   (index quotes incl. direct VIX, technical indicators, realized-P&L /
+   trade-history, tax lots, tradability, watchlist mgmt, scan CRUD) are
+   KNOWN — only journal NEW-TOOLS for categories beyond that audit.
 3. **Ground truth**: `get_portfolio`, `get_equity_positions`, open
    `get_equity_orders`. Reconcile against the stop registry in the last
    journal entry; replace any missing stop immediately. Also skim the tail
@@ -50,6 +53,20 @@ heartbeat.
    named catalyst, confirming tape, clean stop, two-source, not parabolic) +
    §2 limits before any order — discovery widens what we SEE, it loosens
    nothing.
+   **Post-gap watch (POLICY §3.1b, v0.4.1) — the follow-through half of
+   discovery.** Read `robinhood-agentic/data/postgap-watch.csv`. On any run
+   that may enter: re-quote every `watching` name, pull its TRUE post-gap high
+   via `get_equity_historicals` (fill/refresh the `gap_day_high` column), and
+   run `bun run postgap -- <postGapHigh> <price> <higherLow> <tapeReclaims>
+   <sessionsSinceGap>`. TRIGGERED → the name enters the normal §3 pipeline
+   (two-source, don't-chase-parabolic, §2 sizing via `bun run risk -- size`,
+   stop from `bun run trail`) like any candidate. Not triggered → leave
+   `watching` and shadow-log the skip. STALE (> 5 sessions), rolled-over
+   structure, or entered → update `status` (pruned/entered) so the file never
+   accumulates dead names. ADD a row whenever discovery filters a Day-0/Day-1
+   gap ONLY for stop-placement/extension on a genuinely trending name — that
+   filtered name is tomorrow's trigger-(b) candidate, and this file is the
+   only thing that resurfaces it.
 4. **Run-type** from ET clock (POLICY §4, v0.3 — extended hours enabled):
    - **pre-market extended (~7:00–9:30)**: manage + MAY enter/exit per
      POLICY §3.7 — LIMIT orders only, liquidity guard, place the
@@ -58,7 +75,13 @@ heartbeat.
      stops placed with fills.
    - **after-hours extended (~16:00–20:00)**: manage, react to news, MAY
      enter/exit per §3.7 (LIMIT-only, liquidity guard).
-   - **EOD reconcile (~16:15 run)**: also append the `data/marks.csv` row.
+   - **EOD reconcile (~16:15 run)**: also append the `data/marks.csv` row,
+     and record the live CBOE VIX level in the row's note text (`get_indexes`
+     symbol VIX → `get_index_quotes`; e.g. "VIX 16.18"). ADVISORY data
+     collection only: the gate still scores the §4 VIXY-direction leg until
+     the owner ratifies the proposed direct-VIX vol leg (journal 2026-07-13
+     MAINTENANCE — the feed now exists, so history must accrue for the B2
+     2-close confirmation before any cutover).
    - **weekend / outside 7:00–20:00**: research/journal only, never trade.
      Run the **retro** at least once per weekend: read `data/trades.csv`
      (R outcomes per lane), `data/shadow.csv` (were our skips right?),
