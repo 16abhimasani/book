@@ -64,6 +64,19 @@ falls out of context — it lives here instead, and compounds.
   each session for the pullback — otherwise the breadth edge only ever produces
   correctly-filtered chases and zero fills. (Discovery working ≠ entering;
   don't relax the stop-placement filter to force a fill.)
+- **A post-gap "in-band + stop-placeable" read is still a don't-chase when the
+  reference high was a failed gap-and-fade spike — tapeReclaims is the real gate
+  once placeability passes.** 2026-07-17 UNH: the +31.5% earnings BEAT gapped to
+  461.62 then faded the whole move to close near lows (the beat was SOLD); next
+  day it reclaimed the top of its 414–434 month range, which made `bun run
+  postgap` mechanically IN-band (5.8% off 461.62) with the −8% stop resting under
+  the 434 pivot = `stopPlaceable` TRUE — unlike RIVN, where placeability itself
+  failed. The discretionary `tapeReclaims=false` is what correctly held it: a
+  range-top reclaim of a sold earnings gap is not a pullback-to-rising-support in
+  an established uptrend, and measuring a pullback off a failed single-print
+  earnings spike is an artifact. The reference "post-gap high" must be a HELD
+  high; when the engine's mechanical placeability passes, the loop's
+  tape/uptrend-quality judgment is the binding filter.
 - **Gate-ON permits the Lane-2 lane, it does not trigger an entry.** A fresh
   gate-ON read means re-evaluate, not buy.
 - **Verify a catalyst's DATE before calling it fresh — never inherit a prior
