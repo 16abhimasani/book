@@ -63,7 +63,18 @@ falls out of context — it lives here instead, and compounds.
   carry the filtered-but-trending names on an explicit watch and re-quote them
   each session for the pullback — otherwise the breadth edge only ever produces
   correctly-filtered chases and zero fills. (Discovery working ≠ entering;
-  don't relax the stop-placement filter to force a fill.)
+  don't relax the stop-placement filter to force a fill.) *Retro 07-18: two full
+  weeks of the v0.4.1 watch tracked ~16 gapped names and triggered ZERO — every
+  pruned name (07-09 semi leaders ALAB/CRDO/SNDK/AMD/ARM/LASR, then WDC/AMBA/LITE,
+  GS, CBRS) ROLLED OVER (broke its higher-low) rather than basing. The through-line:
+  the regime gate was CONFIRMED OFF the whole window (QQQ < MA20 since 07-13), and
+  in a risk-off tape gaps get SOLD, not bought — a Day-0 gap into a falling market
+  distributes, it doesn't build a pullback-to-rising-support. So post-gap
+  continuation quality is REGIME-DEPENDENT: a sustained gate-OFF window is EXPECTED
+  to yield few/zero clean trigger-(b) setups, and the watch producing zero triggers
+  there is the filter working, not the mechanism failing. Forward rule: weight
+  post-gap continuation entries toward gate-ON regimes; never read a dry gate-OFF
+  fortnight as a reason to loosen the stop-placement / tape-reclaim gate.*
 - **A post-gap "in-band + stop-placeable" read is still a don't-chase when the
   reference high was a failed gap-and-fade spike — tapeReclaims is the real gate
   once placeability passes.** 2026-07-17 UNH: the +31.5% earnings BEAT gapped to
