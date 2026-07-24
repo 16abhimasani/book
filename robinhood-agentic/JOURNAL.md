@@ -8326,3 +8326,17 @@ session and the heartbeat interleave — timestamps are authoritative.)
 - Data upkeep: NO marks row (regular session, not EOD). book.json refreshed (asOf 19:37Z, 0 pos NO-TRADE); snapshot regenerated (README mirror); 1 shadow row (2026-07-24i discovery → 555 data rows; no postgap row, watch empty). No fill → trades stays 6.
 - Limits check: OK — all §2 limits pass (`bun run risk` ALL PASS: 0/6 positions, book risk $0/0.0% ≤ $953.86, risk/position ≤ $238.47, leverage 0%, beta-gross 0%, theme 0%, cash 100% ≥ 2.5%). No order placed.
 - Lesson: none new — LESSONS current. The 07-18 retro thesis still playing out: a sustained gate-OFF window (QQQ < MA20 since 07-13) yields few/zero clean trigger-(b) setups; Day-0 gaps get sold, not bought. No loosening of the stop-placement / tape-reclaim gate in a dry gate-OFF stretch.
+
+## 2026-07-24 20:37 UTC · run: after-hours extended / EOD reconcile
+- Account: $4,769.30 (Δ day 0.0%, +4.0% total vs $4,585 contributed) · cash $4,769.30 (100%, fully settled)
+- Positions: FLAT 0/6 (equity $0, options $0). No open orders. Stop registry empty — nothing to reconcile/replace.
+- Actions: NO-TRADE. Book flat all session; regime CONFIRMED OFF; no §3 trigger fired.
+- Run type: after-hours extended (16:37 ET Fri) doubling as the EOD reconcile — appended the marks.csv row for 2026-07-24 (no dup dates; 07-24 not previously present).
+- EOD marks (07-24): QQQ 684.22 (-1.12% vs 691.96, 19:59:59Z provisional) / VIXY 21.46 (-1.47% vs 21.78, fear DOWN) / VIX direct feed 18.58 (get_index_quotes 16:15 ET post-close). Account 4769.30.
+- Regime gate: CONFIRMED OFF (bun run gate). MA leg QQQ 684.22 ≤ MA20 711.71 = FAIL; vol leg VIX 18.58 < 25 = quiet/pass. AND-gate net risk-OFF = 14th consecutive risk-off close (QQQ < MA20 since 07-13). Lane 2 CLOSED (book flat = nothing to exit). Lane 3 mean-reversion armed but no down->=2-session quality candidate (discovery names all gapping UP, not down).
+- Catalysts considered: market-wide discovery = 20 quality movers, ALL Day-0 first-leg earnings/catalyst gaps — SAFT +42% insurer earnings (10x RVOL, textbook parabolic), RNG +27%, THC +18% healthcare, DLR +11%/SLB +11% energy-materials, IP/SW +10% paper, plus a screen of financials/insurers/REITs. None an established uptrend with pullback-to-rising-support + placeable -8% stop under a higher-low; in a CONFIRMED gate-OFF risk-off tape gaps get SOLD not bought (LESSONS 07-18) -> all filtered on stop-placement / two-source / dont-chase-parabolic. Earnings calendar (high_market_cap, 2d): all AM reports already out (AXP/VZ/CHTR/HCA/SLB/NEE financials-telecom-insurers), Day-0, no fresh momentum-tech catalyst.
+- Post-gap watch: EMPTY (0 watching / 14 pruned) — nothing to re-quote.
+- Re-entry: none — no banked winner within 5 sessions (last exit June).
+- Lane 4 (options paper-walk): no Lane-1 trigger fired -> no paper structure logged this run.
+- Limits check: OK — bun run risk ALL PASS (flat book, 100% cash, book risk $0/0%, cash buffer 100% ≥ 2.5%). No breaches.
+- Next watch items: (1) QQQ must reclaim ~712 MA20 + hold 2 closes to re-arm Lane 2 — still ~28 pts / ~4% below after 14 risk-off closes. (2) Watch for a Day-0 gapper that BASES into a trigger-(b) pullback (weight toward a gate-ON regime per the 07-18 retro). (3) Post-gap continuation quality stays regime-dependent — expect few/zero clean setups while gate is OFF; do NOT loosen the stop-placement gate to force a fill.
