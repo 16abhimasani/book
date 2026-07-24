@@ -162,6 +162,13 @@ falls out of context — it lives here instead, and compounds.
   did NOT catch it (it validates row shape, not duplicate dates). Rule: at step 3,
   if `cut -d, -f1 marks.csv | sort | uniq -d` is non-empty, dedupe keeping the last
   (most-corrected) row per date and re-run `bun run gate` before acting on it.
+  *Generalizes to `postgap-watch.csv` (2026-07-24): it's ONE row per symbol whose
+  `status` field is EDITED (watching→pruned/entered), NOT append-only — but past runs
+  APPENDED a fresh `watching` row on every re-quote, so a name pruned Day-5 (TRV)
+  still showed 7 stale `watching` rows. A future run's "re-quote every watching name"
+  step (a plain `grep watching`) would then resurface a dead name. Unlike the ledgers,
+  this file is NOT union-merged, so consolidate it: one authoritative row per symbol =
+  its final state; log a re-quote by editing the row's notes, never by adding a row.*
 - **On a fresh gate-ON, read the LIVE index + a lev-ETF before deploying — not
   the discover gainers list.** 2026-07-01: the gate was CONFIRMED ON from the
   06-30 close and the scan showed a screen of +10–19% gainers
