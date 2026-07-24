@@ -81,7 +81,7 @@ Closed trades:
 
 **Measurement gate (POLICY §6a):** 6 closed / 0 open · expectancy 0.64R · capital-add not eligible (needs ≥10 closed / >+0.25R / 0 breaches / ≥4wk). Per lane: L1 0.70R (5 closed) · L2 0.31R (1 closed).
 
-**Lane-2 regime gate:** OFF (confirmed 2-day; QQQ 691.99 vs 20d MA 713.31, as of 2026-07-23).
+**Lane-2 regime gate:** OFF (confirmed 2-day; QQQ 684.22 vs 20d MA 711.71, as of 2026-07-24).
 
 **Watcher: no data yet (not started, or never an in-hours scan).**
 <!-- SNAPSHOT:END -->
