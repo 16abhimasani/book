@@ -74,7 +74,14 @@ falls out of context — it lives here instead, and compounds.
   to yield few/zero clean trigger-(b) setups, and the watch producing zero triggers
   there is the filter working, not the mechanism failing. Forward rule: weight
   post-gap continuation entries toward gate-ON regimes; never read a dry gate-OFF
-  fortnight as a reason to loosen the stop-placement / tape-reclaim gate.*
+  fortnight as a reason to loosen the stop-placement / tape-reclaim gate.* *Retro
+  07-25 (now ~5.5wk / 27 sessions flat since the 06-17 DAL BE-stop): the shadow
+  ledger QUANTIFIES the filter as net-positive — of 247 resolved discovery/post-gap
+  skips, 246 would have been LOSERS if traded (avg −0.03R/skip); the drought is the
+  filter WORKING in a persistent gate-OFF tape (QQQ < MA20 since 07-13, 15 risk-off
+  closes), not a defect. Skipping negative-EV Day-0 chases is adding value, so a long
+  flat stretch in a risk-off regime is the expected, correct outcome — never a reason
+  to force a fill.*
 - **A post-gap "in-band + stop-placeable" read is still a don't-chase when the
   reference high was a failed gap-and-fade spike — tapeReclaims is the real gate
   once placeability passes.** 2026-07-17 UNH: the +31.5% earnings BEAT gapped to
